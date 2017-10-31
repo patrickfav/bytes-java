@@ -280,25 +280,32 @@ public final class Bytes implements Comparable<Bytes> {
         return Util.toList(array());
     }
 
+    public char toChar() {
+        if (length() > 2) {
+            throw new UnsupportedOperationException("cannot convert to char if length > 2 byte");
+        }
+        return buffer().getChar();
+    }
+
     public short toShort() {
         if (length() > 2) {
             throw new UnsupportedOperationException("cannot convert to short if length > 2 byte");
         }
-        return Util.byteToShort(array());
+        return buffer().getShort();
     }
 
     public int toInt() {
         if (length() > 4) {
             throw new UnsupportedOperationException("cannot convert to int if length > 4 byte");
         }
-        return Util.byteToInt(array());
+        return buffer().getInt();
     }
 
     public long toLong() {
         if (length() > 8) {
             throw new UnsupportedOperationException("cannot convert to long if length > 8 byte");
         }
-        return Util.byteToLong(array());
+        return buffer().getLong();
     }
 
     /* MUTATOR ************************************************************************************************/
@@ -336,23 +343,6 @@ public final class Bytes implements Comparable<Bytes> {
     }
 
     static class Util {
-        static short byteToShort(byte[] bytes) {
-            return (short) byteToLong(bytes);
-        }
-
-        static int byteToInt(byte[] bytes) {
-            return (int) byteToLong(bytes);
-        }
-
-        static long byteToLong(byte[] bytes) {
-            int returnVal = 0;
-
-            for (int i = 0; i < bytes.length; i++) {
-                returnVal += ((bytes[i] & 0xff)) << ((bytes.length - 1 - i) * 8);
-            }
-            return returnVal;
-        }
-
         /**
          * Returns the values from each provided byteArray combined into a single byteArray.
          * For example, {@code concat(new byte[] {a, b}, new byte[] {}, new

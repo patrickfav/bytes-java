@@ -17,6 +17,7 @@ public class BytesPrimitivesTest {
     public void fromLong() throws Exception {
         long number = 172863182736L;
         System.out.println(Bytes.from(number).encodeHex());
+        System.out.println(Bytes.from(number).toLong());
         assertArrayEquals(Bytes.parseHex("000000283f72d790").array(), Bytes.from(number).array());
         assertEquals(number, Bytes.from(number).toLong());
     }
