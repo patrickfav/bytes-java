@@ -34,6 +34,10 @@ public final class Bytes implements Comparable<Bytes> {
         return wrap(ByteBuffer.allocate(2).putChar(char2Byte).array());
     }
 
+    public static Bytes from(short short2Byte) {
+        return wrap(ByteBuffer.allocate(2).putShort(short2Byte).array());
+    }
+
     public static Bytes from(int integer4byte) {
         return wrap(ByteBuffer.allocate(4).putInt(integer4byte).array());
     }
@@ -86,7 +90,23 @@ public final class Bytes implements Comparable<Bytes> {
     }
 
     public Bytes xor(byte[] secondArray) {
-        return wrap(Util.xor(byteArray, secondArray));
+        return transform(new BytesTransformer.BitWiseOperatorTransformer(secondArray, BytesTransformer.BitWiseOperatorTransformer.Mode.XOR));
+    }
+
+    public Bytes and(Bytes bytes) {
+        return and(bytes.array());
+    }
+
+    public Bytes and(byte[] secondArray) {
+        return transform(new BytesTransformer.BitWiseOperatorTransformer(secondArray, BytesTransformer.BitWiseOperatorTransformer.Mode.AND));
+    }
+
+    public Bytes or(Bytes bytes) {
+        return and(bytes.array());
+    }
+
+    public Bytes or(byte[] secondArray) {
+        return transform(new BytesTransformer.BitWiseOperatorTransformer(secondArray, BytesTransformer.BitWiseOperatorTransformer.Mode.OR));
     }
 
     public Bytes copy() {
@@ -96,6 +116,12 @@ public final class Bytes implements Comparable<Bytes> {
     public Bytes duplicate() {
         return wrap(array());
     }
+
+    public Bytes transform(BytesTransformer transformer) {
+        return transformer.transform(this);
+    }
+
+    /* ATTRIBUTES ************************************************************************************************/
 
     public int length() {
         return byteArray.length;
@@ -270,18 +296,6 @@ public final class Bytes implements Comparable<Bytes> {
                 list.add(b);
             }
             return list;
-        }
-
-        static byte[] xor(byte[] first, byte[] second) {
-            if (first.length != second.length) {
-                throw new IllegalArgumentException("all byte array must be of same length");
-            }
-            byte[] xored = new byte[first.length];
-
-            for (int i = 0; i < first.length; i++) {
-                xored[i] = (byte) (first[i] ^ second[i]);
-            }
-            return xored;
         }
     }
 }
