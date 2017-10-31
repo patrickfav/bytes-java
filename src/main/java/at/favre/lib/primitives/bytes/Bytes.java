@@ -3,6 +3,7 @@ package at.favre.lib.primitives.bytes;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.*;
@@ -42,8 +43,8 @@ public class Bytes implements Comparable<Bytes> {
      * @param length of the internal array
      * @return new instance
      */
-    public static Bytes create(int length) {
-        return create(length, (byte) 0);
+    public static Bytes allocate(int length) {
+        return allocate(length, (byte) 0);
     }
 
     /**
@@ -53,7 +54,7 @@ public class Bytes implements Comparable<Bytes> {
      * @param defaultValue to fill with
      * @return new instance
      */
-    public static Bytes create(int length, byte defaultValue) {
+    public static Bytes allocate(int length, byte defaultValue) {
         byte[] array = new byte[length];
         if (defaultValue != 0) {
             Arrays.fill(array, defaultValue);
@@ -81,11 +82,11 @@ public class Bytes implements Comparable<Bytes> {
      * @param length length
      * @return new instance
      */
-    public static Bytes wrap(byte[] array, int offset, int length) {
+    public static Bytes from(byte[] array, int offset, int length) {
         Objects.requireNonNull(array, "passed array must not be null");
         byte[] part = new byte[length];
         System.arraycopy(array, offset, part, 0, length);
-        return new Bytes(part);
+        return wrap(part);
     }
 
     /**
@@ -94,7 +95,7 @@ public class Bytes implements Comparable<Bytes> {
      * @param moreArrays must not be null
      * @return new instance
      */
-    public static Bytes wrap(byte[]... moreArrays) {
+    public static Bytes from(byte[]... moreArrays) {
         return wrap(Util.concat(moreArrays));
     }
 
@@ -120,14 +121,15 @@ public class Bytes implements Comparable<Bytes> {
     }
 
     /**
-     * Creates a new instance from given collections of single bytes
+     * Creates a new instance from given collections of single bytes.
+     * This will create a copy of given bytes and will not directly use given bytes or byte array.
      *
      * @param manyBytes must not be null
      * @return new instance
      */
     public static Bytes from(byte... manyBytes) {
         Objects.requireNonNull(manyBytes, "must at least pass a single byte");
-        return wrap(manyBytes);
+        return wrap(Arrays.copyOf(manyBytes, manyBytes.length));
     }
 
     /**
@@ -187,7 +189,18 @@ public class Bytes implements Comparable<Bytes> {
      * @return new instance
      */
     public static Bytes from(String utf8String) {
-        return wrap(utf8String.getBytes(StandardCharsets.UTF_8));
+        return from(utf8String, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Creates a new instance from given string
+     *
+     * @param string  to get the internal byte array from
+     * @param charset used to decode the string
+     * @return new instance
+     */
+    public static Bytes from(String string, Charset charset) {
+        return wrap(string.getBytes(charset));
     }
 
     /**
@@ -271,7 +284,7 @@ public class Bytes implements Comparable<Bytes> {
      * @param length desired array length
      * @return random instance
      */
-    public static Bytes nonSecureRandom(int length) {
+    public static Bytes randomNonSecure(int length) {
         return random(length, new Random());
     }
 
@@ -895,7 +908,17 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a>
      */
     public String encodeUtf8() {
-        return new String(array(), StandardCharsets.UTF_8);
+        return encodeCharset(StandardCharsets.UTF_8);
+    }
+
+    /**
+     * String representation with given charset encoding
+     *
+     * @return encoded string
+     */
+    public String encodeCharset(Charset charset) {
+        Objects.requireNonNull(charset, "given charset must not be null");
+        return new String(array(), charset);
     }
 
     /**

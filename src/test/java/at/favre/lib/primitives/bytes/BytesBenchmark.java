@@ -7,9 +7,9 @@ public class BytesBenchmark {
     @Test
     public void immutableVsMutable() throws Exception {
         int length = 16 * 1024;
-        Bytes randomXorOp = Bytes.nonSecureRandom(length);
-        Bytes immutable = Bytes.create(length);
-        Bytes mutable = Bytes.create(length).toMutable();
+        Bytes randomXorOp = Bytes.randomNonSecure(length);
+        Bytes immutable = Bytes.allocate(length);
+        Bytes mutable = Bytes.allocate(length).toMutable();
 
         for (int i = 0; i < 10; i++) {
             immutable = immutable.xor(randomXorOp);
