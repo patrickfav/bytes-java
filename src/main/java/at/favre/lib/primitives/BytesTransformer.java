@@ -231,15 +231,22 @@ public interface BytesTransformer {
     final class SortTransformer implements BytesTransformer {
         private final Comparator<Byte> comparator;
 
+        public SortTransformer() {
+            this(null);
+        }
+
         public SortTransformer(Comparator<Byte> comparator) {
-            Objects.requireNonNull(comparator, "passed comparator must not be null");
             this.comparator = comparator;
         }
 
         @Override
         public Bytes transform(Bytes victim) {
             List<Byte> list = victim.toList();
-            Collections.sort(list, comparator);
+            if (comparator != null) {
+                Collections.sort(list, comparator);
+            } else {
+                Collections.sort(list);
+            }
             return Bytes.from(list);
         }
 

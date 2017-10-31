@@ -194,6 +194,10 @@ public final class Bytes implements Comparable<Bytes> {
         return transform(new BytesTransformer.SortTransformer(comparator));
     }
 
+    public Bytes sort() {
+        return transform(new BytesTransformer.SortTransformer());
+    }
+
     public Bytes shuffle(Random random) {
         return transform(new BytesTransformer.ShuffleTransformer(random));
     }
