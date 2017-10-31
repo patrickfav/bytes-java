@@ -1,5 +1,8 @@
 package at.favre.lib.primitives;
 
+import java.math.BigInteger;
+import java.util.Objects;
+
 public final class ByteToTextEncoding {
     public interface Encoder {
         String encode(byte[] array);
@@ -10,29 +13,37 @@ public final class ByteToTextEncoding {
     }
 
     public static class Hex implements Encoder, Decoder {
-        private final boolean lowerCase;
+        private final boolean upperCase;
 
         public Hex() {
             this(true);
         }
 
-        public Hex(boolean lowerCase) {
-            this.lowerCase = lowerCase;
+        public Hex(boolean upperCase) {
+            this.upperCase = upperCase;
         }
 
         @Override
         public String encode(byte[] byteArray) {
             StringBuilder sb = new StringBuilder(byteArray.length * 2);
             for (byte anArray : byteArray) {
-                sb.append(Character.forDigit((anArray >> 4) & 0xF, 16));
-                sb.append(Character.forDigit((anArray & 0xF), 16));
+                char first4Bit = Character.forDigit((anArray >> 4) & 0xF, 16);
+                char last4Bit = Character.forDigit((anArray & 0xF), 16);
+                if (upperCase) {
+                    first4Bit = Character.toUpperCase(first4Bit);
+                    last4Bit = Character.toUpperCase(last4Bit);
+                }
+                sb.append(first4Bit).append(last4Bit);
             }
-            String out = sb.toString();
-            return lowerCase ? out.toLowerCase() : out;
+            return sb.toString();
         }
 
         @Override
         public byte[] decode(String hexString) {
+            Objects.requireNonNull(hexString, "hex input must not be null");
+            if (hexString.length() % 2 != 0)
+                throw new IllegalArgumentException("invalid hex string, must be mod 2 == 0");
+
             if (hexString.startsWith("0x")) {
                 hexString = hexString.substring(2, hexString.length());
             }
@@ -45,6 +56,36 @@ public final class ByteToTextEncoding {
                                 + Character.digit(hexString.charAt(i + 1), 16));
             }
             return data;
+        }
+    }
+
+    public static class Base64Encoding implements Encoder, Decoder {
+        @Override
+        public String encode(byte[] array) {
+            return Base64.encode(array);
+        }
+
+        @Override
+        public byte[] decode(String encoded) {
+            return Base64.decode(encoded);
+        }
+    }
+
+    public static class BaseRadixEncoder implements Encoder, Decoder {
+        private final int radix;
+
+        BaseRadixEncoder(int radix) {
+            this.radix = radix;
+        }
+
+        @Override
+        public String encode(byte[] array) {
+            return new BigInteger(1, array).toString(radix);
+        }
+
+        @Override
+        public byte[] decode(String encoded) {
+            return new BigInteger(encoded, radix).toByteArray();
         }
     }
 }
