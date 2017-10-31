@@ -1,0 +1,49 @@
+sudo: required
+language: java
+install: true
+jdk:
+  - oraclejdk8
+
+env:
+  global:
+    - secure: "yg2rRwGDgX/8LfSfaYKdHUSV+F7w819WTdfa40C6cj92RPmLEmIeiyRSmNuPNsyWCSbONXOWyEnGSYqG3y3/V4fBs/LZibK2p4tg0LJj2ajeaDXzGo8Fy0XHRkRzb9lJUqNXfMPrhR5SafO5tT3xHAWSgEP0XD+kUsjZ/NmFkiltrbEg5j4XvmK5blmsHCEFlqc+OCk8L/lSIcn7u43PDrHGuNdF118HbctYqypaoqBgGqu69auh79/ytI6zA4KpRJMBuVhQlJxAhLQDKRHFP7TEmJmR7WXwXAYCpY2BAVkmu7MGMzf8qKnO3ccsy73epUTHo9ywSM/WNEEfGnluvnP1AeVWUKMLIMqnVQU8feoEQjzm9G1KbknfX/xo4OFegSwkCgViQOWP6Ju/gmIXfGn/Pcy00z2PpXgKUDRywVwIAnY9LX0QqoYQBwCqoCJWaS+KE7qWRbIFNzRS5EQx44iCl8d0g54+37qGr4eC57QHZ5bpfLmbdyZskrLZzFQcYL6fHTvBr5bbmFC0jOHTNeWD5ujq4XnJvjCrZ0M/IjpSGJFd49LeBdEcxqcjfY2WXaeNpIQ7sIfSuESFmXf2J5tVq3zmBsGDXzx9Ckh2CcspErPxNqCFPNJ21gnWLRZL0MZ5NlVv/myI2EKf1Pq+5WOwhlhBg+jIZfxZQszWtkM="
+    - secure: "kAGN99lV78KkQhvQwualbQRBjpHqT5A1gIpsfWojTkPSKEd+C74uYs3fqecqf9VHRGtms5fEdUceAimoYLclM4iPEEU6wQ6KZLADedRRY4VofbxwuwWmL/dNMUNdWJ8ZHW+ssjvyiqyQ/MOpFdfEM0csSk/BAfNktXnHS3fKdfrWu/iJljBd7TsX33Zl7EEyyR61/Gsulo6vuARRWsKdIYRvokS9N6dh0SZpYvKrobRzqEZQkbuqM+H/d6KQvvv/PL1Zd3mc1UKpgxPERAb1Cy8m8tIBzSyUfC76CVuoXHz/d9xUnCbtKnAvfiysXK0iPSCkapj0byMLXkGc5NmTK4A5SPHF5sJXJQ0zybtZeIr3FwOfAQTks5OEf4/WnYW4F/+0gWGhois1ZJ2wPQbcC7WXZkbn3QVYbawM+DafOKSOmOicSTuJr0BAQK6u9+vCmNS84UibL5PYloCg487QLxj7fCiQy1FjQIwOXspLt4jt8l2Oea6g9YRi0DWdWR5QwDKdlNljZ/oYN5OGX2jm3jgDgM1L+wUl7XpcdJT7jgenDNICUVTv3QQj++uQxBViaiq5YmHU5oWvqcSzqTJq0rBAOD+AUOdWFtKS0acF0MpmURawhcSRWWpwEh6/luCzTqAVUuXaYmPT2E2z/ktpm68+ShgAQMBGybk4tx0WI4Y="
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_901439c1b2d2_key -iv $encrypted_901439c1b2d2_iv -in secrets.tar.enc -out secrets.tar -d
+  - tar xvf secrets.tar
+
+script:
+  - mvn clean install -X -Djarsigner.skip=false
+
+after_success:
+  - mvn test jacoco:report coveralls:report
+
+deploy:
+  - provider: script
+    script: mvn -s ci-settings.xml deploy -X
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: true
+  - provider: releases
+    api_key:
+      secure: "YtK6gh4f6ax5JITgE6N3SIZUN3gzCp3meLfzWtRJmRlntU5VOQYnwzsL7CeVMxm/A+5uIalSRNrc+AqYpOYphmNYz2BDnEQDocKXugkbpH2N7FVGNBS8EXu7ZC2MR/0/sy1E43+trReFdPsNWx5kM04SsQB61aA2StwESSWz7x5ZbU2qk+d1N5NWa3qDo1Mig9N/6qdkvef8y+XavbQus9F9cGUdspminmriFgg9x4otkHD+9f5YhfITpf0Zt00XO/wRkckFTh1un8B56dTJ7JVnMatwM+HGydSZ3KNquZobT400V8nnO3a2CsjzjhSSULklv9ASzVv5D5p6oZpAuUOlIIqsVQzxCdLq/qRJCgjvphmAsX5MBzE9sRqaK+HLXcN2Bs0sQzj7tozQgECBv/9dUrQ7F/wvegNI6HqLHF66YmR+JMpFGab1RlvqZ+SKB7TwY67kdZkHJxaxfjc0/y7IO0Fdiigw8qQNfTSQ+oRPyGMwGKnMDeNHKeJ67LWNGjyjprG/Ywh6zgwEYnAIiwEncOMhdRGSobKqeYU3o4uOGD7zLnMC2pLtPhi+ymj4tEOjmpNmtZn69Q6J177i4cVJNjYPXuXVcwM/JxmxZU7u0XwomV6LVkWQKx9qmwET0gT1uX1sxC1IPmQA/77uKQNqFGRydm/rCHcO5lEe1Kc="
+    file_glob: true
+    file:
+      - "target/hkdf-*.jar"
+      - "target/*.sha256"
+      - "target/checksum-sha256.txt"
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: true
+
+cache:
+  directories:
+    - $HOME/.m2
+
+notifications:
+  slack:
+    secure: "eQL4s+1hwUIvPoFok5ridSE2Rheyb1mcjl432FRYWIxAEcAjWB0FFnvZJMwZCEL5wLrEWu9PBEerdY81oN3uSR2J616pcji1DLSmQ52OBvQnBFmxzdqrhCGKJJQidhBQq3+GXBHnhQRP1J4FXkFVXAiQnxPDM+LKaSwi88VLQLsI7RqQ54HcF+UT3jv39HsIZy7eWaHTmeE+9QiS9acEIwzZmAGwtE4QAPBBSSLH+MGcVZROyAoWxf3ysNoId+ZJNvzMvg7QRSZX+FQADDbbAsCWDwXFNttu3mJe6PEQfSI/QlU/cc2WMnkqss6i07gd0I65FduFTnDUj91XnlQXAFiympRvygPgiDDf/X6KuZn6wB2i8VXEX3P/MbcmwMfGecNusbATvrTcpU+8K6uQQ6G9Yu90Iq0+AIOeM5poeG/DDOmObeMbcBPeRh9+IMYIo3d7/VJCCampSztJY2eQV6a3c6BXzaWmw3/617pF1AF5D1lqHSWCS0tRXE3AOk/xCMVaACEuKWch2I/oZZQORcZPPAlggzxOEBWDUEzqXsPiDdlJtGMPnri2vciXNFIeX0DpAhI/lD1Ytiw41PFvbUQNG0uSlOjDqi3nqrrOy3NESkYCJAMJyoMFWZ2UjyIGiod03NC82nhhEjpEClICq8YKJr4MrX2tYWxltUrbvmw="
+  email: false
