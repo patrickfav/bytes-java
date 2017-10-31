@@ -3,6 +3,7 @@ package at.favre.lib.primitives.bytes;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.*;
 
@@ -177,6 +178,16 @@ public class Bytes implements Comparable<Bytes> {
      */
     public static Bytes from(ByteBuffer buffer) {
         return wrap(buffer.array());
+    }
+
+    /**
+     * Creates a new instance from given utf-8 encoded string
+     *
+     * @param utf8String to get the internal byte array from
+     * @return new instance
+     */
+    public static Bytes from(String utf8String) {
+        return wrap(utf8String.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -875,6 +886,16 @@ public class Bytes implements Comparable<Bytes> {
      */
     public String encodeBase64() {
         return new ByteToTextEncoding.Base64Encoding().encode(array());
+    }
+
+    /**
+     * UTF-8 representation of this byte array
+     *
+     * @return utf-8 encoded string
+     * @see <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a>
+     */
+    public String encodeUtf8() {
+        return new String(array(), StandardCharsets.UTF_8);
     }
 
     /**
