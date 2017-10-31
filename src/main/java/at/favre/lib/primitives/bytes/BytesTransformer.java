@@ -1,4 +1,4 @@
-package at.favre.lib.primitives;
+package at.favre.lib.primitives.bytes;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -7,21 +7,14 @@ import java.util.*;
  * Interface for transforming {@link Bytes}
  */
 public interface BytesTransformer {
-
-    /**
-     * Transform a copy of given byte array and return the copy. The state of victim will not be changed.
-     *
-     * @param victim to preform the transformation on
-     * @return new instance / copy
-     */
-    Bytes transform(Bytes victim);
-
     /**
      * Transform given victim in place, overwriting its internal byte array
      *
-     * @param victim to preform the transformation on
+     * @param victim  to preform the transformation on
+     * @param inPlace perform the operations directly on the victim's byte array to omit copying of the internal array
+     * @return resulting bytes
      */
-    void transformInPlace(Bytes victim);
+    Bytes transform(Bytes victim, boolean inPlace);
 
     /**
      * Simple transformer for bitwise operations on {@link Bytes} instances
@@ -45,27 +38,12 @@ public interface BytesTransformer {
         }
 
         @Override
-        public Bytes transform(Bytes victim) {
-            return transform(victim, false);
-        }
-
-        @Override
-        public void transformInPlace(Bytes victim) {
-            transform(victim, true);
-        }
-
-        private Bytes transform(Bytes victim, boolean inPlace) {
+        public Bytes transform(Bytes victim, boolean inPlace) {
             if (victim.length() != secondArray.length) {
                 throw new IllegalArgumentException("all byte array must be of same length doing bit wise operation");
             }
 
-            byte[] out;
-
-            if (inPlace) {
-                out = victim.array();
-            } else {
-                out = new byte[victim.length()];
-            }
+            byte[] out = inPlace ? victim.array() : new byte[victim.length()];
 
             for (int i = 0; i < victim.length(); i++) {
                 switch (mode) {
@@ -82,7 +60,8 @@ public interface BytesTransformer {
                         throw new IllegalArgumentException("unknown bitwise transform mode " + mode);
                 }
             }
-            return Bytes.wrap(out);
+
+            return inPlace ? victim : Bytes.wrap(out);
         }
     }
 
@@ -93,28 +72,14 @@ public interface BytesTransformer {
      */
     final class NegateTransformer implements BytesTransformer {
         @Override
-        public Bytes transform(Bytes victim) {
-            return transform(victim, false);
-        }
-
-        @Override
-        public void transformInPlace(Bytes victim) {
-            transform(victim, true);
-        }
-
-        private Bytes transform(Bytes victim, boolean inPlace) {
-            byte[] out;
-
-            if (inPlace) {
-                out = victim.array();
-            } else {
-                out = new byte[victim.length()];
-            }
+        public Bytes transform(Bytes victim, boolean inPlace) {
+            byte[] out = inPlace ? victim.array() : new byte[victim.length()];
 
             for (int i = 0; i < victim.length(); i++) {
                 out[i] = (byte) ~victim.array()[i];
             }
-            return Bytes.wrap(out);
+
+            return inPlace ? victim : Bytes.wrap(out);
         }
     }
 
@@ -139,16 +104,7 @@ public interface BytesTransformer {
         }
 
         @Override
-        public Bytes transform(Bytes victim) {
-            return transform(victim, false);
-        }
-
-        @Override
-        public void transformInPlace(Bytes victim) {
-            transform(victim, true);
-        }
-
-        private Bytes transform(Bytes victim, boolean inPlace) {
+        public Bytes transform(Bytes victim, boolean inPlace) {
             BigInteger bigInt;
 
             if (inPlace) {
@@ -182,46 +138,26 @@ public interface BytesTransformer {
         }
 
         @Override
-        public Bytes transform(Bytes victim) {
-            return Bytes.wrap(Bytes.Util.concat(victim.array(), secondArray));
-        }
-
-        @Override
-        public void transformInPlace(Bytes victim) {
-            transform(victim);
+        public Bytes transform(Bytes victim, boolean inPlace) {
+            return Bytes.wrap(Util.concat(victim.array(), secondArray));
         }
     }
 
     /**
      * Reverses the internal byte array
      */
-    final class RevereseTransformer implements BytesTransformer {
-
+    final class ReverseTransformer implements BytesTransformer {
         @Override
-        public Bytes transform(Bytes victim) {
-            return transform(victim, false);
-        }
-
-        @Override
-        public void transformInPlace(Bytes victim) {
-            transform(victim, true);
-        }
-
-        private Bytes transform(Bytes victim, boolean inPlace) {
-            byte[] out;
-
-            if (inPlace) {
-                out = victim.array();
-            } else {
-                out = new byte[victim.length()];
-            }
+        public Bytes transform(Bytes victim, boolean inPlace) {
+            byte[] out = inPlace ? victim.array() : new byte[victim.length()];
 
             for (int k = 0; k < out.length / 2; k++) {
                 byte temp = out[k];
                 out[k] = out[out.length - (1 + k)];
                 out[out.length - (1 + k)] = temp;
             }
-            return Bytes.wrap(out);
+
+            return inPlace ? victim : Bytes.wrap(out);
         }
     }
 
@@ -240,19 +176,18 @@ public interface BytesTransformer {
         }
 
         @Override
-        public Bytes transform(Bytes victim) {
-            List<Byte> list = victim.toList();
-            if (comparator != null) {
-                Collections.sort(list, comparator);
-            } else {
-                Collections.sort(list);
-            }
-            return Bytes.from(list);
-        }
+        public Bytes transform(Bytes victim, boolean inPlace) {
 
-        @Override
-        public void transformInPlace(Bytes victim) {
-            transform(victim);
+            if (comparator == null) {
+                byte[] out = inPlace ? victim.array() : new byte[victim.length()];
+                Arrays.sort(out);
+                return inPlace ? victim : Bytes.wrap(out);
+            } else {
+                //no in-place implementation with comparator
+                List<Byte> list = victim.toList();
+                Collections.sort(list);
+                return Bytes.from(list);
+            }
         }
     }
 
@@ -267,28 +202,11 @@ public interface BytesTransformer {
             this.random = random;
         }
 
-
         @Override
-        public Bytes transform(Bytes victim) {
-            return transform(victim, false);
-        }
-
-        @Override
-        public void transformInPlace(Bytes victim) {
-            transform(victim, true);
-        }
-
-        private Bytes transform(Bytes victim, boolean inPlace) {
-            byte[] out;
-
-            if (inPlace) {
-                out = victim.array();
-            } else {
-                out = new byte[victim.length()];
-            }
-
-            Bytes.Util.shuffle(out, random);
-            return Bytes.wrap(out);
+        public Bytes transform(Bytes victim, boolean inPlace) {
+            byte[] out = inPlace ? victim.array() : new byte[victim.length()];
+            Util.shuffle(out, random);
+            return inPlace ? victim : Bytes.wrap(out);
         }
     }
 }

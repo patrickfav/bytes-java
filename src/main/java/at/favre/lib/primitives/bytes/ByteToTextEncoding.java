@@ -1,4 +1,4 @@
-package at.favre.lib.primitives;
+package at.favre.lib.primitives.bytes;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -71,10 +71,10 @@ public final class ByteToTextEncoding {
         }
     }
 
-    public static class BaseRadixEncoder implements Encoder, Decoder {
+    public static class BaseRadix implements Encoder, Decoder {
         private final int radix;
 
-        BaseRadixEncoder(int radix) {
+        BaseRadix(int radix) {
             this.radix = radix;
         }
 

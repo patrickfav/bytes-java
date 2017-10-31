@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-package at.favre.lib.primitives;
+package at.favre.lib.primitives.bytes;
 
 import java.nio.charset.StandardCharsets;
 

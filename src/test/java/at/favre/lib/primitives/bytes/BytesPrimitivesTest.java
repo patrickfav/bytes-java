@@ -1,4 +1,4 @@
-package at.favre.lib.primitives;
+package at.favre.lib.primitives.bytes;
 
 import org.junit.Before;
 import org.junit.Test;

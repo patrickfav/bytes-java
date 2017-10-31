@@ -1,4 +1,4 @@
-package at.favre.lib.primitives;
+package at.favre.lib.primitives.bytes;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
@@ -6,7 +6,7 @@ import java.nio.ByteOrder;
 import java.security.SecureRandom;
 import java.util.*;
 
-public final class Bytes implements Comparable<Bytes> {
+public class Bytes implements Comparable<Bytes> {
 
     /* FACTORY ***************************************************************************************************/
 
@@ -72,11 +72,11 @@ public final class Bytes implements Comparable<Bytes> {
     }
 
     public static Bytes parseOctal(String octalString) {
-        return parse(octalString, new ByteToTextEncoding.BaseRadixEncoder(8));
+        return parse(octalString, new ByteToTextEncoding.BaseRadix(8));
     }
 
     public static Bytes parseDec(String decString) {
-        return parse(decString, new ByteToTextEncoding.BaseRadixEncoder(10));
+        return parse(decString, new ByteToTextEncoding.BaseRadix(10));
     }
 
     public static Bytes parseHex(String hexString) {
@@ -84,7 +84,7 @@ public final class Bytes implements Comparable<Bytes> {
     }
 
     public static Bytes parseBase36(String base36String) {
-        return parse(base36String, new ByteToTextEncoding.BaseRadixEncoder(36));
+        return parse(base36String, new ByteToTextEncoding.BaseRadix(36));
     }
 
     public static Bytes parseBase64(String base64String) {
@@ -102,7 +102,7 @@ public final class Bytes implements Comparable<Bytes> {
         return random(length, new SecureRandom());
     }
 
-    public static Bytes unsecureRandom(int length) {
+    public static Bytes nonSecureRandom(int length) {
         return random(length, new Random());
     }
 
@@ -116,27 +116,45 @@ public final class Bytes implements Comparable<Bytes> {
 
     private final byte[] byteArray;
     private final ByteOrder byteOrder;
+    private final boolean mutable;
 
-    private Bytes(byte[] array) {
-        this(array, ByteOrder.BIG_ENDIAN);
+    Bytes(byte[] array) {
+        this(array, ByteOrder.BIG_ENDIAN, false);
     }
 
-    private Bytes(byte[] byteArray, ByteOrder byteOrder) {
+    Bytes(byte[] byteArray, ByteOrder byteOrder) {
+        this(byteArray, byteOrder, false);
+    }
+
+    Bytes(byte[] byteArray, ByteOrder byteOrder, boolean mutable) {
         this.byteArray = byteArray;
         this.byteOrder = byteOrder;
+        this.mutable = mutable;
     }
 
     /* TRANSFORMER **********************************************************************************************/
 
-    public Bytes concat(Bytes bytes) {
-        return concat(bytes.array());
+    public Bytes append(Bytes bytes) {
+        return append(bytes.array());
     }
 
-    public Bytes concat(byte b) {
-        return concat(new byte[]{b});
+    public Bytes append(byte b) {
+        return append(new byte[]{b});
     }
 
-    public Bytes concat(byte[] secondArray) {
+    public Bytes append(short short2Bytes) {
+        return append(Bytes.from(short2Bytes));
+    }
+
+    public Bytes append(int integer4Bytes) {
+        return append(Bytes.from(integer4Bytes));
+    }
+
+    public Bytes append(long long8Bytes) {
+        return append(Bytes.from(long8Bytes));
+    }
+
+    public Bytes append(byte[] secondArray) {
         return transform(new BytesTransformer.ConcatTransformer(secondArray));
     }
 
@@ -187,7 +205,7 @@ public final class Bytes implements Comparable<Bytes> {
     }
 
     public Bytes reverse() {
-        return transform(new BytesTransformer.RevereseTransformer());
+        return transform(new BytesTransformer.ReverseTransformer());
     }
 
     public Bytes sort(Comparator<Byte> comparator) {
@@ -228,7 +246,7 @@ public final class Bytes implements Comparable<Bytes> {
     }
 
     public Bytes transform(BytesTransformer transformer) {
-        return transformer.transform(this);
+        return transformer.transform(this, mutable);
     }
 
     public Bytes byteOrder(ByteOrder byteOrder) {
@@ -285,15 +303,15 @@ public final class Bytes implements Comparable<Bytes> {
     /* ENCODER ************************************************************************************************/
 
     public String encodeBinary() {
-        return new ByteToTextEncoding.BaseRadixEncoder(2).encode(array());
+        return new ByteToTextEncoding.BaseRadix(2).encode(array());
     }
 
     public String encodeOctal() {
-        return new ByteToTextEncoding.BaseRadixEncoder(8).encode(array());
+        return new ByteToTextEncoding.BaseRadix(8).encode(array());
     }
 
     public String encodeDec() {
-        return new ByteToTextEncoding.BaseRadixEncoder(10).encode(array());
+        return new ByteToTextEncoding.BaseRadix(10).encode(array());
     }
 
     public String encodeHex() {
@@ -305,7 +323,7 @@ public final class Bytes implements Comparable<Bytes> {
     }
 
     public String encodeBase36() {
-        return new ByteToTextEncoding.BaseRadixEncoder(36).encode(array());
+        return new ByteToTextEncoding.BaseRadix(36).encode(array());
     }
 
     public String encodeBase64() {
@@ -317,6 +335,14 @@ public final class Bytes implements Comparable<Bytes> {
     }
 
     /* CONVERTER ************************************************************************************************/
+
+    public MutableBytes toMutable() {
+        if (this instanceof MutableBytes) {
+            return (MutableBytes) this;
+        } else {
+            return new MutableBytes(array(), byteOrder);
+        }
+    }
 
     public List<Byte> toList() {
         return Util.toList(array());
@@ -354,20 +380,6 @@ public final class Bytes implements Comparable<Bytes> {
         return buffer().getLong();
     }
 
-    /* MUTATOR ************************************************************************************************/
-
-    public void wipe() {
-        Arrays.fill(array(), (byte) 0);
-    }
-
-    public void secureWipe() {
-        secureWipe(new SecureRandom());
-    }
-
-    public void secureWipe(SecureRandom random) {
-        random.nextBytes(array());
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -388,153 +400,4 @@ public final class Bytes implements Comparable<Bytes> {
         return buffer().compareTo(o.buffer());
     }
 
-    static class Util {
-        /**
-         * Returns the values from each provided byteArray combined into a single byteArray.
-         * For example, {@code concat(new byte[] {a, b}, new byte[] {}, new
-         * byte[] {c}} returns the byteArray {@code {a, b, c}}.
-         *
-         * @param arrays zero or more {@code byte} arrays
-         * @return a single byteArray containing all the values from the source arrays, in
-         * order
-         */
-        static byte[] concat(byte[]... arrays) {
-            int length = 0;
-            for (byte[] array : arrays) {
-                length += array.length;
-            }
-            byte[] result = new byte[length];
-            int pos = 0;
-            for (byte[] array : arrays) {
-                System.arraycopy(array, 0, result, pos, array.length);
-                pos += array.length;
-            }
-            return result;
-        }
-
-        /**
-         * Returns the index of the first appearance of the value {@code target} in
-         * {@code array}.
-         *
-         * @param array  an array of {@code byte} values, possibly empty
-         * @param target a primitive {@code byte} value
-         * @return the least index {@code i} for which {@code array[i] == target}, or
-         * {@code -1} if no such index exists.
-         */
-        static int indexOf(byte[] array, byte target, int start, int end) {
-            for (int i = start; i < end; i++) {
-                if (array[i] == target) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        /**
-         * Returns the start position of the first occurrence of the specified {@code
-         * target} within {@code array}, or {@code -1} if there is no such occurrence.
-         * <p>
-         * <p>More formally, returns the lowest index {@code i} such that {@code
-         * java.util.Arrays.copyOfRange(array, i, i + target.length)} contains exactly
-         * the same elements as {@code target}.
-         *
-         * @param array  the array to search for the sequence {@code target}
-         * @param target the array to search for as a sub-sequence of {@code array}
-         */
-        public static int indexOf(byte[] array, byte[] target) {
-            Objects.requireNonNull(array, "array must not be null");
-            Objects.requireNonNull(target, "target must not be null");
-            if (target.length == 0) {
-                return 0;
-            }
-
-            outer:
-            for (int i = 0; i < array.length - target.length + 1; i++) {
-                for (int j = 0; j < target.length; j++) {
-                    if (array[i + j] != target[j]) {
-                        continue outer;
-                    }
-                }
-                return i;
-            }
-            return -1;
-        }
-
-        /**
-         * Returns the index of the last appearance of the value {@code target} in
-         * {@code array}.
-         *
-         * @param array  an array of {@code byte} values, possibly empty
-         * @param target a primitive {@code byte} value
-         * @return the greatest index {@code i} for which {@code array[i] == target},
-         * or {@code -1} if no such index exists.
-         */
-        static int lastIndexOf(byte[] array, byte target, int start, int end) {
-            for (int i = end - 1; i >= start; i--) {
-                if (array[i] == target) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        /**
-         * Copies a collection of {@code Byte} instances into a new array of
-         * primitive {@code byte} values.
-         * <p>
-         * <p>Elements are copied from the argument collection as if by {@code
-         * collection.toArray()}.  Calling this method is as thread-safe as calling
-         * that method.
-         *
-         * @param collection a collection of {@code Byte} objects
-         * @return an array containing the same values as {@code collection}, in the
-         * same order, converted to primitives
-         * @throws NullPointerException if {@code collection} or any of its elements
-         *                              is null
-         */
-        static byte[] toArray(Collection<Byte> collection) {
-            Object[] boxedArray = collection.toArray();
-            int len = boxedArray.length;
-            byte[] array = new byte[len];
-            for (int i = 0; i < len; i++) {
-                array[i] = (Byte) boxedArray[i];
-            }
-            return array;
-        }
-
-        static List<Byte> toList(byte[] arr) {
-            List<Byte> list = new ArrayList<>();
-            for (byte b : arr) {
-                list.add(b);
-            }
-            return list;
-        }
-
-        static Byte[] toObjectArray(byte[] array) {
-            Byte[] objectArray = new Byte[array.length];
-            for (int i = 0; i < array.length; i++) {
-                objectArray[i] = array[i];
-            }
-            return objectArray;
-        }
-
-        /**
-         * Simple Durstenfeld shuffle
-         * <p>
-         * See: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
-         *
-         * @param array
-         * @param random
-         * @return shuffled array
-         */
-        static byte[] shuffle(byte[] array, Random random) {
-            for (int i = array.length - 1; i > 0; i--) {
-                int index = random.nextInt(i + 1);
-                byte a = array[index];
-                array[index] = array[i];
-                array[i] = a;
-            }
-            return array;
-        }
-    }
 }
