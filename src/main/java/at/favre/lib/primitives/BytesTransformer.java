@@ -1,7 +1,7 @@
 package at.favre.lib.primitives;
 
 import java.math.BigInteger;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Interface for transforming {@link Bytes}
@@ -189,6 +189,99 @@ public interface BytesTransformer {
         @Override
         public void transformInPlace(Bytes victim) {
             transform(victim);
+        }
+    }
+
+    /**
+     * Reverses the internal byte array
+     */
+    final class RevereseTransformer implements BytesTransformer {
+
+        @Override
+        public Bytes transform(Bytes victim) {
+            return transform(victim, false);
+        }
+
+        @Override
+        public void transformInPlace(Bytes victim) {
+            transform(victim, true);
+        }
+
+        private Bytes transform(Bytes victim, boolean inPlace) {
+            byte[] out;
+
+            if (inPlace) {
+                out = victim.array();
+            } else {
+                out = new byte[victim.length()];
+            }
+
+            for (int k = 0; k < out.length / 2; k++) {
+                byte temp = out[k];
+                out[k] = out[out.length - (1 + k)];
+                out[out.length - (1 + k)] = temp;
+            }
+            return Bytes.wrap(out);
+        }
+    }
+
+    /**
+     * Sorts the internal byte array with given {@link java.util.Comparator}
+     */
+    final class SortTransformer implements BytesTransformer {
+        private final Comparator<Byte> comparator;
+
+        public SortTransformer(Comparator<Byte> comparator) {
+            Objects.requireNonNull(comparator, "passed comparator must not be null");
+            this.comparator = comparator;
+        }
+
+        @Override
+        public Bytes transform(Bytes victim) {
+            List<Byte> list = victim.toList();
+            Collections.sort(list, comparator);
+            return Bytes.from(list);
+        }
+
+        @Override
+        public void transformInPlace(Bytes victim) {
+            transform(victim);
+        }
+    }
+
+    /**
+     * Shuffles the internal byte array
+     */
+    final class ShuffleTransformer implements BytesTransformer {
+        private final Random random;
+
+        public ShuffleTransformer(Random random) {
+            Objects.requireNonNull(random, "passed random must not be null");
+            this.random = random;
+        }
+
+
+        @Override
+        public Bytes transform(Bytes victim) {
+            return transform(victim, false);
+        }
+
+        @Override
+        public void transformInPlace(Bytes victim) {
+            transform(victim, true);
+        }
+
+        private Bytes transform(Bytes victim, boolean inPlace) {
+            byte[] out;
+
+            if (inPlace) {
+                out = victim.array();
+            } else {
+                out = new byte[victim.length()];
+            }
+
+            Bytes.Util.shuffle(out, random);
+            return Bytes.wrap(out);
         }
     }
 }

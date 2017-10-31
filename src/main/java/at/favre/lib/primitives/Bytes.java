@@ -2,6 +2,7 @@ package at.favre.lib.primitives;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.security.SecureRandom;
 import java.util.*;
 
@@ -66,6 +67,10 @@ public final class Bytes implements Comparable<Bytes> {
         return wrap(ByteBuffer.allocate(8).putLong(long8byte).array());
     }
 
+    public static Bytes from(ByteBuffer buffer) {
+        return wrap(buffer.array());
+    }
+
     public static Bytes parseOctal(String octalString) {
         return parse(octalString, new ByteToTextEncoding.BaseRadixEncoder(8));
     }
@@ -110,9 +115,15 @@ public final class Bytes implements Comparable<Bytes> {
     /* OBJECT ****************************************************************************************************/
 
     private final byte[] byteArray;
+    private final ByteOrder byteOrder;
 
     private Bytes(byte[] array) {
-        this.byteArray = array;
+        this(array, ByteOrder.BIG_ENDIAN);
+    }
+
+    private Bytes(byte[] byteArray, ByteOrder byteOrder) {
+        this.byteArray = byteArray;
+        this.byteOrder = byteOrder;
     }
 
     /* TRANSFORMER **********************************************************************************************/
@@ -175,6 +186,22 @@ public final class Bytes implements Comparable<Bytes> {
         return wrap(copy);
     }
 
+    public Bytes reverse() {
+        return transform(new BytesTransformer.RevereseTransformer());
+    }
+
+    public Bytes sort(Comparator<Byte> comparator) {
+        return transform(new BytesTransformer.SortTransformer(comparator));
+    }
+
+    public Bytes shuffle(Random random) {
+        return transform(new BytesTransformer.ShuffleTransformer(random));
+    }
+
+    public Bytes shuffle() {
+        return transform(new BytesTransformer.ShuffleTransformer(new SecureRandom()));
+    }
+
     /**
      * Copies the specified array, truncating or padding with zeros (if necessary)
      * so the copy has the specified length.  For all indices that are
@@ -200,6 +227,13 @@ public final class Bytes implements Comparable<Bytes> {
         return transformer.transform(this);
     }
 
+    public Bytes byteOrder(ByteOrder byteOrder) {
+        if (byteOrder != this.byteOrder) {
+            return new Bytes(array(), byteOrder);
+        }
+        return this;
+    }
+
     /* ATTRIBUTES ************************************************************************************************/
 
     public int length() {
@@ -212,6 +246,10 @@ public final class Bytes implements Comparable<Bytes> {
 
     public boolean isEmpty() {
         return length() == 0;
+    }
+
+    public ByteOrder byteOrder() {
+        return byteOrder;
     }
 
     public int indexOf(byte target) {
@@ -278,6 +316,10 @@ public final class Bytes implements Comparable<Bytes> {
 
     public List<Byte> toList() {
         return Util.toList(array());
+    }
+
+    public Byte[] toObjectArray() {
+        return Util.toObjectArray(array());
     }
 
     public char toChar() {
@@ -462,6 +504,33 @@ public final class Bytes implements Comparable<Bytes> {
                 list.add(b);
             }
             return list;
+        }
+
+        static Byte[] toObjectArray(byte[] array) {
+            Byte[] objectArray = new Byte[array.length];
+            for (int i = 0; i < array.length; i++) {
+                objectArray[i] = array[i];
+            }
+            return objectArray;
+        }
+
+        /**
+         * Simple Durstenfeld shuffle
+         * <p>
+         * See: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
+         *
+         * @param array
+         * @param random
+         * @return shuffled array
+         */
+        static byte[] shuffle(byte[] array, Random random) {
+            for (int i = array.length - 1; i > 0; i--) {
+                int index = random.nextInt(i + 1);
+                byte a = array[index];
+                array[index] = array[i];
+                array[i] = a;
+            }
+            return array;
         }
     }
 }

@@ -3,6 +3,9 @@ package at.favre.lib.primitives;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -20,5 +23,12 @@ public class BytesPrimitivesTest {
         System.out.println(Bytes.from(number).toLong());
         assertArrayEquals(Bytes.parseHex("000000283f72d790").array(), Bytes.from(number).array());
         assertEquals(number, Bytes.from(number).toLong());
+
+        byte[] defaultArray = new byte[]{(byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04};
+
+        System.out.println(Bytes.from(ByteBuffer.wrap(defaultArray).order(ByteOrder.BIG_ENDIAN)).encodeHex());
+        System.out.println(Bytes.from(ByteBuffer.wrap(defaultArray).order(ByteOrder.BIG_ENDIAN).getInt()).encodeHex());
+        System.out.println(Bytes.from(ByteBuffer.wrap(defaultArray).order(ByteOrder.LITTLE_ENDIAN)).encodeHex());
+        System.out.println(Bytes.from(ByteBuffer.wrap(defaultArray).order(ByteOrder.LITTLE_ENDIAN).getInt()).encodeHex());
     }
 }
