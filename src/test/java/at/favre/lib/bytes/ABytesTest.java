@@ -45,11 +45,11 @@ public abstract class ABytesTest {
     byte[] example2_bytes_seven;
     String example2_hex_seven;
 
-    byte[] example3_bytes_eight;
-    String example3_hex_eight;
+    byte[] example_bytes_eight;
+    String example_hex_eight;
 
-    byte[] example4_bytes_sixteen;
-    String example4_hex_sixteen;
+    byte[] example_bytes_sixteen;
+    String example_hex_sixteen;
 
     @Before
     public void setUp() throws Exception {
@@ -64,10 +64,10 @@ public abstract class ABytesTest {
         example_hex_seven = "4a94fdff1eafed";
         example2_bytes_seven = new byte[]{0x1E, (byte) 0x01, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x78};
         example2_hex_seven = "1e01fdaa12af78";
-        example3_bytes_eight = new byte[]{(byte) 0xEE, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x78, 0x09};
-        example3_hex_eight = "eed1fdaa12af7809";
-        example4_bytes_sixteen = new byte[]{0x7E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x78, 0x09, 0x1E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x00, 0x0A};
-        example4_hex_sixteen = "7ed1fdaa12af78091ed1fdaa12af000a";
+        example_bytes_eight = new byte[]{(byte) 0xEE, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x78, 0x09};
+        example_hex_eight = "eed1fdaa12af7809";
+        example_bytes_sixteen = new byte[]{0x7E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x78, 0x09, 0x1E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x00, 0x0A};
+        example_hex_sixteen = "7ed1fdaa12af78091ed1fdaa12af000a";
     }
 
     Bytes fromAndTest(byte[] bytes) {

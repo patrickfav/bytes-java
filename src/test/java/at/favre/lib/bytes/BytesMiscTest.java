@@ -33,8 +33,8 @@ public class BytesMiscTest extends ABytesTest {
         testToString(Bytes.wrap(new byte[2]));
         testToString(Bytes.wrap(example_bytes_seven));
         testToString(Bytes.wrap(example2_bytes_seven));
-        testToString(Bytes.wrap(example3_bytes_eight));
-        testToString(Bytes.wrap(example4_bytes_sixteen));
+        testToString(Bytes.wrap(example_bytes_eight));
+        testToString(Bytes.wrap(example_bytes_sixteen));
     }
 
     private void testToString(Bytes bytes) {
@@ -47,7 +47,7 @@ public class BytesMiscTest extends ABytesTest {
         assertEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.from(example_bytes_seven).hashCode());
         assertEquals(Bytes.wrap(example2_bytes_seven).hashCode(), Bytes.from(example2_bytes_seven).hashCode());
         assertNotEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.wrap(example2_bytes_seven).hashCode());
-        assertNotEquals(Bytes.wrap(example3_bytes_eight).hashCode(), Bytes.wrap(example2_bytes_seven).hashCode());
+        assertNotEquals(Bytes.wrap(example_bytes_eight).hashCode(), Bytes.wrap(example2_bytes_seven).hashCode());
         assertNotEquals(0, Bytes.wrap(example2_bytes_seven).hashCode());
     }
 
@@ -58,7 +58,7 @@ public class BytesMiscTest extends ABytesTest {
         assertTrue(Bytes.wrap(example_bytes_seven).equals(Bytes.from(example_bytes_seven)));
         assertTrue(Bytes.wrap(example2_bytes_seven).equals(Bytes.from(example2_bytes_seven)));
         assertFalse(Bytes.wrap(example_bytes_seven).equals(Bytes.wrap(example2_bytes_seven)));
-        assertFalse(Bytes.wrap(example3_bytes_eight).equals(Bytes.wrap(example2_bytes_seven)));
+        assertFalse(Bytes.wrap(example_bytes_eight).equals(Bytes.wrap(example2_bytes_seven)));
     }
 
     @Test

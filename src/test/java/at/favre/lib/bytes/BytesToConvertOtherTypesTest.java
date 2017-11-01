@@ -35,8 +35,8 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         checkArray(example_bytes_one);
         checkArray(example_bytes_two);
         checkArray(example_bytes_seven);
-        checkArray(example3_bytes_eight);
-        checkArray(example4_bytes_sixteen);
+        checkArray(example_bytes_eight);
+        checkArray(example_bytes_sixteen);
     }
 
     private void checkArray(byte[] array) {
@@ -53,8 +53,8 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         checkList(example_bytes_one);
         checkList(example_bytes_two);
         checkList(example_bytes_seven);
-        checkList(example3_bytes_eight);
-        checkList(example4_bytes_sixteen);
+        checkList(example_bytes_eight);
+        checkList(example_bytes_sixteen);
     }
 
     private void checkList(byte[] array) {
@@ -71,8 +71,8 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).toBitSet().toByteArray());
         assertArrayEquals(example_bytes_two, Bytes.from(example_bytes_two).toBitSet().toByteArray());
         assertArrayEquals(example_bytes_seven, Bytes.from(example_bytes_seven).toBitSet().toByteArray());
-        assertArrayEquals(example3_bytes_eight, Bytes.from(example3_bytes_eight).toBitSet().toByteArray());
-        assertArrayEquals(example4_bytes_sixteen, Bytes.from(example4_bytes_sixteen).toBitSet().toByteArray());
+        assertArrayEquals(example_bytes_eight, Bytes.from(example_bytes_eight).toBitSet().toByteArray());
+        assertArrayEquals(example_bytes_sixteen, Bytes.from(example_bytes_sixteen).toBitSet().toByteArray());
     }
 
     @Test
@@ -133,7 +133,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
 
     @Test
     public void toLong() throws Exception {
-        assertEquals(-1237929515650418679L, Bytes.from(example3_bytes_eight).toLong());
+        assertEquals(-1237929515650418679L, Bytes.from(example_bytes_eight).toLong());
 
         assertEquals(example_bytes_one[0], Bytes.from(example_bytes_one).toLong());
         assertEquals(6767, Bytes.from(example_bytes_two).toLong());
