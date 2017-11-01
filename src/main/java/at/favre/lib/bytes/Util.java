@@ -194,6 +194,12 @@ final class Util {
 
     private static final int BUF_SIZE = 0x1000; // 4K
 
+    /**
+     * Read all bytes, buffered, from given input stream
+     *
+     * @param inputStream to read from
+     * @return all bytes from the stream
+     */
     static byte[] readFromStream(InputStream inputStream) {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -211,6 +217,13 @@ final class Util {
         }
     }
 
+    /**
+     * Combines a single argument with a vararg to a single array
+     *
+     * @param firstByte first arg
+     * @param moreBytes varargs
+     * @return array containing all args
+     */
     static byte[] concatVararg(byte firstByte, byte[] moreBytes) {
         if (moreBytes == null) {
             return new byte[]{firstByte};
@@ -261,10 +274,6 @@ final class Util {
                 entropy -= prob * Log2(prob);
             }
             return entropy;
-        }
-
-        public double perplexity() {
-            return Math.pow(2, entropy());
         }
     }
 }

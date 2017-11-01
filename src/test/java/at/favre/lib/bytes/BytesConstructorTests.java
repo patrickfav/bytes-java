@@ -44,6 +44,9 @@ public class BytesConstructorTests extends ABytesTest {
 
         assertSame(example_bytes_seven, b.array());
         assertArrayNotEquals(copy, example_bytes_seven);
+
+        Bytes b2 = Bytes.wrap(b);
+        assertSame(b.array(), b2.array());
     }
 
     @Test

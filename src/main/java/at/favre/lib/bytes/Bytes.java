@@ -86,6 +86,17 @@ public class Bytes implements Comparable<Bytes> {
     }
 
     /**
+     * Creates a new reference backed by the same byte array.
+     * Inherits all attributes (readonly, etc.)
+     *
+     * @param bytes to use as template
+     * @return new instance
+     */
+    public static Bytes wrap(Bytes bytes) {
+        return new Bytes(bytes.internalArray(), bytes.byteOrder, bytes.mutable, bytes.readonly);
+    }
+
+    /**
      * Creates a new instance with given byte array.
      * <p>
      * The new instance will be backed by the given byte array;
@@ -374,15 +385,6 @@ public class Bytes implements Comparable<Bytes> {
     private final boolean readonly;
 
     /**
-     * Creates a new immutable instance with Big-Endian ordering
-     *
-     * @param byteArray internal byte array
-     */
-    Bytes(byte[] byteArray) {
-        this(byteArray, ByteOrder.BIG_ENDIAN, false, false);
-    }
-
-    /**
      * Creates a new immutable instance
      *
      * @param byteArray internal byte array
@@ -390,6 +392,16 @@ public class Bytes implements Comparable<Bytes> {
      */
     Bytes(byte[] byteArray, ByteOrder byteOrder) {
         this(byteArray, byteOrder, false, false);
+    }
+
+    /**
+     * Creates a new instance with given array and copies all attributes from old instance
+     *
+     * @param byteArray   internal byte array
+     * @param oldInstance old instance to copy all internal attributes
+     */
+    Bytes(byte[] byteArray, Bytes oldInstance) {
+        this(byteArray, oldInstance.byteOrder(), oldInstance.mutable, oldInstance.readonly);
     }
 
     /**
@@ -706,16 +718,17 @@ public class Bytes implements Comparable<Bytes> {
         }
 
         if (newByteLength == 0) {
-            return wrap(new byte[0]);
+            return new Bytes(new byte[0], this);
         }
 
-        byte[] newSize = new byte[newByteLength];
+        byte[] resizedArray = new byte[newByteLength];
         if (newByteLength > length()) {
-            System.arraycopy(internalArray(), 0, newSize, Math.max(0, Math.abs(newByteLength - length())), Math.min(newByteLength, length()));
+            System.arraycopy(internalArray(), 0, resizedArray, Math.max(0, Math.abs(newByteLength - length())), Math.min(newByteLength, length()));
         } else {
-            System.arraycopy(internalArray(), Math.max(0, Math.abs(newByteLength - length())), newSize, Math.min(0, Math.abs(newByteLength - length())), Math.min(newByteLength, length()));
+            System.arraycopy(internalArray(), Math.max(0, Math.abs(newByteLength - length())), resizedArray, Math.min(0, Math.abs(newByteLength - length())), Math.min(newByteLength, length()));
         }
-        return wrap(newSize);
+
+        return new Bytes(resizedArray, this);
     }
 
 
@@ -864,8 +877,9 @@ public class Bytes implements Comparable<Bytes> {
      * @return new instance backed by the same data
      */
     public Bytes duplicate() {
-        return wrap(internalArray());
+        return wrap(this);
     }
+
 
     /**
      * Set the byte order or endianness of this instance. Default in Java is {@link ByteOrder#BIG_ENDIAN}.
@@ -878,7 +892,7 @@ public class Bytes implements Comparable<Bytes> {
      */
     public Bytes byteOrder(ByteOrder byteOrder) {
         if (byteOrder != this.byteOrder) {
-            return new Bytes(internalArray(), byteOrder);
+            return new Bytes(internalArray(), byteOrder, mutable, readonly);
         }
         return this;
     }

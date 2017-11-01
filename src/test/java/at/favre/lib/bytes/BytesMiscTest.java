@@ -110,6 +110,7 @@ public class BytesMiscTest extends ABytesTest {
     @Test
     public void indexOfArray() throws Exception {
         assertEquals(-1, Bytes.allocate(0).indexOf(new byte[]{(byte) 0xFD}));
+        assertEquals(0, Bytes.allocate(1).indexOf(new byte[0]));
         assertEquals(2, Bytes.from(example_bytes_seven).indexOf(new byte[]{(byte) 0xFD, (byte) 0xFF}));
         assertEquals(-1, Bytes.from(example_bytes_seven).indexOf(new byte[]{(byte) 0xFD, (byte) 0x00}));
     }

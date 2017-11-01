@@ -30,12 +30,12 @@ import java.util.Objects;
  *
  * @see <a href="https://en.wikipedia.org/wiki/Binary-to-text_encoding">Binary To Text Encoding</a>
  */
-public final class BinaryToTextEncoding {
+public interface BinaryToTextEncoding {
 
     /**
      * Interface for encoding bytes
      */
-    public interface Encoder {
+    interface Encoder {
 
         /**
          * Encodes given array with given byte order to a string
@@ -50,7 +50,7 @@ public final class BinaryToTextEncoding {
     /**
      * Interface for decoding encoded strings
      */
-    public interface Decoder {
+    interface Decoder {
 
         /**
          * Decodes given encoded string
@@ -64,7 +64,7 @@ public final class BinaryToTextEncoding {
     /**
      * Hex or Base16
      */
-    public static class Hex implements Encoder, Decoder {
+    class Hex implements Encoder, Decoder {
         private final boolean upperCase;
 
         public Hex() {
@@ -111,7 +111,7 @@ public final class BinaryToTextEncoding {
         }
     }
 
-    public static class Base64Encoding implements Encoder, Decoder {
+    class Base64Encoding implements Encoder, Decoder {
         @Override
         public String encode(byte[] array, ByteOrder byteOrder) {
             return Base64.encode(array);
@@ -123,7 +123,7 @@ public final class BinaryToTextEncoding {
         }
     }
 
-    public static class BaseRadix implements Encoder, Decoder {
+    class BaseRadix implements Encoder, Decoder {
         private final int radix;
 
         BaseRadix(int radix) {
