@@ -131,6 +131,12 @@ public class BytesMiscTest extends ABytesTest {
         for (int i = 0; i < example_bytes_twentyfour.length; i++) {
             assertEquals(example_bytes_twentyfour[i], Bytes.wrap(example_bytes_twentyfour).byteAt(i));
         }
+
+        try {
+            assertEquals(0, Bytes.allocate(1).byteAt(1));
+            fail();
+        } catch (IndexOutOfBoundsException e) {
+        }
     }
 
     @Test
@@ -151,5 +157,12 @@ public class BytesMiscTest extends ABytesTest {
         assertTrue(Bytes.from(example_bytes_twentyfour).entropy() > 3.5);
         assertTrue(Bytes.from(example_bytes_seven).entropy() > 2.5);
         assertTrue(Bytes.from(example_bytes_two).entropy() > 0.5);
+    }
+
+    @Test
+    public void readOnly() throws Exception {
+        assertFalse(Bytes.from(example_bytes_twentyfour).isReadOnly());
+        assertTrue(Bytes.from(example_bytes_twentyfour).readOnly().isReadOnly());
+        assertTrue(Bytes.from(example_bytes_twentyfour).readOnly().copy().isReadOnly());
     }
 }

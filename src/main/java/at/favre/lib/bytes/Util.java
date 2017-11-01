@@ -23,7 +23,6 @@ package at.favre.lib.bytes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.*;
 
 /**
@@ -183,7 +182,6 @@ final class Util {
      *
      * @param array
      * @param random
-     * @return shuffled array
      */
     static void shuffle(byte[] array, Random random) {
         for (int i = array.length - 1; i > 0; i--) {
@@ -210,16 +208,6 @@ final class Util {
             return out.toByteArray();
         } catch (Exception e) {
             throw new IllegalStateException("could not read from input stream", e);
-        }
-    }
-
-    static OutputStream createOutputStream(byte[] array) {
-        try {
-            OutputStream outputStream = new ByteArrayOutputStream(array.length);
-            outputStream.write(array);
-            return outputStream;
-        } catch (Exception e) {
-            throw new IllegalStateException("could not write to output stream", e);
         }
     }
 

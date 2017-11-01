@@ -21,8 +21,8 @@
 
 package at.favre.lib.bytes;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -589,16 +589,16 @@ public class Bytes implements Comparable<Bytes> {
     }
 
     /**
-     * Creates a new instance with a copy of the internal byte array.
+     * Creates a new instance with a copy of the internal byte array and all other attributes.
      *
      * @return copied instance
      */
     public Bytes copy() {
-        return wrap(Arrays.copyOf(internalArray(), length()));
+        return new Bytes(Arrays.copyOf(internalArray(), length()), byteOrder, mutable, readonly);
     }
 
     /**
-     * Creates a new instance with a copy of the internal byte array.
+     * Creates a new instance with a copy of the internal byte array and all other attributes.
      *
      * @param offset starting position in the source array
      * @param length of the new instance
@@ -607,7 +607,7 @@ public class Bytes implements Comparable<Bytes> {
     public Bytes copy(int offset, int length) {
         byte[] copy = new byte[length];
         System.arraycopy(internalArray(), offset, copy, 0, copy.length);
-        return wrap(copy);
+        return new Bytes(copy, byteOrder, mutable, readonly);
     }
 
     /**
@@ -756,6 +756,15 @@ public class Bytes implements Comparable<Bytes> {
      */
     public ByteOrder byteOrder() {
         return byteOrder;
+    }
+
+    /**
+     * Check if this instance is read only
+     *
+     * @return true if read only
+     */
+    public boolean isReadOnly() {
+        return readonly;
     }
 
     /**
@@ -939,12 +948,12 @@ public class Bytes implements Comparable<Bytes> {
     }
 
     /**
-     * Creates an output stream with the same backing data as the intern array of this instance
+     * Creates an input stream with the same backing data as the intern array of this instance
      *
-     * @return new output stream
+     * @return new input stream
      */
-    public OutputStream outputStream() {
-        return Util.createOutputStream(array());
+    public InputStream inputStream() {
+        return new ByteArrayInputStream(internalArray());
     }
 
     /**
