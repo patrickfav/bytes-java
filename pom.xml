@@ -10,7 +10,9 @@
     <packaging>jar</packaging>
 
     <name>Bytes Java Primitive Tools</name>
-    <description>Toolkit for handling byte and byte array primitives</description>
+    <description>Convenience toolkit for easier handling, creating, converting and encoding of any form of byte arrays.
+        Per default everything is immutable, but also supports faster mutable version.
+    </description>
     <url>https://github.com/patrickfav/bytes-java</url>
     <inceptionYear>2017</inceptionYear>
 

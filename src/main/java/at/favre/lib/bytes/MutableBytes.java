@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package at.favre.lib.primitives.bytes;
+package at.favre.lib.bytes;
 
 import java.nio.ByteOrder;
 import java.security.SecureRandom;
