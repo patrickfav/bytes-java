@@ -432,6 +432,16 @@ public class Bytes implements Comparable<Bytes> {
     /**
      * Creates a new instance with the current array appended with the provided data (ie. append at the end)
      *
+     * @param char2Bytes to append
+     * @return appended instance
+     */
+    public Bytes append(char char2Bytes) {
+        return append(Bytes.from(char2Bytes));
+    }
+
+    /**
+     * Creates a new instance with the current array appended with the provided data (ie. append at the end)
+     *
      * @param short2Bytes to append
      * @return appended instance
      */
@@ -557,7 +567,7 @@ public class Bytes implements Comparable<Bytes> {
      * <p>
      * See the considerations about possible in-place operation in {@link #transform(BytesTransformer)}.
      *
-     * @param shiftCount how many bits
+     * @param shiftCount how many bits (not bytes)
      * @return shifted instance
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#Bit_shifts">Bit shifts</a>
      */
@@ -570,7 +580,7 @@ public class Bytes implements Comparable<Bytes> {
      * <p>
      * See the considerations about possible in-place operation in {@link #transform(BytesTransformer)}.
      *
-     * @param shiftCount how many bits
+     * @param shiftCount how many bits (not bytes)
      * @return shifted instance
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#Bit_shifts">Bit shifts</a>
      */
@@ -690,8 +700,21 @@ public class Bytes implements Comparable<Bytes> {
         if (length() == newByteLength) {
             return this;
         }
+
+        if (newByteLength < 0) {
+            throw new IllegalArgumentException("cannot resize to smaller than 0");
+        }
+
+        if (newByteLength == 0) {
+            return wrap(new byte[0]);
+        }
+
         byte[] newSize = new byte[newByteLength];
-        System.arraycopy(internalArray(), 0, newSize, Math.max(0, Math.abs(newByteLength - length())), Math.min(newByteLength, length()));
+        if (newByteLength > length()) {
+            System.arraycopy(internalArray(), 0, newSize, Math.max(0, Math.abs(newByteLength - length())), Math.min(newByteLength, length()));
+        } else {
+            System.arraycopy(internalArray(), Math.max(0, Math.abs(newByteLength - length())), newSize, Math.min(0, Math.abs(newByteLength - length())), Math.min(newByteLength, length()));
+        }
         return wrap(newSize);
     }
 

@@ -64,18 +64,18 @@ public interface BytesTransformer {
                 throw new IllegalArgumentException("all byte array must be of same length doing bit wise operation");
             }
 
-            byte[] out = inPlace ? victim.array() : new byte[victim.length()];
+            byte[] out = inPlace ? victim.internalArray() : new byte[victim.length()];
 
             for (int i = 0; i < victim.length(); i++) {
                 switch (mode) {
                     case OR:
-                        out[i] = (byte) (victim.array()[i] | secondArray[i]);
+                        out[i] = (byte) (victim.internalArray()[i] | secondArray[i]);
                         break;
                     case AND:
-                        out[i] = (byte) (victim.array()[i] & secondArray[i]);
+                        out[i] = (byte) (victim.internalArray()[i] & secondArray[i]);
                         break;
                     case XOR:
-                        out[i] = (byte) (victim.array()[i] ^ secondArray[i]);
+                        out[i] = (byte) (victim.internalArray()[i] ^ secondArray[i]);
                         break;
                     default:
                         throw new IllegalArgumentException("unknown bitwise transform mode " + mode);
@@ -94,10 +94,10 @@ public interface BytesTransformer {
     final class NegateTransformer implements BytesTransformer {
         @Override
         public Bytes transform(Bytes victim, boolean inPlace) {
-            byte[] out = inPlace ? victim.array() : new byte[victim.length()];
+            byte[] out = inPlace ? victim.internalArray() : victim.copy().internalArray();
 
             for (int i = 0; i < victim.length(); i++) {
-                out[i] = (byte) ~victim.array()[i];
+                out[i] = (byte) ~out[i];
             }
 
             return inPlace ? victim : Bytes.wrap(out);
@@ -129,9 +129,9 @@ public interface BytesTransformer {
             BigInteger bigInt;
 
             if (inPlace) {
-                bigInt = new BigInteger(victim.array());
+                bigInt = new BigInteger(victim.internalArray());
             } else {
-                bigInt = new BigInteger(victim.copy().array());
+                bigInt = new BigInteger(victim.copy().internalArray());
             }
 
             switch (type) {
@@ -160,7 +160,7 @@ public interface BytesTransformer {
 
         @Override
         public Bytes transform(Bytes victim, boolean inPlace) {
-            return Bytes.wrap(Util.concat(victim.array(), secondArray));
+            return Bytes.wrap(Util.concat(victim.internalArray(), secondArray));
         }
     }
 
@@ -170,14 +170,13 @@ public interface BytesTransformer {
     final class ReverseTransformer implements BytesTransformer {
         @Override
         public Bytes transform(Bytes victim, boolean inPlace) {
-            byte[] out = inPlace ? victim.array() : new byte[victim.length()];
+            byte[] out = inPlace ? victim.internalArray() : victim.copy().internalArray();
 
-            for (int k = 0; k < out.length / 2; k++) {
-                byte temp = out[k];
-                out[k] = out[out.length - (1 + k)];
-                out[out.length - (1 + k)] = temp;
+            for (int i = 0; i < out.length / 2; i++) {
+                byte temp = out[i];
+                out[i] = out[out.length - i - 1];
+                out[out.length - i - 1] = temp;
             }
-
             return inPlace ? victim : Bytes.wrap(out);
         }
     }
@@ -200,13 +199,13 @@ public interface BytesTransformer {
         public Bytes transform(Bytes victim, boolean inPlace) {
 
             if (comparator == null) {
-                byte[] out = inPlace ? victim.array() : new byte[victim.length()];
+                byte[] out = inPlace ? victim.internalArray() : victim.copy().internalArray();
                 Arrays.sort(out);
                 return inPlace ? victim : Bytes.wrap(out);
             } else {
                 //no in-place implementation with comparator
                 List<Byte> list = victim.toList();
-                Collections.sort(list);
+                Collections.sort(list, comparator);
                 return Bytes.from(list);
             }
         }
@@ -225,7 +224,7 @@ public interface BytesTransformer {
 
         @Override
         public Bytes transform(Bytes victim, boolean inPlace) {
-            byte[] out = inPlace ? victim.array() : new byte[victim.length()];
+            byte[] out = inPlace ? victim.internalArray() : victim.copy().internalArray();
             Util.shuffle(out, random);
             return inPlace ? victim : Bytes.wrap(out);
         }

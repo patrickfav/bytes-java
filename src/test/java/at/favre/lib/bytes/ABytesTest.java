@@ -51,6 +51,8 @@ public abstract class ABytesTest {
     byte[] example_bytes_sixteen;
     String example_hex_sixteen;
 
+    byte[] example_bytes_twentyfour;
+    String example_hex_twentyfour;
     @Before
     public void setUp() throws Exception {
         example_bytes_empty = new byte[0];
@@ -68,6 +70,8 @@ public abstract class ABytesTest {
         example_hex_eight = "eed1fdaa12af7809";
         example_bytes_sixteen = new byte[]{0x7E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x78, 0x09, 0x1E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x00, 0x0A};
         example_hex_sixteen = "7ed1fdaa12af78091ed1fdaa12af000a";
+        example_bytes_twentyfour = new byte[]{(byte) 0x8E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x78, 0x09, 0x1E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x00, 0x0A, (byte) 0xEE, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x78, 0x11};
+        example_hex_twentyfour = "8ed1fdaa12af78091ed1fdaa12af000aeed1fdaa12af7811";
     }
 
     Bytes fromAndTest(byte[] bytes) {

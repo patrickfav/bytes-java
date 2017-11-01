@@ -30,9 +30,7 @@ import java.nio.ByteOrder;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class BytesPrimitivesTest {
-    private final static byte[] example2 = new byte[]{0x4A, (byte) 0x94, (byte) 0xFD, (byte) 0xFF, 0x1E, (byte) 0xAF, (byte) 0xED};
-
+public class BytesByteOrderTest {
     @Before
     public void setUp() throws Exception {
     }
