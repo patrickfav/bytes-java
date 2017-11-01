@@ -878,7 +878,7 @@ public class Bytes implements Comparable<Bytes> {
         throw new ReadOnlyBufferException();
     }
 
-    private byte[] internalArray() {
+    byte[] internalArray() {
         return byteArray;
     }
 
