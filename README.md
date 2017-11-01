@@ -1,5 +1,11 @@
 # Bytes Java
 
+[![Download](https://api.bintray.com/packages/patrickfav/maven/bytes-java/images/download.svg)](https://bintray.com/patrickfav/maven/bytes-java/_latestVersion)
+[![Build Status](https://travis-ci.org/patrickfav/bytes-java.svg?branch=master)](https://travis-ci.org/patrickfav/bytes-java)
+[![Javadocs](https://www.javadoc.io/badge/at.favre.lib/bytes-java.svg)](https://www.javadoc.io/doc/at.favre.lib/bytes-java)
+[![Coverage Status](https://coveralls.io/repos/github/patrickfav/bytes-java/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/bytes-java?branch=master)
+
+
 ## Digital Signatures
 
 ### Signed Jar
