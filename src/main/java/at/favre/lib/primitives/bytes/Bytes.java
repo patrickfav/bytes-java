@@ -21,6 +21,8 @@
 
 package at.favre.lib.primitives.bytes;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -195,13 +197,34 @@ public class Bytes implements Comparable<Bytes> {
     }
 
     /**
-     * Creates a new instance from given ByteBuffer.
+     * Creates a new instance from given ByteBuffer. If this is a {@link java.nio.HeapByteBuffer} instance,
+     * the created instance will use the same backing byte array.
      *
      * @param buffer to get the byte array from
      * @return new instance
      */
     public static Bytes from(ByteBuffer buffer) {
         return wrap(buffer.array());
+    }
+
+    /**
+     * Creates a new instance from given BitSet.
+     *
+     * @param set to get the byte array from
+     * @return new instance
+     */
+    public static Bytes from(BitSet set) {
+        return wrap(set.toByteArray());
+    }
+
+    /**
+     * Reads given input stream and creates a new instance from read data
+     *
+     * @param stream to read from
+     * @return new instance
+     */
+    public static Bytes from(InputStream stream) {
+        return wrap(Util.readFromStream(stream));
     }
 
     /**
@@ -865,8 +888,19 @@ public class Bytes implements Comparable<Bytes> {
     }
 
     /**
+     * Creates an output stream with the same backing data as the intern array of this instance
+     *
+     * @return new output stream
+     */
+    public OutputStream outputStream() {
+        return Util.createOutputStream(array());
+    }
+
+    /**
      * The reference of te internal byte-array. This call requires no conversation or additional memory allocation.
-     * Changes to it will be directly mirrored in this {@link Bytes} instance.
+     *
+     * Modifications to this bytes's content will cause the returned
+     * array's content to be modified, and vice versa.
      *
      * @return the direct reference of the internal byte array
      * @throws ReadOnlyBufferException if this is a read-only instance
@@ -1020,6 +1054,15 @@ public class Bytes implements Comparable<Bytes> {
      */
     public Byte[] toObjectArray() {
         return Util.toObjectArray(internalArray());
+    }
+
+    /**
+     * Returns a copy of the internal byte-array as {@link BitSet} type
+     *
+     * @return bit set with the content of the internal array
+     */
+    public BitSet toBitSet() {
+        return BitSet.valueOf(internalArray());
     }
 
     /**

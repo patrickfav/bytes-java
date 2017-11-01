@@ -1,22 +1,42 @@
 package at.favre.lib.primitives.bytes;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
-public class BytesMiscTest {
-    @Before
-    public void setUp() throws Exception {
-    }
+public class BytesMiscTest extends ABytesTest {
 
     @Test
     public void testToString() throws Exception {
-        byte[] defaultArray = new byte[]{(byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04};
-        byte[] defaultArray2 = new byte[]{(byte) 0xA1, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x14, (byte) 0x75, (byte) 0xE4, (byte) 0xA4, (byte) 0xFF};
-        assertNotNull(Bytes.wrap(defaultArray).toString());
-        assertNotNull(Bytes.wrap(defaultArray2).toString());
-        System.out.println(Bytes.wrap(defaultArray).toString());
-        System.out.println(Bytes.wrap(defaultArray2).toString());
+        testToString(Bytes.wrap(new byte[0]));
+        testToString(Bytes.wrap(new byte[2]));
+        testToString(Bytes.wrap(example_bytes_seven));
+        testToString(Bytes.wrap(example2_bytes_seven));
+        testToString(Bytes.wrap(example3_bytes_eight));
+        testToString(Bytes.wrap(example4_bytes_sixteen));
+    }
+
+    private void testToString(Bytes bytes) {
+        assertNotNull(bytes.toString());
+        System.out.println(bytes.toString());
+    }
+
+    @Test
+    public void testHashcode() throws Exception {
+        assertEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.from(example_bytes_seven).hashCode());
+        assertEquals(Bytes.wrap(example2_bytes_seven).hashCode(), Bytes.from(example2_bytes_seven).hashCode());
+        assertNotEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.wrap(example2_bytes_seven).hashCode());
+        assertNotEquals(Bytes.wrap(example3_bytes_eight).hashCode(), Bytes.wrap(example2_bytes_seven).hashCode());
+        assertNotEquals(0, Bytes.wrap(example2_bytes_seven).hashCode());
+    }
+
+    @Test
+    public void testEquals() throws Exception {
+        assertTrue(Bytes.wrap(new byte[0]).equals(Bytes.wrap(new byte[0])));
+        assertTrue(Bytes.wrap(new byte[16]).equals(Bytes.wrap(new byte[16])));
+        assertTrue(Bytes.wrap(example_bytes_seven).equals(Bytes.from(example_bytes_seven)));
+        assertTrue(Bytes.wrap(example2_bytes_seven).equals(Bytes.from(example2_bytes_seven)));
+        assertFalse(Bytes.wrap(example_bytes_seven).equals(Bytes.wrap(example2_bytes_seven)));
+        assertFalse(Bytes.wrap(example3_bytes_eight).equals(Bytes.wrap(example2_bytes_seven)));
     }
 }

@@ -21,6 +21,9 @@
 
 package at.favre.lib.primitives.bytes;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 
 /**
@@ -188,6 +191,35 @@ final class Util {
             byte a = array[index];
             array[index] = array[i];
             array[i] = a;
+        }
+    }
+
+    private static final int BUF_SIZE = 0x1000; // 4K
+
+    static byte[] readFromStream(InputStream inputStream) {
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buf = new byte[BUF_SIZE];
+            while (true) {
+                int r = inputStream.read(buf);
+                if (r == -1) {
+                    break;
+                }
+                out.write(buf, 0, r);
+            }
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new IllegalStateException("could not read from input stream", e);
+        }
+    }
+
+    static OutputStream createOutputStream(byte[] array) {
+        try {
+            OutputStream outputStream = new ByteArrayOutputStream(array.length);
+            outputStream.write(array);
+            return outputStream;
+        } catch (Exception e) {
+            throw new IllegalStateException("could not write to output stream", e);
         }
     }
 

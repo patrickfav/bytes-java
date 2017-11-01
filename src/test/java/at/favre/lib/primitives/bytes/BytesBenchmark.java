@@ -1,10 +1,12 @@
 package at.favre.lib.primitives.bytes;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BytesBenchmark {
 
     @Test
+    @Ignore
     public void immutableVsMutable() throws Exception {
         int length = 16 * 1024;
         Bytes randomXorOp = Bytes.randomNonSecure(length);
