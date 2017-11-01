@@ -28,6 +28,17 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 public abstract class ABytesTest {
+    byte[] example_bytes_empty;
+
+    byte[] example_bytes_one;
+    String example_hex_one;
+
+    byte[] example_bytes_two;
+    String example_hex_two;
+
+    byte[] example_bytes_four;
+    String example_hex_four;
+
     byte[] example_bytes_seven;
     String example_hex_seven;
 
@@ -42,6 +53,13 @@ public abstract class ABytesTest {
 
     @Before
     public void setUp() throws Exception {
+        example_bytes_empty = new byte[0];
+        example_bytes_one = new byte[]{0x67};
+        example_hex_one = "67";
+        example_bytes_two = new byte[]{0x1A, 0x6F};
+        example_hex_two = "1a6f";
+        example_bytes_four = new byte[]{0x23, 0x3A, (byte) 0xF3, 0x10};
+        example_hex_four = "233af310";
         example_bytes_seven = new byte[]{0x4A, (byte) 0x94, (byte) 0xFD, (byte) 0xFF, 0x1E, (byte) 0xAF, (byte) 0xED};
         example_hex_seven = "4a94fdff1eafed";
         example2_bytes_seven = new byte[]{0x1E, (byte) 0x01, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x78};

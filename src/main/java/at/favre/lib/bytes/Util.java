@@ -223,6 +223,14 @@ final class Util {
         }
     }
 
+    static byte[] concatVararg(byte firstByte, byte[] moreBytes) {
+        if (moreBytes == null) {
+            return new byte[]{firstByte};
+        } else {
+            return concat(new byte[]{firstByte}, moreBytes);
+        }
+    }
+
     /*
     =================================================================================================
      Copyright 2011 Twitter, Inc.

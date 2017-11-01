@@ -55,6 +55,7 @@ import java.util.*;
  *     System.out.println(b.encodeHex());
  * </pre>
  */
+@SuppressWarnings("WeakerAccess")
 public class Bytes implements Comparable<Bytes> {
 
     /* FACTORY ***************************************************************************************************/
@@ -85,15 +86,33 @@ public class Bytes implements Comparable<Bytes> {
     }
 
     /**
-     * Creates a new instance with given byte array. This array will be used directly, no copying happens so mind
-     * the possible side effects.
+     * Creates a new instance with given byte array.
+     * <p>
+     * The new instance will be backed by the given byte array;
+     * that is, modifications to the bytes will cause the array to be modified
+     * and vice versa.
      *
      * @param array to use directly
      * @return new instance
      */
     public static Bytes wrap(byte[] array) {
+        return wrap(array, ByteOrder.BIG_ENDIAN);
+    }
+
+    /**
+     * Creates a new instance with given byte array.
+     * <p>
+     * The new instance will be backed by the given byte array;
+     * that is, modifications to the bytes will cause the array to be modified
+     * and vice versa.
+     *
+     * @param array     to use directly
+     * @param byteOrder the byte order of passed array
+     * @return new instance
+     */
+    public static Bytes wrap(byte[] array, ByteOrder byteOrder) {
         Objects.requireNonNull(array, "passed array must not be null");
-        return new Bytes(array);
+        return new Bytes(array, byteOrder);
     }
 
     /**
@@ -146,18 +165,30 @@ public class Bytes implements Comparable<Bytes> {
      * Creates a new instance from given collections of single bytes.
      * This will create a copy of given bytes and will not directly use given bytes or byte array.
      *
-     * @param manyBytes must not be null
+     * @param byteArrayToCopy must not be null and will not be used directly, but a copy
      * @return new instance
      */
-    public static Bytes from(byte... manyBytes) {
-        Objects.requireNonNull(manyBytes, "must at least pass a single byte");
-        return wrap(Arrays.copyOf(manyBytes, manyBytes.length));
+    public static Bytes from(byte[] byteArrayToCopy) {
+        Objects.requireNonNull(byteArrayToCopy, "must at least pass a single byte");
+        return wrap(Arrays.copyOf(byteArrayToCopy, byteArrayToCopy.length));
+    }
+
+    /**
+     * Creates a new instance from given collections of single bytes.
+     * This will create a copy of given bytes and will not directly use given bytes or byte array.
+     *
+     * @param firstByte must not be null and will not be used directly, but a copy
+     * @param moreBytes more bytes vararg
+     * @return new instance
+     */
+    public static Bytes from(byte firstByte, byte... moreBytes) {
+        return wrap(Util.concatVararg(firstByte, moreBytes));
     }
 
     /**
      * Creates a new instance from given unsigned 2 byte char.
      *
-     * @param char2Byte to create from 
+     * @param char2Byte to create from
      * @return new instance
      */
     public static Bytes from(char char2Byte) {
@@ -196,13 +227,13 @@ public class Bytes implements Comparable<Bytes> {
 
     /**
      * Creates a new instance from given ByteBuffer.
-     * Will use the same backing byte array.
+     * Will use the same backing byte array and honour the buffer's byte order.
      *
      * @param buffer to get the byte array from
      * @return new instance
      */
     public static Bytes from(ByteBuffer buffer) {
-        return wrap(buffer.array());
+        return wrap(buffer.array(), buffer.order());
     }
 
     /**
@@ -253,7 +284,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return decoded instance
      */
     public static Bytes parseOctal(String octalString) {
-        return parse(octalString, new ByteToTextEncoding.BaseRadix(8));
+        return parse(octalString, new BinaryToTextEncoding.BaseRadix(8));
     }
 
     /**
@@ -263,7 +294,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return decoded instance
      */
     public static Bytes parseDec(String decString) {
-        return parse(decString, new ByteToTextEncoding.BaseRadix(10));
+        return parse(decString, new BinaryToTextEncoding.BaseRadix(10));
     }
 
     /**
@@ -274,7 +305,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return decoded instance
      */
     public static Bytes parseHex(String hexString) {
-        return parse(hexString, new ByteToTextEncoding.Hex());
+        return parse(hexString, new BinaryToTextEncoding.Hex());
     }
 
     /**
@@ -284,7 +315,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return decoded instance
      */
     public static Bytes parseBase36(String base36String) {
-        return parse(base36String, new ByteToTextEncoding.BaseRadix(36));
+        return parse(base36String, new BinaryToTextEncoding.BaseRadix(36));
     }
 
     /**
@@ -294,7 +325,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return decoded instance
      */
     public static Bytes parseBase64(String base64String) {
-        return parse(base64String, new ByteToTextEncoding.Base64Encoding());
+        return parse(base64String, new BinaryToTextEncoding.Base64Encoding());
     }
 
     /**
@@ -304,7 +335,7 @@ public class Bytes implements Comparable<Bytes> {
      * @param decoder the decoder used to decode the string
      * @return decoded instance
      */
-    public static Bytes parse(String encoded, ByteToTextEncoding.Decoder decoder) {
+    public static Bytes parse(String encoded, BinaryToTextEncoding.Decoder decoder) {
         Objects.requireNonNull(encoded, "encoded data must not be null");
         Objects.requireNonNull(decoder, "passed decoder instance must no be null");
 
@@ -321,15 +352,6 @@ public class Bytes implements Comparable<Bytes> {
         return random(length, new SecureRandom());
     }
 
-    /**
-     * A new instance with random bytes. Uses a non-cryptographically secure {@link Random} instance.
-     *
-     * @param length desired array length
-     * @return random instance
-     */
-    public static Bytes randomNonSecure(int length) {
-        return random(length, new Random());
-    }
 
     /**
      * A new instance with random bytes.
@@ -657,6 +679,9 @@ public class Bytes implements Comparable<Bytes> {
      * valid in both the original array and the copy, the two arrays will
      * contain identical values.  For any indices that are valid in the
      * copy but not the original, the copy will contain {@code (byte)0}.
+     * <p>
+     * If if the internal array will be grown, zero bytes will be added on the left,
+     * keeping the value the same.
      *
      * @param newByteLength the length of the copy to be returned
      * @return a copy with the desired size or "this" instance if newByteLength == current length
@@ -665,7 +690,9 @@ public class Bytes implements Comparable<Bytes> {
         if (length() == newByteLength) {
             return this;
         }
-        return wrap(Arrays.copyOf(internalArray(), newByteLength));
+        byte[] newSize = new byte[newByteLength];
+        System.arraycopy(internalArray(), 0, newSize, Math.max(0, Math.abs(newByteLength - length())), Math.min(newByteLength, length()));
+        return wrap(newSize);
     }
 
 
@@ -929,7 +956,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Binary_number">Binary number</a>
      */
     public String encodeBinary() {
-        return new ByteToTextEncoding.BaseRadix(2).encode(internalArray());
+        return encode(new BinaryToTextEncoding.BaseRadix(2));
     }
 
     /**
@@ -941,7 +968,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Octal">Octal</a>
      */
     public String encodeOctal() {
-        return new ByteToTextEncoding.BaseRadix(8).encode(internalArray());
+        return encode(new BinaryToTextEncoding.BaseRadix(8));
     }
 
     /**
@@ -953,7 +980,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Decimal">Decimal</a>
      */
     public String encodeDec() {
-        return new ByteToTextEncoding.BaseRadix(10).encode(internalArray());
+        return encode(new BinaryToTextEncoding.BaseRadix(10));
     }
 
     /**
@@ -977,7 +1004,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return hex string
      */
     public String encodeHex(boolean upperCase) {
-        return new ByteToTextEncoding.Hex(upperCase).encode(internalArray());
+        return encode(new BinaryToTextEncoding.Hex(upperCase));
     }
 
     /**
@@ -990,7 +1017,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Base36">Base36</a>
      */
     public String encodeBase36() {
-        return new ByteToTextEncoding.BaseRadix(36).encode(internalArray());
+        return encode(new BinaryToTextEncoding.BaseRadix(36));
     }
 
     /**
@@ -1002,7 +1029,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Base64">Base64</a>
      */
     public String encodeBase64() {
-        return new ByteToTextEncoding.Base64Encoding().encode(internalArray());
+        return encode(new BinaryToTextEncoding.Base64Encoding());
     }
 
     /**
@@ -1032,8 +1059,8 @@ public class Bytes implements Comparable<Bytes> {
      * @param encoder the encoder implementation
      * @return byte-to-text representation
      */
-    public String encode(ByteToTextEncoding.Encoder encoder) {
-        return encoder.encode(internalArray());
+    public String encode(BinaryToTextEncoding.Encoder encoder) {
+        return encoder.encode(internalArray(), byteOrder);
     }
 
     /* CONSERVATORS WITHOUT REUSING THE INTERNAL ARRAY ****************************************************************/
@@ -1068,6 +1095,21 @@ public class Bytes implements Comparable<Bytes> {
     }
 
     /**
+     * If the underlying byte array is smaller than 1 byte / 8 bit returns unsigned two-complement
+     * representation for a Java byte value.
+     *
+     * @return the byte representation
+     * @throws UnsupportedOperationException if byte array is longer than 1 byte
+     * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
+     */
+    public byte toByte() {
+        if (length() > 1) {
+            throw new UnsupportedOperationException("cannot convert to byte if length > 1 byte");
+        }
+        return internalBuffer().get();
+    }
+
+    /**
      * If the underlying byte array is smaller than 2 byte / 16 bit returns unsigned two-complement
      * representation for a Java char integer value. The output is dependent on the set {@link #byteOrder()}.
      *
@@ -1079,7 +1121,7 @@ public class Bytes implements Comparable<Bytes> {
         if (length() > 2) {
             throw new UnsupportedOperationException("cannot convert to char if length > 2 byte");
         }
-        return internalBuffer().getChar();
+        return resize(2).internalBuffer().getChar();
     }
 
     /**
@@ -1094,7 +1136,7 @@ public class Bytes implements Comparable<Bytes> {
         if (length() > 2) {
             throw new UnsupportedOperationException("cannot convert to short if length > 2 byte");
         }
-        return internalBuffer().getShort();
+        return resize(2).internalBuffer().getShort();
     }
 
     /**
@@ -1109,7 +1151,7 @@ public class Bytes implements Comparable<Bytes> {
         if (length() > 4) {
             throw new UnsupportedOperationException("cannot convert to int if length > 4 byte");
         }
-        return internalBuffer().getInt();
+        return resize(4).internalBuffer().getInt();
     }
 
     /**
@@ -1124,7 +1166,7 @@ public class Bytes implements Comparable<Bytes> {
         if (length() > 8) {
             throw new UnsupportedOperationException("cannot convert to long if length > 8 byte");
         }
-        return internalBuffer().getLong();
+        return resize(8).internalBuffer().getLong();
     }
 
     /**
@@ -1180,4 +1222,5 @@ public class Bytes implements Comparable<Bytes> {
 
         return length() + " bytes " + preview;
     }
+
 }

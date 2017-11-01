@@ -60,4 +60,22 @@ public class BytesMiscTest extends ABytesTest {
         assertFalse(Bytes.wrap(example_bytes_seven).equals(Bytes.wrap(example2_bytes_seven)));
         assertFalse(Bytes.wrap(example3_bytes_eight).equals(Bytes.wrap(example2_bytes_seven)));
     }
+
+    @Test
+    public void testCompareTo() throws Exception {
+        byte[] b1 = new byte[]{0x01};
+        byte[] b2 = new byte[]{0x01, 0x02};
+
+        assertTrue(-1 >= Bytes.from(b1).compareTo(Bytes.from(b2)));
+        assertTrue(1 <= Bytes.from(b2).compareTo(Bytes.from(b1)));
+        assertTrue(0 == Bytes.from(b1).compareTo(Bytes.from(b1)));
+
+        byte[] bOne = new byte[]{0x01};
+        byte[] bTwo = new byte[]{0x02};
+
+        assertTrue(-1 >= Bytes.from(bOne).compareTo(Bytes.from(bTwo)));
+        assertTrue(1 <= Bytes.from(bTwo).compareTo(Bytes.from(bOne)));
+        assertTrue(0 == Bytes.from(bOne).compareTo(Bytes.from(bOne)));
+    }
+
 }

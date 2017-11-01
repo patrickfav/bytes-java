@@ -22,17 +22,48 @@
 package at.favre.lib.bytes;
 
 import java.math.BigInteger;
+import java.nio.ByteOrder;
 import java.util.Objects;
 
-public final class ByteToTextEncoding {
+/**
+ * Interface for byte-to-text-encodings
+ *
+ * @see <a href="https://en.wikipedia.org/wiki/Binary-to-text_encoding">Binary To Text Encoding</a>
+ */
+public final class BinaryToTextEncoding {
+
+    /**
+     * Interface for encoding bytes
+     */
     public interface Encoder {
-        String encode(byte[] array);
+
+        /**
+         * Encodes given array with given byte order to a string
+         *
+         * @param array     to encode
+         * @param byteOrder the array is in
+         * @return encoded string
+         */
+        String encode(byte[] array, ByteOrder byteOrder);
     }
 
+    /**
+     * Interface for decoding encoded strings
+     */
     public interface Decoder {
+
+        /**
+         * Decodes given encoded string
+         *
+         * @param encoded string
+         * @return byte array represented by given encoded string
+         */
         byte[] decode(String encoded);
     }
 
+    /**
+     * Hex or Base16
+     */
     public static class Hex implements Encoder, Decoder {
         private final boolean upperCase;
 
@@ -45,7 +76,7 @@ public final class ByteToTextEncoding {
         }
 
         @Override
-        public String encode(byte[] byteArray) {
+        public String encode(byte[] byteArray, ByteOrder byteOrder) {
             StringBuilder sb = new StringBuilder(byteArray.length * 2);
             for (byte anArray : byteArray) {
                 char first4Bit = Character.forDigit((anArray >> 4) & 0xF, 16);
@@ -82,7 +113,7 @@ public final class ByteToTextEncoding {
 
     public static class Base64Encoding implements Encoder, Decoder {
         @Override
-        public String encode(byte[] array) {
+        public String encode(byte[] array, ByteOrder byteOrder) {
             return Base64.encode(array);
         }
 
@@ -100,7 +131,7 @@ public final class ByteToTextEncoding {
         }
 
         @Override
-        public String encode(byte[] array) {
+        public String encode(byte[] array, ByteOrder byteOrder) {
             return new BigInteger(1, array).toString(radix);
         }
 
