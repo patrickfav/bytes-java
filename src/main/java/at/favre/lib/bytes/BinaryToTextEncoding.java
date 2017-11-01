@@ -78,9 +78,12 @@ public interface BinaryToTextEncoding {
         @Override
         public String encode(byte[] byteArray, ByteOrder byteOrder) {
             StringBuilder sb = new StringBuilder(byteArray.length * 2);
-            for (byte anArray : byteArray) {
-                char first4Bit = Character.forDigit((anArray >> 4) & 0xF, 16);
-                char last4Bit = Character.forDigit((anArray & 0xF), 16);
+
+            int index;
+            for (int i = 0; i < byteArray.length; i++) {
+                index = (byteOrder == ByteOrder.BIG_ENDIAN) ? i : byteArray.length - i - 1;
+                char first4Bit = Character.forDigit((byteArray[index] >> 4) & 0xF, 16);
+                char last4Bit = Character.forDigit((byteArray[index] & 0xF), 16);
                 if (upperCase) {
                     first4Bit = Character.toUpperCase(first4Bit);
                     last4Bit = Character.toUpperCase(last4Bit);
@@ -114,7 +117,7 @@ public interface BinaryToTextEncoding {
     class Base64Encoding implements Encoder, Decoder {
         @Override
         public String encode(byte[] array, ByteOrder byteOrder) {
-            return Base64.encode(array);
+            return Base64.encode((byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.from(array).reverse().array());
         }
 
         @Override
@@ -132,7 +135,7 @@ public interface BinaryToTextEncoding {
 
         @Override
         public String encode(byte[] array, ByteOrder byteOrder) {
-            return new BigInteger(1, array).toString(radix);
+            return new BigInteger(1, (byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.from(array).reverse().array()).toString(radix);
         }
 
         @Override
