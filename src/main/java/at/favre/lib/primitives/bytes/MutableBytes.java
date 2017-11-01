@@ -43,8 +43,9 @@ public final class MutableBytes extends Bytes {
      * @param newArray used to overwrite internal
      * @throws IndexOutOfBoundsException if newArray.length > internal length
      */
-    public void overwrite(byte[] newArray) {
+    public MutableBytes overwrite(byte[] newArray) {
         overwrite(newArray, 0);
+        return this;
     }
 
     /**
@@ -54,16 +55,18 @@ public final class MutableBytes extends Bytes {
      * @param offsetInternalArray index of the internal array to start overwriting
      * @throws IndexOutOfBoundsException if newArray.length + offsetInternalArray > internal length
      */
-    public void overwrite(byte[] newArray, int offsetInternalArray) {
+    public MutableBytes overwrite(byte[] newArray, int offsetInternalArray) {
         Objects.requireNonNull(newArray, "must provide non-null array as source");
         System.arraycopy(newArray, 0, internalArray(), offsetInternalArray, newArray.length);
+        return this;
     }
 
     /**
      * Fills the internal byte array with all zeros
      */
-    public void wipe() {
+    public MutableBytes wipe() {
         fill((byte) 0);
+        return this;
     }
 
     /**
@@ -71,15 +74,17 @@ public final class MutableBytes extends Bytes {
      *
      * @param fillByte to fill with
      */
-    public void fill(byte fillByte) {
+    public MutableBytes fill(byte fillByte) {
         Arrays.fill(internalArray(), fillByte);
+        return this;
     }
 
     /**
      * Fills the internal byte array with random data provided by {@link SecureRandom}
      */
-    public void secureWipe() {
+    public MutableBytes secureWipe() {
         secureWipe(new SecureRandom());
+        return this;
     }
 
     /**
@@ -87,8 +92,9 @@ public final class MutableBytes extends Bytes {
      *
      * @param random to generate entropy
      */
-    public void secureWipe(SecureRandom random) {
+    public MutableBytes secureWipe(SecureRandom random) {
         Objects.requireNonNull(random, "must non-null random");
         random.nextBytes(internalArray());
+        return this;
     }
 }
