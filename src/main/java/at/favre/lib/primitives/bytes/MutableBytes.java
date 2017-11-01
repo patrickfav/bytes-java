@@ -41,7 +41,8 @@ public final class MutableBytes extends Bytes {
      * Uses given array to overwrite internal array
      *
      * @param newArray used to overwrite internal
-     * @throws IndexOutOfBoundsException if newArray.length > internal length
+     * @return this instance
+     * @throws IndexOutOfBoundsException if newArray.length &gt; internal length
      */
     public MutableBytes overwrite(byte[] newArray) {
         overwrite(newArray, 0);
@@ -53,7 +54,8 @@ public final class MutableBytes extends Bytes {
      *
      * @param newArray            used to overwrite internal
      * @param offsetInternalArray index of the internal array to start overwriting
-     * @throws IndexOutOfBoundsException if newArray.length + offsetInternalArray > internal length
+     * @return this instance
+     * @throws IndexOutOfBoundsException if newArray.length + offsetInternalArray &gt; internal length
      */
     public MutableBytes overwrite(byte[] newArray, int offsetInternalArray) {
         Objects.requireNonNull(newArray, "must provide non-null array as source");
@@ -63,6 +65,8 @@ public final class MutableBytes extends Bytes {
 
     /**
      * Fills the internal byte array with all zeros
+     *
+     * @return this instance
      */
     public MutableBytes wipe() {
         fill((byte) 0);
@@ -73,6 +77,7 @@ public final class MutableBytes extends Bytes {
      * Fills the internal byte array with provided byte
      *
      * @param fillByte to fill with
+     * @return this instance
      */
     public MutableBytes fill(byte fillByte) {
         Arrays.fill(internalArray(), fillByte);
@@ -81,6 +86,8 @@ public final class MutableBytes extends Bytes {
 
     /**
      * Fills the internal byte array with random data provided by {@link SecureRandom}
+     *
+     * @return this instance
      */
     public MutableBytes secureWipe() {
         secureWipe(new SecureRandom());
@@ -91,6 +98,7 @@ public final class MutableBytes extends Bytes {
      * Fills the internal byte array with random data provided by given random instance
      *
      * @param random to generate entropy
+     * @return this instance
      */
     public MutableBytes secureWipe(SecureRandom random) {
         Objects.requireNonNull(random, "must non-null random");

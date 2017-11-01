@@ -34,7 +34,6 @@ import java.util.*;
 
 /**
  * Bytes is wrapper class for an byte-array that allows a lot of convenience operations on it:
- * <p>
  * <ul>
  * <li>Creation from various source: arrays, primitives, parsed or random</li>
  * <li>Encoding in many formats: hex, base64, etc.</li>
@@ -50,7 +49,6 @@ import java.util.*;
  * using using <code>wrap()</code>). It is possible to create a mutable version (see {@link MutableBytes}).
  * <p>
  * <strong>Example:</strong>
- * <p>
  * <pre>
  *     Bytes b = Bytes.from(array);
  *     b.negate();
@@ -127,7 +125,7 @@ public class Bytes implements Comparable<Bytes> {
      * Creates a new instance from given collections. This will create a lot of auto-unboxing events,
      * so use with care with bigger lists.
      *
-     * @param bytesCollection
+     * @param bytesCollection to create from
      * @return new instance
      */
     public static Bytes from(Collection<Byte> bytesCollection) {
@@ -137,7 +135,7 @@ public class Bytes implements Comparable<Bytes> {
     /**
      * Creates a new single array element array instance from given byte
      *
-     * @param singleByte
+     * @param singleByte to create from
      * @return new instance
      */
     public static Bytes from(byte singleByte) {
@@ -159,7 +157,7 @@ public class Bytes implements Comparable<Bytes> {
     /**
      * Creates a new instance from given unsigned 2 byte char.
      *
-     * @param char2Byte
+     * @param char2Byte to create from 
      * @return new instance
      */
     public static Bytes from(char char2Byte) {
@@ -169,7 +167,7 @@ public class Bytes implements Comparable<Bytes> {
     /**
      * Creates a new instance from given 2 byte short.
      *
-     * @param short2Byte
+     * @param short2Byte to create from
      * @return new instance
      */
     public static Bytes from(short short2Byte) {
@@ -179,7 +177,7 @@ public class Bytes implements Comparable<Bytes> {
     /**
      * Creates a new instance from given 4 byte integer.
      *
-     * @param integer4byte
+     * @param integer4byte to create from
      * @return new instance
      */
     public static Bytes from(int integer4byte) {
@@ -189,7 +187,7 @@ public class Bytes implements Comparable<Bytes> {
     /**
      * Creates a new instance from given 8 byte long.
      *
-     * @param long8byte
+     * @param long8byte to create from
      * @return new instance
      */
     public static Bytes from(long long8byte) {
@@ -197,8 +195,8 @@ public class Bytes implements Comparable<Bytes> {
     }
 
     /**
-     * Creates a new instance from given ByteBuffer. If this is a {@link java.nio.HeapByteBuffer} instance,
-     * the created instance will use the same backing byte array.
+     * Creates a new instance from given ByteBuffer.
+     * Will use the same backing byte array.
      *
      * @param buffer to get the byte array from
      * @return new instance
@@ -726,11 +724,13 @@ public class Bytes implements Comparable<Bytes> {
      * Returns the start position of the first occurrence of the specified {@code
      * target} within {@code array}, or {@code -1} if there is no such occurrence.
      * <p>
-     * <p>More formally, returns the lowest index {@code i} such that {@code
+     * More formally, returns the lowest index {@code i} such that {@code
      * java.util.Arrays.copyOfRange(array, i, i + target.length)} contains exactly
      * the same elements as {@code target}.
      *
      * @param subArray the array to search for as a sub-sequence of {@code array}
+     * @return the least index {@code i} for which {@code array[i] == target}, or
+     * {@code -1} if no such index exists.
      */
     public int indexOf(byte[] subArray) {
         return Util.indexOf(internalArray(), subArray);
@@ -813,6 +813,7 @@ public class Bytes implements Comparable<Bytes> {
      * <p>
      * This option is important for all encoding and conversation methods.
      *
+     * @param byteOrder new byteOrder
      * @return a new instance with the same underlying array and new order, or "this" if order is the same
      * @see <a href="https://en.wikipedia.org/wiki/Endianness">Endianness</a>
      */
@@ -898,7 +899,7 @@ public class Bytes implements Comparable<Bytes> {
 
     /**
      * The reference of te internal byte-array. This call requires no conversation or additional memory allocation.
-     *
+     * <p>
      * Modifications to this bytes's content will cause the returned
      * array's content to be modified, and vice versa.
      *
@@ -1017,6 +1018,7 @@ public class Bytes implements Comparable<Bytes> {
     /**
      * String representation with given charset encoding
      *
+     * @param charset the charset the return will be encoded
      * @return encoded string
      */
     public String encodeCharset(Charset charset) {
@@ -1128,7 +1130,7 @@ public class Bytes implements Comparable<Bytes> {
     /**
      * Compares this bytes instance to another.
      * <p>
-     * <p> Two byte bytes are compared by comparing their sequences of
+     * Two byte bytes are compared by comparing their sequences of
      * remaining elements lexicographically, without regard to the starting
      * position of each sequence within its corresponding buffer.
      * Pairs of {@code byte} elements are compared as if by invoking
