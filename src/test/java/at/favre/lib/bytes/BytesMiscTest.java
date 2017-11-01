@@ -78,4 +78,78 @@ public class BytesMiscTest extends ABytesTest {
         assertTrue(0 == Bytes.from(bOne).compareTo(Bytes.from(bOne)));
     }
 
+    @Test
+    public void testLength() throws Exception {
+        assertEquals(0, Bytes.from(new byte[0]).length());
+
+        for (int i = 0; i < 128; i++) {
+            assertEquals(i, Bytes.from(new byte[i]).length());
+            assertEquals(i * 8, Bytes.from(new byte[i]).lengthBit());
+            assertEquals(i, Bytes.allocate(i).length());
+        }
+    }
+
+    @Test
+    public void testIsEmpty() throws Exception {
+        assertTrue(Bytes.from(new byte[0]).isEmpty());
+        assertTrue(Bytes.allocate(0).isEmpty());
+        assertFalse(Bytes.from(new byte[1]).isEmpty());
+        assertFalse(Bytes.allocate(1).isEmpty());
+        assertFalse(Bytes.from(example_bytes_seven).isEmpty());
+    }
+
+    @Test
+    public void indexOfByte() throws Exception {
+        assertEquals(-1, Bytes.allocate(0).indexOf((byte) 0xFD));
+        assertEquals(0, Bytes.allocate(128).indexOf((byte) 0x00));
+        assertEquals(2, Bytes.from(example_bytes_seven).indexOf((byte) 0xFD));
+        assertEquals(5, Bytes.from(example_bytes_seven).indexOf((byte) 0xAF));
+        assertEquals(-1, Bytes.from(example_bytes_seven).indexOf((byte) 0x00));
+    }
+
+    @Test
+    public void indexOfArray() throws Exception {
+        assertEquals(-1, Bytes.allocate(0).indexOf(new byte[]{(byte) 0xFD}));
+        assertEquals(2, Bytes.from(example_bytes_seven).indexOf(new byte[]{(byte) 0xFD, (byte) 0xFF}));
+        assertEquals(-1, Bytes.from(example_bytes_seven).indexOf(new byte[]{(byte) 0xFD, (byte) 0x00}));
+    }
+
+    @Test
+    public void lastIndexOf() throws Exception {
+        assertEquals(-1, Bytes.allocate(0).lastIndexOf((byte) 0xFD));
+        assertEquals(127, Bytes.allocate(128).lastIndexOf((byte) 0x00));
+        assertEquals(2, Bytes.from(example_bytes_seven).lastIndexOf((byte) 0xFD));
+        assertEquals(5, Bytes.from(example_bytes_seven).lastIndexOf((byte) 0xAF));
+        assertEquals(-1, Bytes.from(example_bytes_seven).lastIndexOf((byte) 0x00));
+    }
+
+    @Test
+    public void byteAt() throws Exception {
+        assertEquals(0, Bytes.allocate(1).byteAt(0));
+        assertEquals(0, Bytes.allocate(128).byteAt(127));
+
+        for (int i = 0; i < example_bytes_twentyfour.length; i++) {
+            assertEquals(example_bytes_twentyfour[i], Bytes.wrap(example_bytes_twentyfour).byteAt(i));
+        }
+    }
+
+    @Test
+    public void count() throws Exception {
+        assertEquals(0, Bytes.allocate(0).count((byte) 0));
+        assertEquals(1, Bytes.allocate(1).count((byte) 0));
+        assertEquals(128, Bytes.allocate(128).count((byte) 0));
+        assertEquals(3, Bytes.from(example_bytes_twentyfour).count((byte) 0xAA));
+        assertEquals(1, Bytes.from(example_bytes_seven).count((byte) 0xAF));
+    }
+
+    @Test
+    public void entropy() throws Exception {
+        assertEquals(0, Bytes.allocate(0).entropy(), 0.1d);
+        assertEquals(0, Bytes.allocate(1).entropy(), 0.1d);
+        assertEquals(0, Bytes.allocate(256).entropy(), 0.1d);
+        assertEquals(0, Bytes.from(new byte[]{1}).entropy(), 0.1d);
+        assertTrue(Bytes.from(example_bytes_twentyfour).entropy() > 3.5);
+        assertTrue(Bytes.from(example_bytes_seven).entropy() > 2.5);
+        assertTrue(Bytes.from(example_bytes_two).entropy() > 0.5);
+    }
 }
