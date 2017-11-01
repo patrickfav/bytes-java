@@ -1,8 +1,30 @@
+/*
+ * Copyright 2017 Patrick Favre-Bulle
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package at.favre.lib.primitives.bytes;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.ReadOnlyBufferException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -306,6 +328,7 @@ public class Bytes implements Comparable<Bytes> {
     private final byte[] byteArray;
     private final ByteOrder byteOrder;
     private final boolean mutable;
+    private final boolean readonly;
 
     /**
      * Creates a new immutable instance with Big-Endian ordering
@@ -313,7 +336,7 @@ public class Bytes implements Comparable<Bytes> {
      * @param byteArray internal byte array
      */
     Bytes(byte[] byteArray) {
-        this(byteArray, ByteOrder.BIG_ENDIAN, false);
+        this(byteArray, ByteOrder.BIG_ENDIAN, false, false);
     }
 
     /**
@@ -323,7 +346,7 @@ public class Bytes implements Comparable<Bytes> {
      * @param byteOrder the internal byte order - this is used to interpret given array, not to change it
      */
     Bytes(byte[] byteArray, ByteOrder byteOrder) {
-        this(byteArray, byteOrder, false);
+        this(byteArray, byteOrder, false, false);
     }
 
     /**
@@ -332,11 +355,13 @@ public class Bytes implements Comparable<Bytes> {
      * @param byteArray internal byte array
      * @param byteOrder the internal byte order - this is used to interpret given array, not to change it
      * @param mutable   if the internal state can be changed
+     * @param readonly  if all getter for internal byte array will fail
      */
-    Bytes(byte[] byteArray, ByteOrder byteOrder, boolean mutable) {
+    Bytes(byte[] byteArray, ByteOrder byteOrder, boolean mutable, boolean readonly) {
         this.byteArray = byteArray;
         this.byteOrder = byteOrder;
         this.mutable = mutable;
+        this.readonly = readonly;
     }
 
     /* TRANSFORMER **********************************************************************************************/
@@ -348,7 +373,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return appended instance
      */
     public Bytes append(Bytes bytes) {
-        return append(bytes.array());
+        return append(bytes.internalArray());
     }
 
     /**
@@ -410,7 +435,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#XOR">Bitwise operators: XOR</a>
      */
     public Bytes xor(Bytes bytes) {
-        return xor(bytes.array());
+        return xor(bytes.internalArray());
     }
 
     /**
@@ -434,7 +459,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#AND">Bitwise operators: AND</a>
      */
     public Bytes and(Bytes bytes) {
-        return and(bytes.array());
+        return and(bytes.internalArray());
     }
 
     /**
@@ -458,7 +483,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#OR">Bitwise operators: OR</a>
      */
     public Bytes or(Bytes bytes) {
-        return and(bytes.array());
+        return and(bytes.internalArray());
     }
 
     /**
@@ -516,7 +541,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return copied instance
      */
     public Bytes copy() {
-        return wrap(Arrays.copyOf(array(), length()));
+        return wrap(Arrays.copyOf(internalArray(), length()));
     }
 
     /**
@@ -528,7 +553,7 @@ public class Bytes implements Comparable<Bytes> {
      */
     public Bytes copy(int offset, int length) {
         byte[] copy = new byte[length];
-        System.arraycopy(array(), offset, copy, 0, copy.length);
+        System.arraycopy(internalArray(), offset, copy, 0, copy.length);
         return wrap(copy);
     }
 
@@ -619,32 +644,9 @@ public class Bytes implements Comparable<Bytes> {
         if (length() == newByteLength) {
             return this;
         }
-        return wrap(Arrays.copyOf(array(), newByteLength));
+        return wrap(Arrays.copyOf(internalArray(), newByteLength));
     }
 
-    /**
-     * Create a new instance with the same underlying byte array.
-     *
-     * @return new instance backed by the same data
-     */
-    public Bytes duplicate() {
-        return wrap(array());
-    }
-
-    /**
-     * Set the byte order or endianness of this instance. Default in Java is {@link ByteOrder#BIG_ENDIAN}.
-     * <p>
-     * This option is important for all encoding and conversation methods.
-     *
-     * @return a new instance with the same underlying array and new order, or "this" if order is the same
-     * @see <a href="https://en.wikipedia.org/wiki/Endianness">Endianness</a>
-     */
-    public Bytes byteOrder(ByteOrder byteOrder) {
-        if (byteOrder != this.byteOrder) {
-            return new Bytes(array(), byteOrder);
-        }
-        return this;
-    }
 
     /* ATTRIBUTES ************************************************************************************************/
 
@@ -654,7 +656,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return byte length
      */
     public int length() {
-        return array().length;
+        return internalArray().length;
     }
 
     /**
@@ -694,7 +696,7 @@ public class Bytes implements Comparable<Bytes> {
      * {@code -1} if no such index exists.
      */
     public int indexOf(byte target) {
-        return Util.indexOf(array(), target, 0, length());
+        return Util.indexOf(internalArray(), target, 0, length());
     }
 
     /**
@@ -708,7 +710,7 @@ public class Bytes implements Comparable<Bytes> {
      * @param subArray the array to search for as a sub-sequence of {@code array}
      */
     public int indexOf(byte[] subArray) {
-        return Util.indexOf(array(), subArray);
+        return Util.indexOf(internalArray(), subArray);
     }
 
     /**
@@ -720,7 +722,7 @@ public class Bytes implements Comparable<Bytes> {
      * or {@code -1} if no such index exists.
      */
     public int lastIndexOf(byte target) {
-        return Util.lastIndexOf(array(), target, 0, length());
+        return Util.lastIndexOf(internalArray(), target, 0, length());
     }
 
     /**
@@ -736,7 +738,7 @@ public class Bytes implements Comparable<Bytes> {
         if (index < 0 || index > length()) {
             throw new IndexOutOfBoundsException("cannot get byte from index out of bounds: " + index);
         }
-        return array()[index];
+        return internalArray()[index];
     }
 
     /**
@@ -748,7 +750,7 @@ public class Bytes implements Comparable<Bytes> {
      */
     public int count(byte target) {
         int count = 0;
-        for (byte b : array()) {
+        for (byte b : internalArray()) {
             if (b == target) {
                 count++;
             }
@@ -772,7 +774,45 @@ public class Bytes implements Comparable<Bytes> {
         return new Util.Entropy<>(toList()).entropy();
     }
 
-    /* GETTER ************************************************************************************************/
+    /* CONSERVATORS POSSIBLY REUSING THE INTERNAL ARRAY ***************************************************************/
+
+    /**
+     * Create a new instance which shares the same underlying array
+     *
+     * @return new instance backed by the same data
+     */
+    public Bytes duplicate() {
+        return wrap(internalArray());
+    }
+
+    /**
+     * Set the byte order or endianness of this instance. Default in Java is {@link ByteOrder#BIG_ENDIAN}.
+     * <p>
+     * This option is important for all encoding and conversation methods.
+     *
+     * @return a new instance with the same underlying array and new order, or "this" if order is the same
+     * @see <a href="https://en.wikipedia.org/wiki/Endianness">Endianness</a>
+     */
+    public Bytes byteOrder(ByteOrder byteOrder) {
+        if (byteOrder != this.byteOrder) {
+            return new Bytes(internalArray(), byteOrder);
+        }
+        return this;
+    }
+
+    /**
+     * Returns a new read-only byte instance. Read-only means, that there is no direct access to the underlying byte
+     * array and all transformers will create a copy (ie. immutable)
+     *
+     * @return a new instance if not already readonly, or "this" otherwise
+     */
+    public Bytes readOnly() {
+        if (readonly) {
+            return this;
+        } else {
+            return new Bytes(internalArray(), byteOrder, false, true);
+        }
+    }
 
     /**
      * The internal byte array wrapped in a {@link ByteBuffer} instance.
@@ -781,9 +821,14 @@ public class Bytes implements Comparable<Bytes> {
      * This will honor the set {@link #byteOrder()}.
      *
      * @return byte buffer
+     * @throws ReadOnlyBufferException if this is a read-only instance
      */
     public ByteBuffer buffer() {
         return ByteBuffer.wrap(array()).order(byteOrder);
+    }
+
+    private ByteBuffer internalBuffer() {
+        return ByteBuffer.wrap(internalArray()).order(byteOrder);
     }
 
     /**
@@ -794,6 +839,7 @@ public class Bytes implements Comparable<Bytes> {
      * array will be used directly.
      *
      * @return big integer
+     * @throws ReadOnlyBufferException if this is a read-only instance
      */
     public BigInteger bigInteger() {
         if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
@@ -804,12 +850,35 @@ public class Bytes implements Comparable<Bytes> {
     }
 
     /**
+     * Returns a mutable version of this instance with sharing the same underlying byte-array.
+     * If you want the mutable version to be a copy, call {@link #copy()} first.
+     *
+     * @return new mutable instance with same reference to internal byte array, or "this" if this is already of type {@link MutableBytes}
+     * @throws ReadOnlyBufferException if this is a read-only instance
+     */
+    public MutableBytes mutable() {
+        if (this instanceof MutableBytes) {
+            return (MutableBytes) this;
+        } else {
+            return new MutableBytes(array(), byteOrder);
+        }
+    }
+
+    /**
      * The reference of te internal byte-array. This call requires no conversation or additional memory allocation.
      * Changes to it will be directly mirrored in this {@link Bytes} instance.
      *
      * @return the direct reference of the internal byte array
+     * @throws ReadOnlyBufferException if this is a read-only instance
      */
     public byte[] array() {
+        if (!readonly) {
+            return internalArray();
+        }
+        throw new ReadOnlyBufferException();
+    }
+
+    private byte[] internalArray() {
         return byteArray;
     }
 
@@ -825,7 +894,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Binary_number">Binary number</a>
      */
     public String encodeBinary() {
-        return new ByteToTextEncoding.BaseRadix(2).encode(array());
+        return new ByteToTextEncoding.BaseRadix(2).encode(internalArray());
     }
 
     /**
@@ -837,7 +906,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Octal">Octal</a>
      */
     public String encodeOctal() {
-        return new ByteToTextEncoding.BaseRadix(8).encode(array());
+        return new ByteToTextEncoding.BaseRadix(8).encode(internalArray());
     }
 
     /**
@@ -849,7 +918,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Decimal">Decimal</a>
      */
     public String encodeDec() {
-        return new ByteToTextEncoding.BaseRadix(10).encode(array());
+        return new ByteToTextEncoding.BaseRadix(10).encode(internalArray());
     }
 
     /**
@@ -873,7 +942,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return hex string
      */
     public String encodeHex(boolean upperCase) {
-        return new ByteToTextEncoding.Hex(upperCase).encode(array());
+        return new ByteToTextEncoding.Hex(upperCase).encode(internalArray());
     }
 
     /**
@@ -886,7 +955,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Base36">Base36</a>
      */
     public String encodeBase36() {
-        return new ByteToTextEncoding.BaseRadix(36).encode(array());
+        return new ByteToTextEncoding.BaseRadix(36).encode(internalArray());
     }
 
     /**
@@ -898,7 +967,7 @@ public class Bytes implements Comparable<Bytes> {
      * @see <a href="https://en.wikipedia.org/wiki/Base64">Base64</a>
      */
     public String encodeBase64() {
-        return new ByteToTextEncoding.Base64Encoding().encode(array());
+        return new ByteToTextEncoding.Base64Encoding().encode(internalArray());
     }
 
     /**
@@ -918,7 +987,7 @@ public class Bytes implements Comparable<Bytes> {
      */
     public String encodeCharset(Charset charset) {
         Objects.requireNonNull(charset, "given charset must not be null");
-        return new String(array(), charset);
+        return new String(internalArray(), charset);
     }
 
     /**
@@ -928,24 +997,10 @@ public class Bytes implements Comparable<Bytes> {
      * @return byte-to-text representation
      */
     public String encode(ByteToTextEncoding.Encoder encoder) {
-        return encoder.encode(array());
+        return encoder.encode(internalArray());
     }
 
-    /* CONVERTER ************************************************************************************************/
-
-    /**
-     * Returns a mutable version of this instance with sharing the same underlying byte-array.
-     * If you want the mutable version to be a copy, call {@link #copy()} first.
-     *
-     * @return new mutable instance with same reference to internal byte array, or "this" if this is already of type {@link MutableBytes}
-     */
-    public MutableBytes toMutable() {
-        if (this instanceof MutableBytes) {
-            return (MutableBytes) this;
-        } else {
-            return new MutableBytes(array(), byteOrder);
-        }
-    }
+    /* CONSERVATORS WITHOUT REUSING THE INTERNAL ARRAY ****************************************************************/
 
     /**
      * Returns a copy of the internal byte-array as {@link List} collection type
@@ -954,7 +1009,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return copy of internal array as list
      */
     public List<Byte> toList() {
-        return Util.toList(array());
+        return Util.toList(internalArray());
     }
 
     /**
@@ -964,7 +1019,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return copy of internal array as object array
      */
     public Byte[] toObjectArray() {
-        return Util.toObjectArray(array());
+        return Util.toObjectArray(internalArray());
     }
 
     /**
@@ -979,7 +1034,7 @@ public class Bytes implements Comparable<Bytes> {
         if (length() > 2) {
             throw new UnsupportedOperationException("cannot convert to char if length > 2 byte");
         }
-        return buffer().getChar();
+        return internalBuffer().getChar();
     }
 
     /**
@@ -994,7 +1049,7 @@ public class Bytes implements Comparable<Bytes> {
         if (length() > 2) {
             throw new UnsupportedOperationException("cannot convert to short if length > 2 byte");
         }
-        return buffer().getShort();
+        return internalBuffer().getShort();
     }
 
     /**
@@ -1009,7 +1064,7 @@ public class Bytes implements Comparable<Bytes> {
         if (length() > 4) {
             throw new UnsupportedOperationException("cannot convert to int if length > 4 byte");
         }
-        return buffer().getInt();
+        return internalBuffer().getInt();
     }
 
     /**
@@ -1024,7 +1079,7 @@ public class Bytes implements Comparable<Bytes> {
         if (length() > 8) {
             throw new UnsupportedOperationException("cannot convert to long if length > 8 byte");
         }
-        return buffer().getLong();
+        return internalBuffer().getLong();
     }
 
     /**
@@ -1043,7 +1098,7 @@ public class Bytes implements Comparable<Bytes> {
      */
     @Override
     public int compareTo(Bytes o) {
-        return buffer().compareTo(o.buffer());
+        return internalBuffer().compareTo(o.internalBuffer());
     }
 
     @Override
@@ -1053,12 +1108,12 @@ public class Bytes implements Comparable<Bytes> {
 
         Bytes bytes = (Bytes) o;
 
-        return Arrays.equals(array(), bytes.array());
+        return Arrays.equals(internalArray(), bytes.internalArray());
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(array());
+        return Arrays.hashCode(internalArray());
     }
 
     /**

@@ -9,7 +9,7 @@ public class BytesBenchmark {
         int length = 16 * 1024;
         Bytes randomXorOp = Bytes.randomNonSecure(length);
         Bytes immutable = Bytes.allocate(length);
-        Bytes mutable = Bytes.allocate(length).toMutable();
+        Bytes mutable = Bytes.allocate(length).mutable();
 
         for (int i = 0; i < 10; i++) {
             immutable = immutable.xor(randomXorOp);
@@ -19,7 +19,7 @@ public class BytesBenchmark {
         for (int i = 0; i < 5; i++) {
             Thread.sleep(32);
             long durationImmutable = runBenchmark(randomXorOp, immutable);
-            Thread.sleep(320);
+            Thread.sleep(120);
             long durationMutable = runBenchmark(randomXorOp, mutable);
             System.out.println("\nRun " + i);
             System.out.println("Immutable: \t" + durationImmutable + " ns");

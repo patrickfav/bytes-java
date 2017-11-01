@@ -1,7 +1,31 @@
+/*
+ * Copyright 2017 Patrick Favre-Bulle
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package at.favre.lib.primitives.bytes;
 
 import java.util.*;
 
+/**
+ * Common Util methods to convert or modify byte arrays
+ */
 final class Util {
     private Util() {
     }
@@ -119,6 +143,13 @@ final class Util {
         return array;
     }
 
+    /**
+     * Converts given array to list of boxed bytes. Will create a new list
+     * and not reuse the array reference.
+     *
+     * @param array to convert
+     * @return list with same length and content as array
+     */
     static List<Byte> toList(byte[] array) {
         List<Byte> list = new ArrayList<>(array.length);
         for (byte b : array) {
@@ -127,6 +158,13 @@ final class Util {
         return list;
     }
 
+    /**
+     * Converts this primitive array to an boxed object array. Will create a new array
+     * and not reuse the array reference.
+     *
+     * @param array to convert
+     * @return new array
+     */
     static Byte[] toObjectArray(byte[] array) {
         Byte[] objectArray = new Byte[array.length];
         for (int i = 0; i < array.length; i++) {
@@ -144,14 +182,13 @@ final class Util {
      * @param random
      * @return shuffled array
      */
-    static byte[] shuffle(byte[] array, Random random) {
+    static void shuffle(byte[] array, Random random) {
         for (int i = array.length - 1; i > 0; i--) {
             int index = random.nextInt(i + 1);
             byte a = array[index];
             array[index] = array[i];
             array[i] = a;
         }
-        return array;
     }
 
     /*
