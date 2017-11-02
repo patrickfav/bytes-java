@@ -74,7 +74,7 @@ final class Base64 {
             } else if (c == '\n' || c == '\r' || c == ' ' || c == '\t') {
                 continue;
             } else {
-                return null;
+                throw new IllegalArgumentException("invalid character to decode: " + c);
             }
 
             // Append this char's 6 bits to the word.

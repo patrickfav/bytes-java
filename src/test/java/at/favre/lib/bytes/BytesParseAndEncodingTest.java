@@ -44,6 +44,11 @@ public class BytesParseAndEncodingTest extends ABytesTest {
         assertArrayEquals(defaultArray, Bytes.parseHex(Bytes.parseHex("A0E1").encodeHex()).array());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void parseHexInvalid() throws Exception {
+        Bytes.parseHex("A0E");
+    }
+
     @Test
     public void encodeHex() throws Exception {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1};
@@ -56,6 +61,11 @@ public class BytesParseAndEncodingTest extends ABytesTest {
     @Test
     public void parseBase64() throws Exception {
         assertArrayEquals(encodingExample, Bytes.parseBase64("SpT9/x6v7Q==").array());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void parseBase64Invalid() throws Exception {
+        Bytes.parseBase64("☕");
     }
 
     @Test
