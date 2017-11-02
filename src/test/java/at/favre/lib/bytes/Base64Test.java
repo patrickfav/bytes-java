@@ -19,6 +19,8 @@ public class Base64Test {
         assertArrayEquals("foob".getBytes(), Base64.decode("Zm9vYg=="));
         assertArrayEquals("fooba".getBytes(), Base64.decode("Zm9vYmE="));
         assertArrayEquals("foobar".getBytes(), Base64.decode("Zm9vYmFy"));
+        assertArrayEquals("k".getBytes(), Base64.decode("a+"));
+        assertArrayEquals("i".getBytes(), Base64.decode("aZ\n"));
     }
 
     @Test
@@ -30,6 +32,8 @@ public class Base64Test {
         assertEquals("Zm9vYg==", Base64.encode("foob".getBytes()));
         assertEquals("Zm9vYmE=", Base64.encode("fooba".getBytes()));
         assertEquals("Zm9vYmFy", Base64.encode("foobar".getBytes()));
+        assertEquals("aQo=", Base64.encode("i\n".getBytes()));
+        assertEquals("aSA=", Base64.encode("i ".getBytes()));
     }
 
 }
