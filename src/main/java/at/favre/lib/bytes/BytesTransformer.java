@@ -82,7 +82,7 @@ public interface BytesTransformer {
                 }
             }
 
-            return inPlace ? victim : Bytes.wrap(out);
+            return inPlace ? victim : new Bytes(out, victim);
         }
     }
 
@@ -100,7 +100,7 @@ public interface BytesTransformer {
                 out[i] = (byte) ~out[i];
             }
 
-            return inPlace ? victim : Bytes.wrap(out);
+            return inPlace ? victim : new Bytes(out, victim);
         }
     }
 
@@ -177,7 +177,7 @@ public interface BytesTransformer {
                 out[i] = out[out.length - i - 1];
                 out[out.length - i - 1] = temp;
             }
-            return inPlace ? victim : Bytes.wrap(out);
+            return inPlace ? victim : new Bytes(out, victim);
         }
     }
 
@@ -201,7 +201,7 @@ public interface BytesTransformer {
             if (comparator == null) {
                 byte[] out = inPlace ? victim.internalArray() : victim.copy().internalArray();
                 Arrays.sort(out);
-                return inPlace ? victim : Bytes.wrap(out);
+                return inPlace ? victim : new Bytes(out, victim);
             } else {
                 //no in-place implementation with comparator
                 List<Byte> list = victim.toList();
@@ -226,7 +226,7 @@ public interface BytesTransformer {
         public Bytes transform(Bytes victim, boolean inPlace) {
             byte[] out = inPlace ? victim.internalArray() : victim.copy().internalArray();
             Util.shuffle(out, random);
-            return inPlace ? victim : Bytes.wrap(out);
+            return inPlace ? victim : new Bytes(out, victim);
         }
     }
 }

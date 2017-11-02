@@ -1241,12 +1241,19 @@ public class Bytes implements Comparable<Bytes> {
 
         Bytes bytes = (Bytes) o;
 
-        return Arrays.equals(internalArray(), bytes.internalArray());
+        if (mutable != bytes.mutable) return false;
+        if (readonly != bytes.readonly) return false;
+        if (!Arrays.equals(byteArray, bytes.byteArray)) return false;
+        return byteOrder != null ? byteOrder.equals(bytes.byteOrder) : bytes.byteOrder == null;
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(internalArray());
+        int result = Arrays.hashCode(byteArray);
+        result = 31 * result + (byteOrder != null ? byteOrder.hashCode() : 0);
+        result = 31 * result + (mutable ? 1 : 0);
+        result = 31 * result + (readonly ? 1 : 0);
+        return result;
     }
 
     /**
