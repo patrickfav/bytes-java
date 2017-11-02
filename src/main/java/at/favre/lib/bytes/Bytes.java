@@ -1247,6 +1247,26 @@ public class Bytes implements Comparable<Bytes> {
         return byteOrder != null ? byteOrder.equals(bytes.byteOrder) : bytes.byteOrder == null;
     }
 
+    /**
+     * Checks only for internal array content
+     *
+     * @param other to compare to
+     * @return true if the internal array are equals (see {@link Arrays#equals(byte[], byte[])})
+     */
+    public boolean equalsContent(Bytes other) {
+        return other != null && equalsContent(other.internalArray());
+    }
+
+    /**
+     * Checks only for internal array content
+     *
+     * @param array to compare to
+     * @return true if the internal array are equals (see {@link Arrays#equals(byte[], byte[])})
+     */
+    public boolean equalsContent(byte[] array) {
+        return array != null && Arrays.equals(internalArray(), array);
+    }
+
     @Override
     public int hashCode() {
         int result = Arrays.hashCode(byteArray);

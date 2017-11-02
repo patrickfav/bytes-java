@@ -23,6 +23,8 @@ package at.favre.lib.bytes;
 
 import org.junit.Test;
 
+import java.nio.ByteOrder;
+
 import static org.junit.Assert.*;
 
 public class BytesMiscTest extends ABytesTest {
@@ -56,9 +58,20 @@ public class BytesMiscTest extends ABytesTest {
         assertTrue(Bytes.wrap(new byte[0]).equals(Bytes.wrap(new byte[0])));
         assertTrue(Bytes.wrap(new byte[16]).equals(Bytes.wrap(new byte[16])));
         assertTrue(Bytes.wrap(example_bytes_seven).equals(Bytes.from(example_bytes_seven)));
+        assertFalse(Bytes.wrap(example_bytes_seven).byteOrder(ByteOrder.BIG_ENDIAN).equals(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
         assertTrue(Bytes.wrap(example2_bytes_seven).equals(Bytes.from(example2_bytes_seven)));
         assertFalse(Bytes.wrap(example_bytes_seven).equals(Bytes.wrap(example2_bytes_seven)));
         assertFalse(Bytes.wrap(example_bytes_eight).equals(Bytes.wrap(example2_bytes_seven)));
+    }
+
+    @Test
+    public void testEqualsContent() throws Exception {
+        assertTrue(Bytes.wrap(new byte[0]).byteOrder(ByteOrder.BIG_ENDIAN).equalsContent(Bytes.wrap(new byte[0]).byteOrder(ByteOrder.LITTLE_ENDIAN)));
+        assertTrue(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.BIG_ENDIAN).equalsContent(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
+        assertTrue(Bytes.from(example_bytes_seven).mutable().equalsContent(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
+        assertTrue(Bytes.from(example_bytes_seven).mutable().equalsContent(Bytes.from(example_bytes_seven)));
+        assertTrue(Bytes.from(example_bytes_seven).readOnly().equalsContent(Bytes.from(example_bytes_seven)));
+        assertTrue(Bytes.from(example_bytes_seven).readOnly().equalsContent(example_bytes_seven));
     }
 
     @Test
