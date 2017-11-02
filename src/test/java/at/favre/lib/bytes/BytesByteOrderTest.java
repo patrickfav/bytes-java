@@ -123,5 +123,11 @@ public class BytesByteOrderTest extends ABytesTest {
         assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).toLong(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).toLong());
     }
 
+    @Test
+    public void bigInteger() throws Exception {
+        Bytes b = Bytes.from(example_bytes_four);
+        assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).bigInteger(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).bigInteger());
+        assertEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).bigInteger(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().bigInteger());
+    }
 
 }

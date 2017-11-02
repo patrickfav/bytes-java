@@ -100,4 +100,10 @@ public class MutableBytesABytesTest extends ABytesTest {
         Bytes.wrap(new byte[0]).mutable().secureWipe(null);
     }
 
+    @Test
+    public void testIfGetSameInstance() throws Exception {
+        MutableBytes b = fromAndTest(example_bytes_seven).mutable();
+        assertSame(b, b.mutable());
+    }
+
 }

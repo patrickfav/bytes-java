@@ -24,6 +24,7 @@ package at.favre.lib.bytes;
 import org.junit.Test;
 
 import java.nio.ByteOrder;
+import java.nio.ReadOnlyBufferException;
 
 import static org.junit.Assert.*;
 
@@ -178,5 +179,12 @@ public class BytesMiscTest extends ABytesTest {
         assertFalse(Bytes.from(example_bytes_twentyfour).isReadOnly());
         assertTrue(Bytes.from(example_bytes_twentyfour).readOnly().isReadOnly());
         assertTrue(Bytes.from(example_bytes_twentyfour).readOnly().copy().isReadOnly());
+
+        assertArrayEquals(example_bytes_twentyfour, Bytes.from(example_bytes_twentyfour).readOnly().internalArray());
+        try {
+            Bytes.from(example_bytes_twentyfour).readOnly().array();
+            fail();
+        } catch (ReadOnlyBufferException e) {
+        }
     }
 }
