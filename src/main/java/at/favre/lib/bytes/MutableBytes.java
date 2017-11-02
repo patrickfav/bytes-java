@@ -34,7 +34,12 @@ import java.util.Objects;
 public final class MutableBytes extends Bytes {
 
     MutableBytes(byte[] byteArray, ByteOrder byteOrder) {
-        super(byteArray, byteOrder, true, false);
+        super(byteArray, byteOrder);
+    }
+
+    @Override
+    public boolean isMutable() {
+        return true;
     }
 
     /**

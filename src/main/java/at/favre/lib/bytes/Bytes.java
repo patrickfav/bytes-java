@@ -56,7 +56,7 @@ import java.util.*;
  * </pre>
  */
 @SuppressWarnings("WeakerAccess")
-public class Bytes implements Comparable<Bytes> {
+public class Bytes extends AbstractBytes implements Comparable<Bytes> {
 
     /* FACTORY ***************************************************************************************************/
 
@@ -381,8 +381,6 @@ public class Bytes implements Comparable<Bytes> {
 
     private final byte[] byteArray;
     private final ByteOrder byteOrder;
-    private final boolean mutable;
-    private final boolean readonly;
 
     /**
      * Creates a new immutable instance
@@ -390,33 +388,9 @@ public class Bytes implements Comparable<Bytes> {
      * @param byteArray internal byte array
      * @param byteOrder the internal byte order - this is used to interpret given array, not to change it
      */
-    Bytes(byte[] byteArray, ByteOrder byteOrder) {
-        this(byteArray, byteOrder, false, false);
-    }
-
-    /**
-     * Creates a new instance with given array and copies all attributes from old instance
-     *
-     * @param byteArray   internal byte array
-     * @param oldInstance old instance to copy all internal attributes
-     */
-    Bytes(byte[] byteArray, Bytes oldInstance) {
-        this(byteArray, oldInstance.byteOrder(), oldInstance.mutable, oldInstance.readonly);
-    }
-
-    /**
-     * Creates a new instance
-     *
-     * @param byteArray internal byte array
-     * @param byteOrder the internal byte order - this is used to interpret given array, not to change it
-     * @param mutable   if the internal state can be changed
-     * @param readonly  if all getter for internal byte array will fail
-     */
-    Bytes(byte[] byteArray, ByteOrder byteOrder, boolean mutable, boolean readonly) {
+    public Bytes(byte[] byteArray, ByteOrder byteOrder) {
         this.byteArray = byteArray;
         this.byteOrder = byteOrder;
-        this.mutable = mutable;
-        this.readonly = readonly;
     }
 
     /* TRANSFORMER **********************************************************************************************/
@@ -692,7 +666,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return the transformed instance (might be the same, or a new one)
      */
     public Bytes transform(BytesTransformer transformer) {
-        return transformer.transform(this, mutable);
+        return transformer.transform(this, isMutable());
     }
 
     /**
@@ -776,8 +750,9 @@ public class Bytes implements Comparable<Bytes> {
      *
      * @return true if read only
      */
+    @Override
     public boolean isReadOnly() {
-        return readonly;
+        return false;
     }
 
     /**
@@ -904,7 +879,7 @@ public class Bytes implements Comparable<Bytes> {
      * @return a new instance if not already readonly, or "this" otherwise
      */
     public Bytes readOnly() {
-        if (readonly) {
+        if (isReadOnly()) {
             return this;
         } else {
             return new Bytes(internalArray(), byteOrder, false, true);
@@ -980,7 +955,7 @@ public class Bytes implements Comparable<Bytes> {
      * @throws ReadOnlyBufferException if this is a read-only instance
      */
     public byte[] array() {
-        if (!readonly) {
+        if (!isReadOnly()) {
             return internalArray();
         }
         throw new ReadOnlyBufferException();
