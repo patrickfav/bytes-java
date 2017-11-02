@@ -148,7 +148,13 @@ public class BytesMiscTest extends ABytesTest {
         }
 
         try {
-            assertEquals(0, Bytes.allocate(1).byteAt(1));
+            Bytes.allocate(1).byteAt(1);
+            fail();
+        } catch (IndexOutOfBoundsException e) {
+        }
+
+        try {
+            Bytes.allocate(16).byteAt(-1);
             fail();
         } catch (IndexOutOfBoundsException e) {
         }
@@ -186,5 +192,8 @@ public class BytesMiscTest extends ABytesTest {
             fail();
         } catch (ReadOnlyBufferException e) {
         }
+
+        Bytes b = Bytes.from(example_bytes_twentyfour).readOnly();
+        assertSame(b, b.readOnly());
     }
 }
