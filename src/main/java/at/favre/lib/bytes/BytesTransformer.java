@@ -284,4 +284,35 @@ public interface BytesTransformer {
             return resizedArray;
         }
     }
+
+    /**
+     * Switches bits on specific position of an array
+     */
+    class BitSwitchTransformer implements BytesTransformer {
+        private final int position;
+        private final boolean newBitValue;
+
+        BitSwitchTransformer(int position, boolean newBitValue) {
+            this.position = position;
+            this.newBitValue = newBitValue;
+        }
+
+        @Override
+        public byte[] transform(byte[] currentArray, boolean inPlace) {
+            byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
+
+            if (position < 0 || position >= 8 * currentArray.length) {
+                throw new IllegalArgumentException("bit index " + (position * 8) + " out of bounds");
+            }
+
+
+            int bytePosition = currentArray.length - 1 - position / 8;
+            if (newBitValue) {
+                out[bytePosition] ^= (1 << position % 8);
+            } else {
+                out[bytePosition] &= ~(1 << position % 8);
+            }
+            return out;
+        }
+    }
 }

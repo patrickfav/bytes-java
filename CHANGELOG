@@ -4,6 +4,7 @@
 
 * better type hierarchy with read-only and mutable types
 * add validator feature
+* add bit switch feature
 
 ## v0.2.0
 

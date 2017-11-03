@@ -690,6 +690,17 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
+     * Returns a Byte whose value is equivalent to this Byte with the designated bit switched to newBitValue. Bits start to count from the LSB (ie. Bytes.from(0).switchBit(0,true) == 1)
+     *
+     * @param bitPosition not to confuse with byte position
+     * @param newBitValue if true set to 1, 0 otherwise
+     * @return instance with bit switched
+     */
+    public Bytes switchBit(int bitPosition, boolean newBitValue) {
+        return transform(new BytesTransformer.BitSwitchTransformer(bitPosition, newBitValue));
+    }
+
+    /**
      * Generic transformation of this instance.
      * <p>
      * This transformation might be done in-place (ie. without copying the internal array and overwriting its old state),

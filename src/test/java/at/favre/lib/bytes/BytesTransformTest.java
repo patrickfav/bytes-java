@@ -23,6 +23,7 @@ package at.favre.lib.bytes;
 
 import org.junit.Test;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.Comparator;
@@ -239,6 +240,22 @@ public class BytesTransformTest extends ABytesTest {
         assertArrayEquals(new byte[]{0}, Bytes.from(8).rightShift(4).array());
         assertArrayEquals(new byte[]{example_bytes_two[0]}, Bytes.from(example_bytes_two).rightShift(8).array());
         assertArrayEquals(new byte[1], Bytes.from(example_bytes_two).rightShift(16).array());
+    }
+
+    @Test
+    public void bitSwitch() throws Exception {
+        assertEquals(1, Bytes.from(0).switchBit(0, true).toInt());
+
+        for (int i = 0; i < 63; i++) {
+            for (long j = 1; j < 33; j++) {
+                assertEquals("bit position " + i + " is wrong",
+                        BigInteger.valueOf(j).flipBit(i).longValue(),
+                        Bytes.from(j).switchBit(i, true).toLong());
+                assertEquals("bit position " + i + " is wrong",
+                        BigInteger.valueOf(j).clearBit(i).longValue(),
+                        Bytes.from(j).switchBit(i, false).toLong());
+            }
+        }
     }
 
     @Test
