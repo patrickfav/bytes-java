@@ -2,6 +2,9 @@
 
 ## v0.3.0
 
+* better type hierarchy with read-only and mutable types
+* add validator feature
+
 ## v0.2.0
 
 initial version

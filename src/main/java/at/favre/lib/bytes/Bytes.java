@@ -690,6 +690,32 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
         return factory.wrap(transformer.transform(internalArray(), isMutable()), byteOrder);
     }
 
+    /* VALIDATORS ***************************************************************************************************/
+
+    /**
+     * Checks the content of each byte for 0 values
+     *
+     * @return true if not empty and only contains zero byte values
+     */
+    public boolean validateNotOnlyZeros() {
+        return !validate(BytesValidators.onlyOf((byte) 0));
+    }
+
+    /**
+     * Applies all given validators and returns true if all of them return true
+     *
+     * @param bytesValidators array of validators to check against the byte array
+     * @return true if all validators return true
+     */
+    public boolean validate(BytesValidator... bytesValidators) {
+        Objects.requireNonNull(bytesValidators);
+        boolean valid = true;
+        for (BytesValidator bytesValidator : bytesValidators) {
+            valid &= bytesValidator.validate(internalArray());
+        }
+        return valid;
+    }
+
     /* ATTRIBUTES ************************************************************************************************/
 
     /**
