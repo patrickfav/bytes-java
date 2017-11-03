@@ -23,8 +23,7 @@ package at.favre.lib.bytes;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Test cases from rfc4648
@@ -42,6 +41,9 @@ public class Base64Test {
         assertArrayEquals("foobar".getBytes(), Base64.decode("Zm9vYmFy"));
         assertArrayEquals("k".getBytes(), Base64.decode("a+"));
         assertArrayEquals("i".getBytes(), Base64.decode("aZ\n"));
+        assertArrayEquals("foob".getBytes(), Base64.decode("Zm9vYg=========="));
+        assertArrayEquals(new byte[]{106, -64}, Base64.decode("a\rs\t\nC "));
+        assertNull(Base64.decode("a\r\t\n "));
     }
 
     @Test
@@ -55,6 +57,7 @@ public class Base64Test {
         assertEquals("Zm9vYmFy", Base64.encode("foobar".getBytes()));
         assertEquals("aQo=", Base64.encode("i\n".getBytes()));
         assertEquals("aSA=", Base64.encode("i ".getBytes()));
+
     }
 
 }
