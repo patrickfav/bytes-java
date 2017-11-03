@@ -290,9 +290,9 @@ public interface BytesTransformer {
      */
     class BitSwitchTransformer implements BytesTransformer {
         private final int position;
-        private final boolean newBitValue;
+        private final Boolean newBitValue;
 
-        BitSwitchTransformer(int position, boolean newBitValue) {
+        BitSwitchTransformer(int position, Boolean newBitValue) {
             this.position = position;
             this.newBitValue = newBitValue;
         }
@@ -307,8 +307,10 @@ public interface BytesTransformer {
 
 
             int bytePosition = currentArray.length - 1 - position / 8;
-            if (newBitValue) {
+            if (newBitValue == null) {
                 out[bytePosition] ^= (1 << position % 8);
+            } else if (newBitValue) {
+                out[bytePosition] |= (1 << position % 8);
             } else {
                 out[bytePosition] &= ~(1 << position % 8);
             }

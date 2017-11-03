@@ -690,7 +690,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * Returns a Byte whose value is equivalent to this Byte with the designated bit switched to newBitValue. Bits start to count from the LSB (ie. Bytes.from(0).switchBit(0,true) == 1)
+     * Returns a Byte whose value is equivalent to this Byte with the designated bit set to newBitValue. Bits start to count from the LSB (ie. Bytes.from(0).switchBit(0,true) == 1)
      *
      * @param bitPosition not to confuse with byte position
      * @param newBitValue if true set to 1, 0 otherwise
@@ -698,6 +698,16 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      */
     public Bytes switchBit(int bitPosition, boolean newBitValue) {
         return transform(new BytesTransformer.BitSwitchTransformer(bitPosition, newBitValue));
+    }
+
+    /**
+     * Returns a Byte whose value is equivalent to this Byte with the designated bit switched.
+     *
+     * @param bitPosition not to confuse with byte position
+     * @return instance with bit switched
+     */
+    public Bytes switchBit(int bitPosition) {
+        return transform(new BytesTransformer.BitSwitchTransformer(bitPosition, null));
     }
 
     /**

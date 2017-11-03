@@ -249,8 +249,11 @@ public class BytesTransformTest extends ABytesTest {
         for (int i = 0; i < 63; i++) {
             for (long j = 1; j < 33; j++) {
                 assertEquals("bit position " + i + " is wrong",
-                        BigInteger.valueOf(j).flipBit(i).longValue(),
+                        BigInteger.valueOf(j).setBit(i).longValue(),
                         Bytes.from(j).switchBit(i, true).toLong());
+                assertEquals("bit position " + i + " is wrong",
+                        BigInteger.valueOf(j).flipBit(i).longValue(),
+                        Bytes.from(j).switchBit(i).toLong());
                 assertEquals("bit position " + i + " is wrong",
                         BigInteger.valueOf(j).clearBit(i).longValue(),
                         Bytes.from(j).switchBit(i, false).toLong());
