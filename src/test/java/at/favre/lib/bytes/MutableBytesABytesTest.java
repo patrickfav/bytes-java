@@ -106,4 +106,23 @@ public class MutableBytesABytesTest extends ABytesTest {
         assertSame(b, b.mutable());
     }
 
+    @Test
+    public void testTransformerShouldBeMutable() throws Exception {
+        MutableBytes b = fromAndTest(example_bytes_seven).mutable();
+        assertTrue(b.isMutable());
+        assertTrue(b.copy().isMutable());
+        assertTrue(b.duplicate().isMutable());
+        assertTrue(b.reverse().isMutable());
+        assertTrue(b.resize(7).isMutable());
+        assertTrue(b.resize(6).isMutable());
+        assertTrue(b.sort().isMutable());
+        assertTrue(b.shuffle().isMutable());
+        assertTrue(b.negate().isMutable());
+        assertTrue(b.leftShift(1).isMutable());
+        assertTrue(b.rightShift(1).isMutable());
+        assertTrue(b.and(Bytes.random(b.length())).isMutable());
+        assertTrue(b.or(Bytes.random(b.length())).isMutable());
+        assertTrue(b.xor(Bytes.random(b.length())).isMutable());
+        assertTrue(b.append(3).isMutable());
+    }
 }

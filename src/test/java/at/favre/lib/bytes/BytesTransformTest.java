@@ -93,7 +93,7 @@ public class BytesTransformTest extends ABytesTest {
     public void resizeSameInstance() throws Exception {
         Bytes b = Bytes.from(example_bytes_sixteen);
         Bytes b2 = b.resize(16);
-        assertSame(b, b2);
+        assertSame(b.array(), b2.array());
     }
 
     @Test
@@ -245,14 +245,14 @@ public class BytesTransformTest extends ABytesTest {
     public void transform() throws Exception {
         assertArrayEquals(example_bytes_two, Bytes.from(example_bytes_two).transform(new BytesTransformer() {
             @Override
-            public Bytes transform(Bytes victim, boolean inPlace) {
-                return victim.copy();
+            public byte[] transform(byte[] currentArray, boolean inPlace) {
+                return Bytes.from(currentArray).array();
             }
         }).array());
         assertArrayEquals(new byte[2], Bytes.from(example_bytes_two).transform(new BytesTransformer() {
             @Override
-            public Bytes transform(Bytes victim, boolean inPlace) {
-                return Bytes.wrap(new byte[victim.length()]);
+            public byte[] transform(byte[] currentArray, boolean inPlace) {
+                return Bytes.allocate(currentArray.length).array();
             }
         }).array());
     }
