@@ -25,6 +25,10 @@ package at.favre.lib.bytes;
  * Util and easy access for {@link BytesValidators}
  */
 public class BytesValidators {
+
+    private BytesValidators() {
+    }
+
     /**
      * Checks the length of a byte array
      *

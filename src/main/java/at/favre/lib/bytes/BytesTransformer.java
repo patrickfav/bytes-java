@@ -68,6 +68,7 @@ public interface BytesTransformer {
 
             for (int i = 0; i < currentArray.length; i++) {
                 switch (mode) {
+                    default:
                     case OR:
                         out[i] = (byte) (currentArray[i] | secondArray[i]);
                         break;
@@ -77,8 +78,6 @@ public interface BytesTransformer {
                     case XOR:
                         out[i] = (byte) (currentArray[i] ^ secondArray[i]);
                         break;
-                    default:
-                        throw new IllegalArgumentException("unknown bitwise transform mode " + mode);
                 }
             }
 
@@ -129,12 +128,11 @@ public interface BytesTransformer {
             BigInteger bigInt = new BigInteger(currentArray);
 
             switch (type) {
+                default:
                 case LEFT_SHIFT:
                     return bigInt.shiftLeft(shiftCount).toByteArray();
                 case RIGHT_SHIFT:
                     return bigInt.shiftRight(shiftCount).toByteArray();
-                default:
-                    throw new IllegalArgumentException("unknown shift type " + type);
             }
         }
     }

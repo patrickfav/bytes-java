@@ -261,6 +261,11 @@ public class BytesTransformTest extends ABytesTest {
         }
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void bitSwitchOutOfBounds() throws Exception {
+        Bytes.from(4).switchBit(32, true);
+    }
+
     @Test
     public void transform() throws Exception {
         assertArrayEquals(example_bytes_two, Bytes.from(example_bytes_two).transform(new BytesTransformer() {
