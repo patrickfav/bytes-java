@@ -21,22 +21,38 @@
 
 package at.favre.lib.bytes;
 
-/**
- * Base interface for bytes
- */
-public interface AbstractBytes {
+import java.nio.ByteOrder;
+import java.nio.ReadOnlyBufferException;
+
+public final class ReadOnlyBytes extends Bytes {
 
     /**
-     * Checks if instance is mutable
+     * Creates a new immutable instance
      *
-     * @return true if mutable, ie. transformers will change internal array
+     * @param byteArray internal byte array
+     * @param byteOrder the internal byte order - this is used to interpret given array, not to change it
      */
-    boolean isMutable();
+    ReadOnlyBytes(byte[] byteArray, ByteOrder byteOrder) {
+        super(byteArray, byteOrder, new Factory());
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return true;
+    }
+
+    @Override
+    public byte[] array() {
+        throw new ReadOnlyBufferException();
+    }
 
     /**
-     * Checks if instance is readonly
-     *
-     * @return true if readonly, ie. no direct access to the internal array
+     * Factory creating mutable byte types
      */
-    boolean isReadOnly();
+    private static class Factory implements BytesFactory {
+        @Override
+        public Bytes wrap(byte[] array, ByteOrder byteOrder) {
+            return new ReadOnlyBytes(array, byteOrder);
+        }
+    }
 }

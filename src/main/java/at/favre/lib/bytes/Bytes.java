@@ -56,7 +56,7 @@ import java.util.*;
  * </pre>
  */
 @SuppressWarnings("WeakerAccess")
-public class Bytes extends AbstractBytes implements Comparable<Bytes> {
+public class Bytes implements Comparable<Bytes>, AbstractBytes {
 
     /* FACTORY ***************************************************************************************************/
 
@@ -93,7 +93,7 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
      * @return new instance
      */
     public static Bytes wrap(Bytes bytes) {
-        return new Bytes(bytes.internalArray(), bytes.byteOrder, bytes.mutable, bytes.readonly);
+        return new Bytes(bytes.internalArray(), bytes.byteOrder);
     }
 
     /**
@@ -381,6 +381,11 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
 
     private final byte[] byteArray;
     private final ByteOrder byteOrder;
+    private final BytesFactory factory;
+
+    Bytes(byte[] byteArray, ByteOrder byteOrder) {
+        this(byteArray, byteOrder, new Factory());
+    }
 
     /**
      * Creates a new immutable instance
@@ -388,9 +393,10 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
      * @param byteArray internal byte array
      * @param byteOrder the internal byte order - this is used to interpret given array, not to change it
      */
-    public Bytes(byte[] byteArray, ByteOrder byteOrder) {
+    Bytes(byte[] byteArray, ByteOrder byteOrder, BytesFactory factory) {
         this.byteArray = byteArray;
         this.byteOrder = byteOrder;
+        this.factory = factory;
     }
 
     /* TRANSFORMER **********************************************************************************************/
@@ -580,7 +586,7 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
      * @return copied instance
      */
     public Bytes copy() {
-        return new Bytes(Arrays.copyOf(internalArray(), length()), byteOrder, mutable, readonly);
+        return transform(new BytesTransformer.CopyTransformer(0, length()));
     }
 
     /**
@@ -591,9 +597,7 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
      * @return copied instance
      */
     public Bytes copy(int offset, int length) {
-        byte[] copy = new byte[length];
-        System.arraycopy(internalArray(), offset, copy, 0, copy.length);
-        return new Bytes(copy, byteOrder, mutable, readonly);
+        return transform(new BytesTransformer.CopyTransformer(offset, length));
     }
 
     /**
@@ -654,22 +658,6 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
     }
 
     /**
-     * Generic transformation of this instance.
-     * <p>
-     * This transformation might be done in-place (ie. without copying the internal array and overwriting its old state),
-     * or on a copy of the internal data, depending on the type (e.g. {@link MutableBytes}) and if the operation can be done
-     * in-place. Therefore the caller has to ensure that certain side-effects, which occur due to the changing of the internal
-     * data, do not create bugs in his/her code. Usually immutability is prefered, but when handling many or big byte arrays,
-     * mutability enables drastically better performance.
-     *
-     * @param transformer used to transform this instance
-     * @return the transformed instance (might be the same, or a new one)
-     */
-    public Bytes transform(BytesTransformer transformer) {
-        return transformer.transform(this, isMutable());
-    }
-
-    /**
      * Copies the specified array, truncating or padding with zeros (if necessary)
      * so the copy has the specified length.  For all indices that are
      * valid in both the original array and the copy, the two arrays will
@@ -683,28 +671,24 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
      * @return a copy with the desired size or "this" instance if newByteLength == current length
      */
     public Bytes resize(int newByteLength) {
-        if (length() == newByteLength) {
-            return this;
-        }
-
-        if (newByteLength < 0) {
-            throw new IllegalArgumentException("cannot resize to smaller than 0");
-        }
-
-        if (newByteLength == 0) {
-            return new Bytes(new byte[0], this);
-        }
-
-        byte[] resizedArray = new byte[newByteLength];
-        if (newByteLength > length()) {
-            System.arraycopy(internalArray(), 0, resizedArray, Math.max(0, Math.abs(newByteLength - length())), Math.min(newByteLength, length()));
-        } else {
-            System.arraycopy(internalArray(), Math.max(0, Math.abs(newByteLength - length())), resizedArray, Math.min(0, Math.abs(newByteLength - length())), Math.min(newByteLength, length()));
-        }
-
-        return new Bytes(resizedArray, this);
+        return transform(new BytesTransformer.ResizeTransformer(newByteLength));
     }
 
+    /**
+     * Generic transformation of this instance.
+     * <p>
+     * This transformation might be done in-place (ie. without copying the internal array and overwriting its old state),
+     * or on a copy of the internal data, depending on the type (e.g. {@link MutableBytes}) and if the operation can be done
+     * in-place. Therefore the caller has to ensure that certain side-effects, which occur due to the changing of the internal
+     * data, do not create bugs in his/her code. Usually immutability is prefered, but when handling many or big byte arrays,
+     * mutability enables drastically better performance.
+     *
+     * @param transformer used to transform this instance
+     * @return the transformed instance (might be the same, or a new one)
+     */
+    public Bytes transform(BytesTransformer transformer) {
+        return factory.wrap(transformer.transform(internalArray(), isMutable()), byteOrder);
+    }
 
     /* ATTRIBUTES ************************************************************************************************/
 
@@ -743,6 +727,16 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
      */
     public ByteOrder byteOrder() {
         return byteOrder;
+    }
+
+    /**
+     * Checks if instance is mutable
+     *
+     * @return true if mutable, ie. transformers will change internal array
+     */
+    @Override
+    public boolean isMutable() {
+        return false;
     }
 
     /**
@@ -852,9 +846,8 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
      * @return new instance backed by the same data
      */
     public Bytes duplicate() {
-        return wrap(this);
+        return factory.wrap(internalArray(), byteOrder);
     }
-
 
     /**
      * Set the byte order or endianness of this instance. Default in Java is {@link ByteOrder#BIG_ENDIAN}.
@@ -867,7 +860,7 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
      */
     public Bytes byteOrder(ByteOrder byteOrder) {
         if (byteOrder != this.byteOrder) {
-            return new Bytes(internalArray(), byteOrder, mutable, readonly);
+            return wrap(internalArray(), byteOrder);
         }
         return this;
     }
@@ -878,11 +871,11 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
      *
      * @return a new instance if not already readonly, or "this" otherwise
      */
-    public Bytes readOnly() {
+    public ReadOnlyBytes readOnly() {
         if (isReadOnly()) {
-            return this;
+            return (ReadOnlyBytes) this;
         } else {
-            return new Bytes(internalArray(), byteOrder, false, true);
+            return new ReadOnlyBytes(internalArray(), byteOrder);
         }
     }
 
@@ -915,7 +908,7 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
      */
     public BigInteger bigInteger() {
         if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
-            return new BigInteger(new BytesTransformer.ReverseTransformer().transform(this, false).array());
+            return new BigInteger(new BytesTransformer.ReverseTransformer().transform(array(), false));
         } else {
             return new BigInteger(array());
         }
@@ -942,7 +935,7 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
      * @return new input stream
      */
     public InputStream inputStream() {
-        return new ByteArrayInputStream(internalArray());
+        return new ByteArrayInputStream(array());
     }
 
     /**
@@ -955,10 +948,7 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
      * @throws ReadOnlyBufferException if this is a read-only instance
      */
     public byte[] array() {
-        if (!isReadOnly()) {
-            return internalArray();
-        }
-        throw new ReadOnlyBufferException();
+        return internalArray();
     }
 
     byte[] internalArray() {
@@ -1216,8 +1206,6 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
 
         Bytes bytes = (Bytes) o;
 
-        if (mutable != bytes.mutable) return false;
-        if (readonly != bytes.readonly) return false;
         if (!Arrays.equals(byteArray, bytes.byteArray)) return false;
         return byteOrder != null ? byteOrder.equals(bytes.byteOrder) : bytes.byteOrder == null;
     }
@@ -1246,8 +1234,6 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
     public int hashCode() {
         int result = Arrays.hashCode(byteArray);
         result = 31 * result + (byteOrder != null ? byteOrder.hashCode() : 0);
-        result = 31 * result + (mutable ? 1 : 0);
-        result = 31 * result + (readonly ? 1 : 0);
         return result;
     }
 
@@ -1269,6 +1255,13 @@ public class Bytes extends AbstractBytes implements Comparable<Bytes> {
         }
 
         return length() + " bytes " + preview;
+    }
+
+    private static class Factory implements BytesFactory {
+        @Override
+        public Bytes wrap(byte[] array, ByteOrder byteOrder) {
+            return new Bytes(array, byteOrder);
+        }
     }
 
 }

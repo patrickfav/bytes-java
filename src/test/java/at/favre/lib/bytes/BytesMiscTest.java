@@ -181,6 +181,27 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
+    public void readOnlyShouldKeepProperty() throws Exception {
+        ReadOnlyBytes b = Bytes.from(example_bytes_seven).readOnly();
+        assertSame(b, b.readOnly());
+        assertTrue(b.isReadOnly());
+        assertTrue(b.copy().isReadOnly());
+        assertTrue(b.duplicate().isReadOnly());
+        assertTrue(b.reverse().isReadOnly());
+        assertTrue(b.resize(7).isReadOnly());
+        assertTrue(b.resize(6).isReadOnly());
+        assertTrue(b.sort().isReadOnly());
+        assertTrue(b.shuffle().isReadOnly());
+        assertTrue(b.negate().isReadOnly());
+        assertTrue(b.leftShift(1).isReadOnly());
+        assertTrue(b.rightShift(1).isReadOnly());
+        assertTrue(b.and(Bytes.random(b.length())).isReadOnly());
+        assertTrue(b.or(Bytes.random(b.length())).isReadOnly());
+        assertTrue(b.xor(Bytes.random(b.length())).isReadOnly());
+        assertTrue(b.append(3).isReadOnly());
+    }
+
+    @Test
     public void readOnly() throws Exception {
         assertFalse(Bytes.from(example_bytes_twentyfour).isReadOnly());
         assertTrue(Bytes.from(example_bytes_twentyfour).readOnly().isReadOnly());

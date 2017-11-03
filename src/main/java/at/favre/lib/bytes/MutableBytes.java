@@ -34,7 +34,7 @@ import java.util.Objects;
 public final class MutableBytes extends Bytes {
 
     MutableBytes(byte[] byteArray, ByteOrder byteOrder) {
-        super(byteArray, byteOrder);
+        super(byteArray, byteOrder, new Factory());
     }
 
     @Override
@@ -109,5 +109,15 @@ public final class MutableBytes extends Bytes {
         Objects.requireNonNull(random, "must non-null random");
         random.nextBytes(internalArray());
         return this;
+    }
+
+    /**
+     * Factory creating mutable byte types
+     */
+    private static class Factory implements BytesFactory {
+        @Override
+        public Bytes wrap(byte[] array, ByteOrder byteOrder) {
+            return new MutableBytes(array, byteOrder);
+        }
     }
 }
