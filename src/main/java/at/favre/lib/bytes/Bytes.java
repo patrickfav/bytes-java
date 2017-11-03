@@ -30,6 +30,7 @@ import java.nio.ReadOnlyBufferException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.text.Normalizer;
 import java.util.*;
 
 /**
@@ -40,7 +41,8 @@ import java.util.*;
  * <li>Helper functions like: indexOf, count, entropy</li>
  * <li>Transformations like: append, reverse, xor, and, resize, ...</li>
  * <li>Conversation to other types: primitives, List, object array, ByteBuffer, BigInteger, ...</li>
- * <li>Making it mutable</li>
+ * <li>Validation: built-in or provided</li>
+ * <li>Making it mutable or read-only</li>
  * </ul>
  * <p>
  * It supports byte ordering (little/big endianness).
@@ -61,7 +63,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     /* FACTORY ***************************************************************************************************/
 
     /**
-     * Creates a new instance with an empty array filled zeros.
+     * Creates a new instance with an empty array filled with zeros.
      *
      * @param length of the internal array
      * @return new instance
@@ -278,6 +280,17 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
+     * Creates a new instance from normalized form of given utf-8 encoded string
+     *
+     * @param utf8String to get the internal byte array from
+     * @param form       to normalize, usually you want {@link java.text.Normalizer.Form#NFKD} for compatibility
+     * @return new instance
+     */
+    public static Bytes from(String utf8String, Normalizer.Form form) {
+        return from(Normalizer.normalize(utf8String, form), StandardCharsets.UTF_8);
+    }
+
+    /**
      * Creates a new instance from given string
      *
      * @param string  to get the internal byte array from
@@ -363,7 +376,6 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
         return random(length, new SecureRandom());
     }
 
-
     /**
      * A new instance with random bytes.
      *
@@ -402,7 +414,10 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     /* TRANSFORMER **********************************************************************************************/
 
     /**
-     * Creates a new instance with the current array appended with the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (ie. append at the end).
+     * <p>
+     * This will create a new byte array internally, so it is not suitable to use as extensive builder pattern -
+     * use {@link ByteBuffer} or {@link java.io.ByteArrayOutputStream} for that.
      *
      * @param bytes to append
      * @return appended instance
@@ -412,17 +427,17 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * Creates a new instance with the current array appended with the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
      *
      * @param singleByte to append
      * @return appended instance
      */
     public Bytes append(byte singleByte) {
-        return append(new byte[]{singleByte});
+        return append(Bytes.from(singleByte));
     }
 
     /**
-     * Creates a new instance with the current array appended with the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
      *
      * @param char2Bytes to append
      * @return appended instance
@@ -432,7 +447,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * Creates a new instance with the current array appended with the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
      *
      * @param short2Bytes to append
      * @return appended instance
@@ -442,7 +457,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * Creates a new instance with the current array appended with the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
      *
      * @param integer4Bytes to append
      * @return appended instance
@@ -452,7 +467,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * Creates a new instance with the current array appended with the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
      *
      * @param long8Bytes to append
      * @return appended instance
@@ -462,7 +477,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * Creates a new instance with the current array appended with the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
      *
      * @param secondArray to append
      * @return appended instance
@@ -746,7 +761,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * Get the set byte order or endianness. Default in Java is {@link ByteOrder#BIG_ENDIAN}.
+     * Get the set byte order/endianness. Default in Java is {@link ByteOrder#BIG_ENDIAN}.
      *
      * @return either {@link ByteOrder#BIG_ENDIAN} or {@link ByteOrder#LITTLE_ENDIAN}
      * @see <a href="https://en.wikipedia.org/wiki/Endianness">Endianness</a>
@@ -1132,7 +1147,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * If the underlying byte array is smaller than 1 byte / 8 bit returns unsigned two-complement
+     * If the underlying byte array is smaller than or equal to 1 byte / 8 bit returns unsigned two-complement
      * representation for a Java byte value.
      *
      * @return the byte representation
@@ -1147,7 +1162,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * If the underlying byte array is smaller than 2 byte / 16 bit returns unsigned two-complement
+     * If the underlying byte array is smaller than or equal to 2 byte / 16 bit returns unsigned two-complement
      * representation for a Java char integer value. The output is dependent on the set {@link #byteOrder()}.
      *
      * @return the int representation
@@ -1162,7 +1177,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * If the underlying byte array is smaller than 2 byte / 16 bit returns signed two-complement
+     * If the underlying byte array is smaller than or equal to 2 byte / 16 bit returns signed two-complement
      * representation for a Java short integer value. The output is dependent on the set {@link #byteOrder()}.
      *
      * @return the int representation
@@ -1177,7 +1192,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * If the underlying byte array is smaller than 4 byte / 32 bit returns signed two-complement
+     * If the underlying byte array is smaller than or equal to 4 byte / 32 bit returns signed two-complement
      * representation for a Java signed integer value. The output is dependent on the set {@link #byteOrder()}.
      *
      * @return the int representation
@@ -1192,7 +1207,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * If the underlying byte array is smaller than 8 byte / 64 bit returns signed two-complement
+     * If the underlying byte array is smaller than or equal to 8 byte / 64 bit returns signed two-complement
      * representation for a Java signed long integer value. The output is dependent on the set {@link #byteOrder()}.
      *
      * @return the long representation
