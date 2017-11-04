@@ -33,13 +33,14 @@ It's main features include:
 
 * **Creation** from a wide variety of sources: multiple arrays, integers, streams, random, strings, files, ...
 * **Transformation** with many built-in: append, xor, and, or, shifts, shuffle, reverse, sort, ...
-* **Validators** with the ability to arbitrarily combine multiple ones
+* **Validators** with the ability to arbitrarily combine multiple ones with logical expressions
 * **Parsing and Encoding** in most common binary-to-text-encodings: [hex](https://en.wikipedia.org/wiki/Hexadecimal), [base64](https://en.wikipedia.org/wiki/Base64), ...
 * **Immutable, Mutable and Read-Only** versions
 * **Utility Features** like `indexOf`, `count`, `isEmpty`, `bitAt`, ...
 * **Flexibility** provide your own Transformers, Validators and Encoders
 
-It is written in Java 7 to keep backwards compatibility with *Android* and older *Java* applications.
+It is written in [Java 7](https://en.wikipedia.org/wiki/Java_version_history#Java_SE_7) to keep backwards compatibility with *Android* and older *Java* applications.
+It is lightweight as it does not require any additional dependencies.
 
 ## Quickstart
 
