@@ -1,10 +1,47 @@
-# Bytes Java
+# Bytes
+
+Bytes is a utility library that makes it easy to **create**, **parse**, **transform**,
+**validate** and **convert** byte arrays in Java. It's main class `Bytes` is
+a collections of bytes and the main API. It supports [endianness](https://en.wikipedia.org/wiki/Endianness)
+as well as **immutability** and **mutability**, so the caller may decide to favor
+performance. This can be seen as combination of the features provided by
+[`BigInteger`](https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html),
+[`ByteBuffer`](https://docs.oracle.com/javase/7/docs/api/java/nio/ByteBuffer.html) but
+providing a lot of additional features.
 
 [![Download](https://api.bintray.com/packages/patrickfav/maven/bytes-java/images/download.svg)](https://bintray.com/patrickfav/maven/bytes-java/_latestVersion)
 [![Build Status](https://travis-ci.org/patrickfav/bytes-java.svg?branch=master)](https://travis-ci.org/patrickfav/bytes-java)
 [![Javadocs](https://www.javadoc.io/badge/at.favre.lib/bytes.svg)](https://www.javadoc.io/doc/at.favre.lib/bytes)
 [![Coverage Status](https://coveralls.io/repos/github/patrickfav/bytes-java/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/bytes-java?branch=master)
 
+It's main features include:
+
+* **Creation** from a wide variety of sources: multiple arrays, integers, streams, random, files, ...
+* **Transformation** with many built-in: append, xor, and, or, shifts, shuffle, reverse, sort, ...
+* **Validators** with the ability to arbitrarily combine multiple ones
+* **Parsing and Encoding** in most common binary-to-text-encodings: [hex](https://en.wikipedia.org/wiki/Hexadecimal), [base64](https://en.wikipedia.org/wiki/Base64), ...
+* **Immutable, Mutable and Read-Only** versions
+* **Utility Features** like `indexOf`, `count`, `isEmpty`, `byteAt`, ...
+
+It is written in Java 7 to keep backwards compatibility with *Android* and older *Java* applications.
+
+## Quickstart
+
+Add dependency to your `pom.xml`:
+
+    <dependency>
+        <groupId>at.favre.lib</groupId>
+        <artifactId>bytes</artifactId>
+        <version>{latest-version}</version>
+    </dependency>
+
+A very simple example:
+
+```java
+Bytes b = Bytes.wrap(someByteArray);  //reuse given reference
+b.copy().reverse(); //reverse the bytes on a copied instance
+String hex = b.encodeHex(); //encode base16/hex
+```
 
 ## API Description
 
@@ -41,7 +78,7 @@ The following code is equivalent:
 Bytes.wrap(myArray).copy() ~ Bytes.from(myArray)
 ```
 
-### More Constructors
+#### More Constructors
 
 **Concatenating** of multiple byte arrays or bytes:
 
