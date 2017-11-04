@@ -782,6 +782,41 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
         return transform(new BytesTransformer.ResizeTransformer(newByteLength));
     }
 
+
+    /**
+     * Calculates sha256 on the underlying byte array and returns a byte instance containing the hash.
+     *
+     * @return sha256 (32 bytes) hash of internal byte array
+     * @throws IllegalArgumentException if the message digest algorithm can not be found in the security providers
+     * @see <a href="https://en.wikipedia.org/wiki/Secure_Hash_Algorithms">Secure Hash Algorithms</a>
+     */
+    public Bytes hashSha256() {
+        return hash(BytesTransformer.MessageDigestTransformer.ALGORITHM_SHA_256);
+    }
+
+    /**
+     * Calculates sha512 on the underlying byte array and returns a byte instance containing the hash.
+     *
+     * @return sha512 hash (64 bytes) of internal byte array
+     * @throws IllegalArgumentException if the message digest algorithm can not be found in the security providers
+     * @see <a href="https://en.wikipedia.org/wiki/Secure_Hash_Algorithms">Secure Hash Algorithms</a>
+     */
+    public Bytes hashSha512() {
+        return hash(BytesTransformer.MessageDigestTransformer.ALGORITHM_SHA_512);
+    }
+
+    /**
+     * Calculates hash with provided algorithm on the underlying byte array and returns a byte instance
+     * containing the hash.
+     *
+     * @param algorithm same format as passed to {@link java.security.MessageDigest#getInstance(String)}
+     * @return hash of internal byte array
+     * @throws IllegalArgumentException if the message digest algorithm can not be found in the security providers
+     */
+    public Bytes hash(String algorithm) {
+        return transform(new BytesTransformer.MessageDigestTransformer(algorithm));
+    }
+
     /**
      * Generic transformation of this instance.
      * <p>

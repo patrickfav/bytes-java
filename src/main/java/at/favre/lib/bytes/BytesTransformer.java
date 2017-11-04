@@ -22,6 +22,8 @@
 package at.favre.lib.bytes;
 
 import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
@@ -312,6 +314,30 @@ public interface BytesTransformer {
                 out[bytePosition] &= ~(1 << position % 8);
             }
             return out;
+        }
+    }
+
+    /**
+     * Converts to hash
+     */
+    class MessageDigestTransformer implements BytesTransformer {
+        final static String ALGORITHM_SHA_256 = "SHA-256";
+        final static String ALGORITHM_SHA_512 = "SHA-512";
+
+        private final MessageDigest messageDigest;
+
+        MessageDigestTransformer(String digestName) {
+            try {
+                this.messageDigest = MessageDigest.getInstance(digestName);
+            } catch (NoSuchAlgorithmException e) {
+                throw new IllegalArgumentException("could not get message digest algorithm " + digestName, e);
+            }
+        }
+
+        @Override
+        public byte[] transform(byte[] currentArray, boolean inPlace) {
+            messageDigest.update(currentArray);
+            return messageDigest.digest();
         }
     }
 }

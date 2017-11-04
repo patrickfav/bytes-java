@@ -32,7 +32,7 @@ to blindly paste code snippets from
 It's main features include:
 
 * **Creation** from a wide variety of sources: multiple arrays, integers, streams, random, strings, files, ...
-* **Transformation** with many built-in: append, xor, and, or, shifts, shuffle, reverse, sort, ...
+* **Transformation** with many built-in: append, xor, and, hash, shifts, shuffle, reverse, sort, ...
 * **Validators** with the ability to arbitrarily combine multiple ones with logical expressions
 * **Parsing and Encoding** in most common binary-to-text-encodings: [hex](https://en.wikipedia.org/wiki/Hexadecimal), [base64](https://en.wikipedia.org/wiki/Base64), ...
 * **Immutable, Mutable and Read-Only** versions
@@ -192,6 +192,13 @@ Bytes copy = Bytes.wrap(array).copy(3, 17); //copy partial array
 
 ```java
 Bytes resized = Bytes.wrap(array).resize(3); //from {3, 9, 2, 1} to {9, 2, 1}
+```
+
+**Hashing** the internal byte array using the [`MessageDigest`](https://docs.oracle.com/javase/7/docs/api/java/security/MessageDigest.html) Java crypto API:
+
+```java
+Bytes hash = Bytes.wrap(array).sha256();
+Bytes hash = Bytes.wrap(array).hash("MD5");
 ```
 
 Other transformers:
