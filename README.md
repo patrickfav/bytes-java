@@ -37,6 +37,7 @@ It's main features include:
 * **Parsing and Encoding** in most common binary-to-text-encodings: [hex](https://en.wikipedia.org/wiki/Hexadecimal), [base64](https://en.wikipedia.org/wiki/Base64), ...
 * **Immutable, Mutable and Read-Only** versions
 * **Utility Features** like `indexOf`, `count`, `isEmpty`, `bitAt`, ...
+* **Flexibility** provide your own Transformers, Validators and Encoders
 
 It is written in Java 7 to keep backwards compatibility with *Android* and older *Java* applications.
 
@@ -145,7 +146,7 @@ For parsing binary-text-encoded strings, see below.
 
 ### Transformers
 
-Transformer transform the internal byte array. It is possible to create
+Transformers transform the internal byte array. It is possible to create
 custom transformers if a specific feature is not provided by the default
  implementation (see `BytesTransformer`). Depending on the type (mutable vs
  immutable) and transformer it will overwrite the internal byte array
