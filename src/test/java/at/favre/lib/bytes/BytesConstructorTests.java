@@ -146,12 +146,28 @@ public class BytesConstructorTests extends ABytesTest {
     }
 
     @Test
+    public void fromIntArray() throws Exception {
+        assertArrayEquals(new byte[]{0, 0, 0, 1, 0, 0, 0, 2}, Bytes.from(1, 2).array());
+        assertArrayEquals(Bytes.from(Bytes.from(871193), Bytes.from(6761), Bytes.from(-917656)).array(), Bytes.from(871193, 6761, -917656).array());
+        assertArrayEquals(Bytes.from(Bytes.from(1678), Bytes.from(-223), Bytes.from(11114)).array(), Bytes.from(1678, -223, 11114).array());
+        assertArrayEquals(new byte[]{0, 11, 30, 55, 0, 0, 35, 53, 0, 0, 0, 0, 0, 0, 56, -70}, Bytes.from(728631, 9013, 0, 14522).array());
+    }
+
+    @Test
     public void fromLong() throws Exception {
         long test = 172283719283L;
         byte[] primitiveArray = ByteBuffer.allocate(8).putLong(test).array();
         assertArrayEquals(primitiveArray, Bytes.from(test).array());
         assertArrayEquals(new byte[8], Bytes.from(0L).array());
         assertEquals(test, Bytes.from(test).toLong());
+    }
+
+    @Test
+    public void fromLongArray() throws Exception {
+        assertArrayEquals(new byte[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2}, Bytes.from(new long[]{1, 2}).array());
+        assertArrayEquals(Bytes.from(Bytes.from(871193L), Bytes.from(6761L), Bytes.from(-917656L)).array(), Bytes.from(new long[]{871193, 6761, -917656}).array());
+        assertArrayEquals(Bytes.from(Bytes.from(1678L), Bytes.from(-223L), Bytes.from(11114L)).array(), Bytes.from(1678L, -223L, 11114L).array());
+        assertArrayEquals(Bytes.from(Bytes.from(1273612831678L), Bytes.from(-72639123786223L)).array(), Bytes.from(1273612831678L, -72639123786223L).array());
     }
 
     @Test
@@ -272,5 +288,12 @@ public class BytesConstructorTests extends ABytesTest {
         }
 
         assertArrayEquals(randomBytes.array(), Bytes.from(tempFile).array());
+    }
+
+    @Test
+    public void fromObjectArray() throws Exception {
+        Byte[] objectArray = new Byte[]{0x01, 0x02, 0x03, 0x04};
+        Bytes b = Bytes.from(objectArray);
+        assertArrayEquals(new byte[]{0x01, 0x02, 0x03, 0x04}, b.array());
     }
 }

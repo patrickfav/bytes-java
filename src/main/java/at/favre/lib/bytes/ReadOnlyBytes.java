@@ -24,6 +24,13 @@ package at.favre.lib.bytes;
 import java.nio.ByteOrder;
 import java.nio.ReadOnlyBufferException;
 
+/**
+ * The read-only version of {@link Bytes} created by calling {@link #readOnly()}.
+ * <p>
+ * Read-only Bytes does not have access to the internal byte array ({@link #array()}
+ * will throw an exception). Transformers will always create a copy and keep the
+ * read-only status.
+ */
 public final class ReadOnlyBytes extends Bytes {
 
     /**

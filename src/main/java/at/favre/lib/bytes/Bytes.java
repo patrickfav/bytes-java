@@ -130,6 +130,18 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
+     * Creates a new instance from given collections of single bytes.
+     * This will create a copy of given bytes and will not directly use given bytes or byte array.
+     *
+     * @param byteArrayToCopy must not be null and will not be used directly, but a copy
+     * @return new instance
+     */
+    public static Bytes from(byte[] byteArrayToCopy) {
+        Objects.requireNonNull(byteArrayToCopy, "must at least pass a single byte");
+        return wrap(Arrays.copyOf(byteArrayToCopy, byteArrayToCopy.length));
+    }
+
+    /**
      * Creates a new instance from a slice of given array
      *
      * @param array  to slice
@@ -181,6 +193,16 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
+     * Creates a new instance from given object byte array. Will copy and unbox every element.
+     *
+     * @param objectArray to create from
+     * @return new instance
+     */
+    public static Bytes from(Byte[] objectArray) {
+        return wrap(Util.toPrimitiveArray(objectArray));
+    }
+
+    /**
      * Creates a new single array element array instance from given byte
      *
      * @param singleByte to create from
@@ -188,18 +210,6 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      */
     public static Bytes from(byte singleByte) {
         return wrap(new byte[]{singleByte});
-    }
-
-    /**
-     * Creates a new instance from given collections of single bytes.
-     * This will create a copy of given bytes and will not directly use given bytes or byte array.
-     *
-     * @param byteArrayToCopy must not be null and will not be used directly, but a copy
-     * @return new instance
-     */
-    public static Bytes from(byte[] byteArrayToCopy) {
-        Objects.requireNonNull(byteArrayToCopy, "must at least pass a single byte");
-        return wrap(Arrays.copyOf(byteArrayToCopy, byteArrayToCopy.length));
     }
 
     /**
@@ -245,6 +255,17 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
+     * Creates a new instance from given 4 byte integer array.
+     *
+     * @param intArray to create from
+     * @return new instance
+     */
+    public static Bytes from(int... intArray) {
+        Objects.requireNonNull(intArray, "must provide at least a single int");
+        return wrap(Util.toByteArray(intArray));
+    }
+
+    /**
      * Creates a new instance from given 8 byte long.
      *
      * @param long8byte to create from
@@ -252,6 +273,17 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      */
     public static Bytes from(long long8byte) {
         return wrap(ByteBuffer.allocate(8).putLong(long8byte).array());
+    }
+
+    /**
+     * Creates a new instance from given 8 byte long array.
+     *
+     * @param longArray to create from
+     * @return new instance
+     */
+    public static Bytes from(long... longArray) {
+        Objects.requireNonNull(longArray, "must provide at least a single long");
+        return wrap(Util.toByteArray(longArray));
     }
 
     /**
@@ -677,7 +709,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * Reverses the internal byte array.
+     * Reverses the internal bytes in the array (not bits in each byte)
      * <p>
      * See the considerations about possible in-place operation in {@link #transform(BytesTransformer)}.
      *
@@ -1359,6 +1391,9 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
         return length() + " bytes " + preview;
     }
 
+    /**
+     * Internal factory for {@link Bytes} instances
+     */
     private static class Factory implements BytesFactory {
         @Override
         public Bytes wrap(byte[] array, ByteOrder byteOrder) {

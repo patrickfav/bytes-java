@@ -3,7 +3,7 @@
 ## v0.3.1
 
 * better validation and more creation possibilities
-* create from bigInteger
+* create from bigInteger, int[], long[] and Byte[]
 
 ## v0.3.0
 

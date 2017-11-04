@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.util.*;
 
@@ -164,8 +165,8 @@ final class Util {
     }
 
     /**
-     * Converts this primitive array to an boxed object array. Will create a new array
-     * and not reuse the array reference.
+     * Converts this primitive array to an boxed object array.
+     * Will create a new array and not reuse the array reference.
      *
      * @param array to convert
      * @return new array
@@ -176,6 +177,57 @@ final class Util {
             objectArray[i] = array[i];
         }
         return objectArray;
+    }
+
+    /**
+     * Converts this object array to an primitives type array.
+     * Will create a new array and not reuse the array reference.
+     *
+     * @param objectArray to convert
+     * @return new array
+     */
+    static byte[] toPrimitiveArray(Byte[] objectArray) {
+        byte[] primitivesArray = new byte[objectArray.length];
+        for (int i = 0; i < objectArray.length; i++) {
+            primitivesArray[i] = objectArray[i];
+        }
+        return primitivesArray;
+    }
+
+    /**
+     * Creates a byte array from given int array.
+     * The resulting byte array will have length intArray * 4.
+     *
+     * @param intArray to convert
+     * @return resulting byte array
+     */
+    static byte[] toByteArray(int[] intArray) {
+        byte[] primitivesArray = new byte[intArray.length * 4];
+        for (int i = 0; i < intArray.length; i++) {
+            byte[] intBytes = ByteBuffer.allocate(4).putInt(intArray[i]).array();
+            for (int j = 0; j < intBytes.length; j++) {
+                primitivesArray[(i * 4) + j] = intBytes[j];
+            }
+        }
+        return primitivesArray;
+    }
+
+    /**
+     * Creates a byte array from given long array.
+     * The resulting byte array will have length longArray * 8
+     *
+     * @param longArray to convert
+     * @return resulting byte array
+     */
+    static byte[] toByteArray(long[] longArray) {
+        byte[] primitivesArray = new byte[longArray.length * 8];
+        for (int i = 0; i < longArray.length; i++) {
+            byte[] longBytes = ByteBuffer.allocate(8).putLong(longArray[i]).array();
+            for (int j = 0; j < longBytes.length; j++) {
+                primitivesArray[(i * 8) + j] = longBytes[j];
+            }
+        }
+        return primitivesArray;
     }
 
     /**
@@ -251,7 +303,6 @@ final class Util {
         } catch (IOException e) {
             throw new IllegalStateException("could not read from file", e);
         }
-
     }
 
     /*

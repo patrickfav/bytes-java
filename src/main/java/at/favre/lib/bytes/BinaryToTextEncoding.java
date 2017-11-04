@@ -114,6 +114,9 @@ public interface BinaryToTextEncoding {
         }
     }
 
+    /**
+     * Simple Base64 encoder
+     */
     class Base64Encoding implements Encoder, Decoder {
         @Override
         public String encode(byte[] array, ByteOrder byteOrder) {
@@ -126,6 +129,9 @@ public interface BinaryToTextEncoding {
         }
     }
 
+    /**
+     * Simple radix encoder which internally uses {@link BigInteger#toString(int)}
+     */
     class BaseRadix implements Encoder, Decoder {
         private final int radix;
 

@@ -22,7 +22,7 @@ There are 3 basic constructors:
  * `from()` which always creates a new internal array reference (i.e. a copy of the passed reference)
  * `parse()` which parses from binary-text-encoded strings (see other section)
 
-Here is a simple example to show the difference
+Here is a simple example to show the difference:
 
 ```java
 byte[] myArray = ...
@@ -50,11 +50,12 @@ Bytes.from(array1, array2, array3);
 Bytes.from((byte) 0x01, (byte) 0x02, (byte) 0x03);
 ```
 
-Creating byte arrays from **primitive integer** types:
+Creating byte arrays from **primitive integer** types and arrays:
 
 ```java
 Bytes.from(8);  //00000000 00000000 00000000 00001000
 Bytes.from(1897621543227L);
+Bytes.from(1634, 88903, 77263);
 ```
 
 Initializing **empty arrays** of arbitrary length:
@@ -93,7 +94,8 @@ For parsing binary-text-encoded strings, see below.
 ### Transformers
 
 Transformer transform the internal byte array. It is possible to create
-a custom transformer if a specific use case is required (see `BytesTransformer`).
+custom transformers if a specific feature is not provided by the default
+ implementation (see `BytesTransformer`).
 
 ```java
 Bytes result = Bytes.wrap(array1).transform(myCustomTransformer);
@@ -102,8 +104,8 @@ Bytes result = Bytes.wrap(array1).transform(myCustomTransformer);
 #### Built-In Transformers
 
 For **appending** byte arrays or primitive integer types to current instances.
-Note however, that this will create new copies of byte arrays every time.
-For dynamic growing byte arrays see `ByteArrayOutputStream`
+*Note:* this will create a new copy of the internal byte array; for dynamically
+ growing byte arrays see `ByteArrayOutputStream`.
 
 ```java
 Bytes result = Bytes.wrap(array1).append(array2);
@@ -146,7 +148,7 @@ Bytes result = Bytes.wrap(array).reverse();
 
 ### Parser and Encoder for Binary-Text-Encodings
 
-This library can parse and encode a variety of encodings: binary, decimal, ocatal,
+This library can parse and encode a variety of encodings: binary, decimal, octal,
 hex, base36 and base64. Additionally custom parsers are supported by providing your own
 implementation:
 
@@ -155,7 +157,7 @@ Bytes.parse("8sK;S*j=r", base85Decoder);
 Bytes.encode(base85Encoder);
  ```
 
-**Hex** can be upper and lowercase and also supports `0x` prefix for parsing
+**Hex** can be upper and lowercase and also supports `0x` prefix for parsing:
 
 ```java
 Bytes.parseHex("a0e13eaa1a")

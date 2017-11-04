@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * Mutable version of {@link Bytes}. If possible, all transformations are done in place, without creating a copy.
+ * Mutable version of {@link Bytes} created by calling {@link #mutable()}. If possible, all transformations are done in place, without creating a copy.
  * <p>
  * Adds additional mutator, which may change the internal array in-place, like {@link #wipe()}
  */
