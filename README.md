@@ -3,7 +3,7 @@
 Bytes is a utility library that makes it easy to **create**, **parse**, **transform**,
 **validate** and **convert** byte arrays in Java. It's main class `Bytes` is
 a collections of bytes and the main API. It supports [endianness](https://en.wikipedia.org/wiki/Endianness)
-as well as **immutability** and **mutability**, so the caller may decide to favor
+as well as **immutable** and **mutable** access, so the caller may decide to favor
 performance. This can be seen as combination of the features provided by
 [`BigInteger`](https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html),
 [`ByteBuffer`](https://docs.oracle.com/javase/7/docs/api/java/nio/ByteBuffer.html) but
@@ -147,7 +147,9 @@ For parsing binary-text-encoded strings, see below.
 
 Transformer transform the internal byte array. It is possible to create
 custom transformers if a specific feature is not provided by the default
- implementation (see `BytesTransformer`).
+ implementation (see `BytesTransformer`). Depending on the type (mutable vs
+ immutable) and transformer it will overwrite the internal byte array
+ or always create a copy first.
 
 ```java
 Bytes result = Bytes.wrap(array1).transform(myCustomTransformer);
@@ -385,6 +387,13 @@ b.overwrite(anotherArray) //directly overwrite given array
 b.fill(0x03) // fills with e.g. 3
 b.wipe() //fills with zeros
 b.secureWipe() //fills with random data
+```
+
+*Note:* a copy will inherit mutability/read-only properties:
+
+```java
+Bytes b = Bytes.from(array).mutable().copy();
+assertTrue(b.isMutable());
 ```
 
 #### Readonly Bytes
