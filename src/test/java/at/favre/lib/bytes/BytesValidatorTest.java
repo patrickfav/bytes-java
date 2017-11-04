@@ -23,6 +23,9 @@ package at.favre.lib.bytes;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import static at.favre.lib.bytes.BytesValidators.*;
 import static org.junit.Assert.*;
 
@@ -83,6 +86,18 @@ public class BytesValidatorTest extends ABytesTest {
         assertEquals(Bytes.allocate(2).validate(not(onlyOf((byte) 0))), Bytes.allocate(2).validate(notOnlyOf((byte) 0)));
         assertTrue(Bytes.allocate(2).validate(not(atLeast(16))));
         assertFalse(Bytes.allocate(2).validate(not(atMost(16))));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testLogicalNoElements() throws Exception {
+        Bytes.allocate(2).validate(new BytesValidator.Logical(Collections.<BytesValidator>emptyList(), BytesValidator.Logical.Operator.AND));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testLogicalTooManyElements() throws Exception {
+        Bytes.allocate(2).validate(new BytesValidator.Logical(
+                Arrays.<BytesValidator>asList(new BytesValidator.Length(2, BytesValidator.Length.Mode.GREATER_OR_EQ_THAN), new BytesValidator.Length(2, BytesValidator.Length.Mode.EXACT))
+                , BytesValidator.Logical.Operator.NOT));
     }
 
     @Test

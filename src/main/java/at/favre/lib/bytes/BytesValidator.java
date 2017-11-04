@@ -147,12 +147,12 @@ public interface BytesValidator {
         private final Operator operator;
 
         public Logical(List<BytesValidator> validatorList, Operator operator) {
-            if (validatorList.isEmpty()) throw new IllegalArgumentException("must contain at least 1 element");
+            if (validatorList.isEmpty())
+                throw new IllegalArgumentException("must contain at least 1 element");
             if (operator == NOT && validatorList.size() != 1)
                 throw new IllegalArgumentException("not operator can only be applied to single element");
             this.validatorList = validatorList;
             this.operator = operator;
-
         }
 
         @Override
