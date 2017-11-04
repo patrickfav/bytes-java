@@ -21,9 +21,13 @@
 
 package at.favre.lib.bytes;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -36,6 +40,8 @@ import java.util.LinkedList;
 import static org.junit.Assert.*;
 
 public class BytesConstructorTests extends ABytesTest {
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Test
     public void wrapTest() throws Exception {
@@ -254,5 +260,17 @@ public class BytesConstructorTests extends ABytesTest {
     public void fromPartByte() throws Exception {
         assertArrayEquals(new byte[]{example_bytes_four[1]}, Bytes.from(example_bytes_four, 1, 1).array());
         assertArrayEquals(new byte[]{example_bytes_eight[4], example_bytes_eight[5], example_bytes_eight[6]}, Bytes.from(example_bytes_eight, 4, 3).array());
+    }
+
+    @Test
+    public void fromFile() throws Exception {
+        File tempFile = testFolder.newFile("out-test.txt");
+        Bytes randomBytes = Bytes.random(500);
+
+        try (FileOutputStream stream = new FileOutputStream(tempFile)) {
+            stream.write(randomBytes.array());
+        }
+
+        assertArrayEquals(randomBytes.array(), Bytes.from(tempFile).array());
     }
 }

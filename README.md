@@ -61,7 +61,7 @@ Initializing **empty arrays** of arbitrary length:
 
 ```java
 Bytes.allocate(16);
-Bytes.allocate(4,(byte) 1); //fill with 0x01
+Bytes.allocate(4, (byte) 1); //fill with 0x01
 ```
 
 Creating **random** byte arrays for e.g. testing:
@@ -85,6 +85,7 @@ Bytes.from(byteInputStream); //any inputStream
 Bytes.from(byteList); //List<Byte> byteList = ...
 Bytes.from(myBitSet); //BitSet myBitSet = ...
 Bytes.from(bigInteger);
+Bytes.from(file); //reads bytes from any java.io.File
 ```
 
 For parsing binary-text-encoded strings, see below.
@@ -179,6 +180,8 @@ Bytes.from(array).encodeDec(); //20992966904426477
 Bytes.from(array).encodeOctal(); //1124517677707527755
 Bytes.from(array).encodeBase36(); //5qpdvuwjvu5
 ```
+
+### Utility Methods
 
 ### Validation
 

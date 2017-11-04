@@ -22,6 +22,7 @@
 package at.favre.lib.bytes;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
@@ -293,6 +294,19 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      */
     public static Bytes from(InputStream stream) {
         return wrap(Util.readFromStream(stream));
+    }
+
+    /**
+     * Reads given file and returns the byte content. Be aware that the whole file content will be loaded to
+     * memory, so be careful what to read in.
+     *
+     * @param file to read from
+     * @return new instance
+     * @throws IllegalArgumentException if file does not exist
+     * @throws IllegalStateException    if file could not be read
+     */
+    public static Bytes from(File file) {
+        return wrap(Util.readFromFile(file));
     }
 
     /**
@@ -983,7 +997,6 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     private ByteBuffer internalBuffer() {
         return ByteBuffer.wrap(internalArray()).order(byteOrder);
     }
-
 
 
     /**

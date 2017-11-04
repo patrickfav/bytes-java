@@ -22,7 +22,10 @@
 package at.favre.lib.bytes;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -230,6 +233,25 @@ final class Util {
         } else {
             return concat(new byte[]{firstByte}, moreBytes);
         }
+    }
+
+    /**
+     * Reads all bytes from a file
+     *
+     * @param file the file to read
+     * @return byte content
+     */
+    static byte[] readFromFile(File file) {
+        if (file == null || !file.exists() || !file.isFile()) {
+            throw new IllegalArgumentException("file must not be null, has to exist and must be a file (not a directory) " + file);
+        }
+
+        try {
+            return Files.readAllBytes(file.toPath());
+        } catch (IOException e) {
+            throw new IllegalStateException("could not read from file", e);
+        }
+
     }
 
     /*
