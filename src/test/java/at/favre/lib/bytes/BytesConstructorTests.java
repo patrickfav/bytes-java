@@ -21,6 +21,7 @@
 
 package at.favre.lib.bytes;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -288,6 +289,28 @@ public class BytesConstructorTests extends ABytesTest {
         }
 
         assertArrayEquals(randomBytes.array(), Bytes.from(tempFile).array());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void fromFileNotExisting() throws Exception {
+        Bytes.from(new File("doesnotexist"));
+    }
+
+    @Test
+    @Ignore("setting file NOT readable does not seem to work")
+    public void fromFileCannotRead() throws Exception {
+        File tempFile = testFolder.newFile("out-test2.txt");
+        Bytes randomBytes = Bytes.random(500);
+
+        try (FileOutputStream stream = new FileOutputStream(tempFile)) {
+            stream.write(randomBytes.array());
+        }
+        assertTrue(tempFile.setReadable(false));
+        try {
+            Bytes.from(tempFile);
+            fail();
+        } catch (IllegalStateException e) {
+        }
     }
 
     @Test

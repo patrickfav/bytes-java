@@ -810,18 +810,14 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * Applies all given validators and returns true if all of them return true
+     * Applies all given validators and returns true if all of them return true (default AND concatenation).
      *
      * @param bytesValidators array of validators to check against the byte array
      * @return true if all validators return true
      */
     public boolean validate(BytesValidator... bytesValidators) {
         Objects.requireNonNull(bytesValidators);
-        boolean valid = true;
-        for (BytesValidator bytesValidator : bytesValidators) {
-            valid &= bytesValidator.validate(internalArray());
-        }
-        return valid;
+        return BytesValidators.and(bytesValidators).validate(internalArray());
     }
 
     /* ATTRIBUTES ************************************************************************************************/

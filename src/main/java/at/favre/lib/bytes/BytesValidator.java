@@ -21,6 +21,11 @@
 
 package at.favre.lib.bytes;
 
+import java.util.List;
+
+import static at.favre.lib.bytes.BytesValidator.Logical.Operator.NOT;
+import static at.favre.lib.bytes.BytesValidator.Logical.Operator.OR;
+
 /**
  * Interface for validating byte arrays
  */
@@ -64,7 +69,6 @@ public interface BytesValidator {
         }
     }
 
-
     /**
      * Checks if a byte array contains only the same value
      */
@@ -97,5 +101,80 @@ public interface BytesValidator {
             }
             return mode == Mode.NONE_OF || mode == Mode.ONLY_OF;
         }
+    }
+
+    /**
+     * Checks if arrays end or start with given array
+     */
+    final class PrePostFix implements BytesValidator {
+
+        private final byte[] pfix;
+        private final boolean startsWith;
+
+        public PrePostFix(boolean startsWith, byte... pfix) {
+            this.pfix = pfix;
+            this.startsWith = startsWith;
+        }
+
+        @Override
+        public boolean validate(byte[] byteArrayToValidate) {
+            if (pfix.length > byteArrayToValidate.length) {
+                return false;
+            }
+
+            for (int i = 0; i < pfix.length; i++) {
+                if (startsWith && pfix[i] != byteArrayToValidate[i]) {
+                    return false;
+                }
+                if (!startsWith && pfix[i] != byteArrayToValidate[byteArrayToValidate.length - pfix.length + i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    /**
+     * Logical operations over multiple validators
+     */
+    final class Logical implements BytesValidator {
+        enum Operator {
+            OR, AND, NOT
+        }
+
+        private final List<BytesValidator> validatorList;
+
+        private final Operator operator;
+
+        public Logical(List<BytesValidator> validatorList, Operator operator) {
+            if (validatorList.isEmpty()) throw new IllegalArgumentException("must contain at least 1 element");
+            if (operator == NOT && validatorList.size() != 1)
+                throw new IllegalArgumentException("not operator can only be applied to single element");
+            this.validatorList = validatorList;
+            this.operator = operator;
+
+        }
+
+        @Override
+        public boolean validate(byte[] byteArrayToValidate) {
+            if (operator == NOT) {
+                return !validatorList.get(0).validate(byteArrayToValidate);
+            }
+
+            boolean bool = operator != OR;
+            for (BytesValidator bytesValidator : validatorList) {
+                switch (operator) {
+                    default:
+                    case OR:
+                        bool |= bytesValidator.validate(byteArrayToValidate);
+                        break;
+                    case AND:
+                        bool &= bytesValidator.validate(byteArrayToValidate);
+                        break;
+                }
+            }
+            return bool;
+        }
+
     }
 }

@@ -23,8 +23,8 @@ package at.favre.lib.bytes;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static at.favre.lib.bytes.BytesValidators.*;
+import static org.junit.Assert.*;
 
 public class BytesValidatorTest extends ABytesTest {
 
@@ -36,28 +36,84 @@ public class BytesValidatorTest extends ABytesTest {
         assertTrue(Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 1}).validateNotOnlyZeros());
         assertTrue(Bytes.random(128).validateNotOnlyZeros());
 
-        assertTrue(Bytes.allocate(1).validate(BytesValidators.onlyOf((byte) 0)));
-        assertFalse(Bytes.allocate(1).validate(BytesValidators.noneOf((byte) 0)));
-        assertFalse(Bytes.allocate(1).validate(BytesValidators.onlyOf((byte) 1)));
-        assertTrue(Bytes.allocate(1).validate(BytesValidators.noneOf((byte) 1)));
-        assertTrue(Bytes.allocate(1).validate(BytesValidators.noneOf((byte) 1)));
-        assertTrue(Bytes.wrap(new byte[]{1, 1, 1, 1, 0, 1}).validate(BytesValidators.notOnlyOf((byte) 1)));
-        assertFalse(Bytes.wrap(new byte[]{1, 1, 1, 1, 1}).validate(BytesValidators.notOnlyOf((byte) 1)));
-        assertTrue(Bytes.wrap(new byte[]{1, 1, 1, 1, 1, 1}).validate(BytesValidators.onlyOf((byte) 1)));
+        assertTrue(Bytes.allocate(1).validate(onlyOf((byte) 0)));
+        assertFalse(Bytes.allocate(1).validate(noneOf((byte) 0)));
+        assertFalse(Bytes.allocate(1).validate(onlyOf((byte) 1)));
+        assertTrue(Bytes.allocate(1).validate(noneOf((byte) 1)));
+        assertTrue(Bytes.allocate(1).validate(noneOf((byte) 1)));
+        assertTrue(Bytes.wrap(new byte[]{1, 1, 1, 1, 0, 1}).validate(notOnlyOf((byte) 1)));
+        assertFalse(Bytes.wrap(new byte[]{1, 1, 1, 1, 1}).validate(notOnlyOf((byte) 1)));
+        assertTrue(Bytes.wrap(new byte[]{1, 1, 1, 1, 1, 1}).validate(onlyOf((byte) 1)));
     }
 
     @Test
     public void testLengthValidators() throws Exception {
-        assertFalse(Bytes.allocate(0).validate(BytesValidators.atLeast(1)));
-        assertTrue(Bytes.allocate(1).validate(BytesValidators.atLeast(1)));
-        assertTrue(Bytes.allocate(2).validate(BytesValidators.atLeast(1)));
+        assertFalse(Bytes.allocate(0).validate(atLeast(1)));
+        assertTrue(Bytes.allocate(1).validate(atLeast(1)));
+        assertTrue(Bytes.allocate(2).validate(atLeast(1)));
 
-        assertFalse(Bytes.allocate(2).validate(BytesValidators.atMost(1)));
-        assertTrue(Bytes.allocate(1).validate(BytesValidators.atMost(1)));
-        assertTrue(Bytes.allocate(0).validate(BytesValidators.atMost(1)));
+        assertFalse(Bytes.allocate(2).validate(atMost(1)));
+        assertTrue(Bytes.allocate(1).validate(atMost(1)));
+        assertTrue(Bytes.allocate(0).validate(atMost(1)));
 
-        assertFalse(Bytes.allocate(0).validate(BytesValidators.exactLength(1)));
-        assertTrue(Bytes.allocate(1).validate(BytesValidators.exactLength(1)));
-        assertFalse(Bytes.allocate(2).validate(BytesValidators.exactLength(1)));
+        assertFalse(Bytes.allocate(0).validate(exactLength(1)));
+        assertTrue(Bytes.allocate(1).validate(exactLength(1)));
+        assertFalse(Bytes.allocate(2).validate(exactLength(1)));
+    }
+
+    @Test
+    public void testOrValidation() throws Exception {
+        assertTrue(Bytes.allocate(0).validate(or(exactLength(1), exactLength(0))));
+        assertTrue(Bytes.allocate(2).validate(or(atLeast(3), onlyOf((byte) 0))));
+        assertTrue(Bytes.allocate(3).validate(or(onlyOf((byte) 1), onlyOf((byte) 0))));
+        assertTrue(Bytes.wrap(new byte[]{0, 0}).validate(or(onlyOf((byte) 1), onlyOf((byte) 0))));
+        assertFalse(Bytes.wrap(new byte[]{1, 0}).validate(or(onlyOf((byte) 2), onlyOf((byte) 1), onlyOf((byte) 0))));
+    }
+
+    @Test
+    public void testAndValidation() throws Exception {
+        assertFalse(Bytes.allocate(5).validate(and(atLeast(3), notOnlyOf((byte) 0))));
+        assertFalse(Bytes.wrap(new byte[]{1, 0}).validate(and(atLeast(3), notOnlyOf((byte) 0))));
+        assertTrue(Bytes.wrap(new byte[]{1, 0, 0}).validate(and(atLeast(3), notOnlyOf((byte) 0))));
+        assertFalse(Bytes.allocate(21).validate(and(atLeast(3), atMost(20))));
+    }
+
+    @Test
+    public void testNotValidation() throws Exception {
+        assertEquals(Bytes.allocate(2).validate(not(onlyOf((byte) 0))), Bytes.allocate(2).validate(notOnlyOf((byte) 0)));
+        assertTrue(Bytes.allocate(2).validate(not(atLeast(16))));
+        assertFalse(Bytes.allocate(2).validate(not(atMost(16))));
+    }
+
+    @Test
+    public void testNestedValidation() throws Exception {
+        assertTrue(Bytes.allocate(16).validate(
+                or(and(atLeast(8), not(onlyOf(((byte) 0)))),
+                        or(exactLength(16), exactLength(12)))));
+
+        assertTrue(Bytes.allocate(16).validate(or(exactLength(16), exactLength(12))));
+        assertFalse(Bytes.allocate(16).validate(and(atLeast(8), not(onlyOf(((byte) 0))))));
+        assertTrue(Bytes.allocate(16).validate(and(atLeast(8), onlyOf(((byte) 0)))));
+        assertTrue(Bytes.allocate(16).validate(or(not(onlyOf(((byte) 0))), exactLength(16))));
+    }
+
+    @Test
+    public void testStartWithValidate() throws Exception {
+        assertTrue(Bytes.wrap(new byte[]{0, 3, 0}).validate(startsWith((byte) 0, (byte) 3)));
+        assertFalse(Bytes.wrap(new byte[]{0, 2, 0}).validate(startsWith((byte) 0, (byte) 3)));
+        assertTrue(Bytes.wrap(new byte[]{0, 2, 0}).validate(startsWith((byte) 0)));
+        assertFalse(Bytes.wrap(new byte[]{0, 2, 0}).validate(startsWith((byte) 2)));
+        assertTrue(Bytes.allocate(16).validate(startsWith((byte) 0)));
+        assertFalse(Bytes.allocate(16).validate(startsWith(Bytes.allocate(17).array())));
+    }
+
+    @Test
+    public void testEndsWithValidate() throws Exception {
+        assertTrue(Bytes.wrap(new byte[]{1, 2, 3}).validate(endsWith((byte) 2, (byte) 3)));
+        assertFalse(Bytes.wrap(new byte[]{0, 2, 0}).validate(endsWith((byte) 3, (byte) 0)));
+        assertTrue(Bytes.wrap(new byte[]{0, 2, 0}).validate(endsWith((byte) 0)));
+        assertFalse(Bytes.wrap(new byte[]{0, 2, 0}).validate(endsWith((byte) 2)));
+        assertTrue(Bytes.allocate(16).validate(endsWith((byte) 0)));
+        assertFalse(Bytes.allocate(16).validate(endsWith(Bytes.allocate(17).array())));
     }
 }

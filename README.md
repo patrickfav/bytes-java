@@ -190,13 +190,30 @@ Bytes.from(array).encodeBase36(); //5qpdvuwjvu5
 A simple validation framework which can be used to check the internal byte array:
 
 ```java
-Bytes.wrap(new byte[]{8, 3, 9}.validate(BytesValidators.atLeast(3)); // true
+Bytes.wrap(new byte[]{8, 3, 9}.validate(BytesValidators.startsWith((byte) 8), BytesValidators.atLeast(3)); // true
 ```
 
 This is especially convenient when combining validators:
 
 ```java
 Bytes.wrap(new byte[]{0, 1}.validate(BytesValidators.atMost(2), BytesValidators.notOnlyOf((byte)  0)); // true
+```
+
+Validators also support nestable logical expressions AND, OR as well as NOT:
+
+```java
+Bytes.allocate(0).validate(or(exactLength(1), exactLength(0))) //true
+Bytes.allocate(21).validate(and(atLeast(3), atMost(20))) //true
+Bytes.allocate(2).validate(not(onlyOf((byte) 0))); //false
+```
+
+Nesting is also possible:
+
+```java
+assertTrue(Bytes.allocate(16).validate(
+                or(
+                   and(atLeast(8),not(onlyOf(((byte) 0)))),
+                   or(exactLength(16), exactLength(12)))));
 ```
 
 ### Converting
