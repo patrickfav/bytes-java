@@ -32,22 +32,30 @@ public class BytesValidators {
     /**
      * Checks the length of a byte array
      *
-     * @param value to check against
+     * @param byteLength to check against
      * @return true if longer than given value
      */
-    public static BytesValidator longerThan(int value) {
-        return new BytesValidator.Length(value, BytesValidator.Length.Mode.GREATER_THAN);
+    public static BytesValidator atLeast(int byteLength) {
+        return new BytesValidator.Length(byteLength, BytesValidator.Length.Mode.GREATER_OR_EQ_THAN);
     }
 
-    public static BytesValidator shorterThan(int value) {
-        return new BytesValidator.Length(value, BytesValidator.Length.Mode.SMALLER_THAN);
+    public static BytesValidator atMost(int byteLength) {
+        return new BytesValidator.Length(byteLength, BytesValidator.Length.Mode.SMALLER_OR_EQ_THAN);
     }
 
-    public static BytesValidator exactLength(int value) {
-        return new BytesValidator.Length(value, BytesValidator.Length.Mode.EXACT);
+    public static BytesValidator exactLength(int byteLength) {
+        return new BytesValidator.Length(byteLength, BytesValidator.Length.Mode.EXACT);
     }
 
     public static BytesValidator onlyOf(byte value) {
-        return new BytesValidator.IdenticalContent(value);
+        return new BytesValidator.IdenticalContent(value, BytesValidator.IdenticalContent.Mode.ONLY_OF);
+    }
+
+    public static BytesValidator notOnlyOf(byte value) {
+        return new BytesValidator.IdenticalContent(value, BytesValidator.IdenticalContent.Mode.NOT_ONLY_OF);
+    }
+
+    public static BytesValidator noneOf(byte value) {
+        return new BytesValidator.IdenticalContent(value, BytesValidator.IdenticalContent.Mode.NONE_OF);
     }
 }

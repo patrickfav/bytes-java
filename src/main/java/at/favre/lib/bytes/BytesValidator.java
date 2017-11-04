@@ -39,7 +39,7 @@ public interface BytesValidator {
      */
     final class Length implements BytesValidator {
         enum Mode {
-            SMALLER_THAN, GREATER_THAN, EXACT
+            SMALLER_OR_EQ_THAN, GREATER_OR_EQ_THAN, EXACT
         }
 
         private final int refLength;
@@ -53,10 +53,10 @@ public interface BytesValidator {
         @Override
         public boolean validate(byte[] byteArrayToValidate) {
             switch (mode) {
-                case GREATER_THAN:
-                    return byteArrayToValidate.length > refLength;
-                case SMALLER_THAN:
-                    return byteArrayToValidate.length < refLength;
+                case GREATER_OR_EQ_THAN:
+                    return byteArrayToValidate.length >= refLength;
+                case SMALLER_OR_EQ_THAN:
+                    return byteArrayToValidate.length <= refLength;
                 default:
                 case EXACT:
                     return byteArrayToValidate.length == refLength;
@@ -69,21 +69,33 @@ public interface BytesValidator {
      * Checks if a byte array contains only the same value
      */
     final class IdenticalContent implements BytesValidator {
-        final byte refByte;
+        private final byte refByte;
 
+        enum Mode {
+            ONLY_OF, NONE_OF, NOT_ONLY_OF
+        }
 
-        IdenticalContent(byte refByte) {
+        private final Mode mode;
+
+        IdenticalContent(byte refByte, Mode mode) {
             this.refByte = refByte;
+            this.mode = mode;
         }
 
         @Override
         public boolean validate(byte[] byteArrayToValidate) {
             for (byte b : byteArrayToValidate) {
-                if (b != refByte) {
+                if (mode == Mode.NONE_OF && b == refByte) {
                     return false;
                 }
+                if (mode == Mode.ONLY_OF && b != refByte) {
+                    return false;
+                }
+                if (mode == Mode.NOT_ONLY_OF && b != refByte) {
+                    return true;
+                }
             }
-            return true;
+            return mode == Mode.NONE_OF || mode == Mode.ONLY_OF;
         }
     }
 }

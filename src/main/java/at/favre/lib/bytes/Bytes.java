@@ -749,7 +749,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      * @return true if not empty and only contains zero byte values
      */
     public boolean validateNotOnlyZeros() {
-        return !validate(BytesValidators.onlyOf((byte) 0));
+        return validate(BytesValidators.notOnlyOf((byte) 0));
     }
 
     /**

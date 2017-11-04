@@ -36,19 +36,25 @@ public class BytesValidatorTest extends ABytesTest {
         assertTrue(Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 1}).validateNotOnlyZeros());
         assertTrue(Bytes.random(128).validateNotOnlyZeros());
 
-        assertTrue(Bytes.allocate(0).validate(BytesValidators.onlyOf((byte) 0)));
+        assertTrue(Bytes.allocate(1).validate(BytesValidators.onlyOf((byte) 0)));
+        assertFalse(Bytes.allocate(1).validate(BytesValidators.noneOf((byte) 0)));
+        assertFalse(Bytes.allocate(1).validate(BytesValidators.onlyOf((byte) 1)));
+        assertTrue(Bytes.allocate(1).validate(BytesValidators.noneOf((byte) 1)));
+        assertTrue(Bytes.allocate(1).validate(BytesValidators.noneOf((byte) 1)));
+        assertTrue(Bytes.wrap(new byte[]{1, 1, 1, 1, 0, 1}).validate(BytesValidators.notOnlyOf((byte) 1)));
+        assertFalse(Bytes.wrap(new byte[]{1, 1, 1, 1, 1}).validate(BytesValidators.notOnlyOf((byte) 1)));
         assertTrue(Bytes.wrap(new byte[]{1, 1, 1, 1, 1, 1}).validate(BytesValidators.onlyOf((byte) 1)));
     }
 
     @Test
     public void testLengthValidators() throws Exception {
-        assertFalse(Bytes.allocate(0).validate(BytesValidators.longerThan(1)));
-        assertFalse(Bytes.allocate(1).validate(BytesValidators.longerThan(1)));
-        assertTrue(Bytes.allocate(2).validate(BytesValidators.longerThan(1)));
+        assertFalse(Bytes.allocate(0).validate(BytesValidators.atLeast(1)));
+        assertTrue(Bytes.allocate(1).validate(BytesValidators.atLeast(1)));
+        assertTrue(Bytes.allocate(2).validate(BytesValidators.atLeast(1)));
 
-        assertFalse(Bytes.allocate(2).validate(BytesValidators.shorterThan(1)));
-        assertFalse(Bytes.allocate(1).validate(BytesValidators.shorterThan(1)));
-        assertTrue(Bytes.allocate(0).validate(BytesValidators.shorterThan(1)));
+        assertFalse(Bytes.allocate(2).validate(BytesValidators.atMost(1)));
+        assertTrue(Bytes.allocate(1).validate(BytesValidators.atMost(1)));
+        assertTrue(Bytes.allocate(0).validate(BytesValidators.atMost(1)));
 
         assertFalse(Bytes.allocate(0).validate(BytesValidators.exactLength(1)));
         assertTrue(Bytes.allocate(1).validate(BytesValidators.exactLength(1)));

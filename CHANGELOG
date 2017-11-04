@@ -1,5 +1,9 @@
 # Releases
 
+## v0.3.1
+
+* better validation and more creation possibilities
+
 ## v0.3.0
 
 * better type hierarchy with read-only and mutable types
