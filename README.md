@@ -16,7 +16,7 @@ providing a lot of additional features.
 
 It's main features include:
 
-* **Creation** from a wide variety of sources: multiple arrays, integers, streams, random, files, ...
+* **Creation** from a wide variety of sources: multiple arrays, integers, streams, random, strings, files, ...
 * **Transformation** with many built-in: append, xor, and, or, shifts, shuffle, reverse, sort, ...
 * **Validators** with the ability to arbitrarily combine multiple ones
 * **Parsing and Encoding** in most common binary-to-text-encodings: [hex](https://en.wikipedia.org/wiki/Hexadecimal), [base64](https://en.wikipedia.org/wiki/Base64), ...
@@ -222,6 +222,31 @@ Bytes.from(array).encodeBase36(); //5qpdvuwjvu5
 
 ### Utility Methods
 
+Methods that return additional information about the instance.
+
+Finding occurrence of specific bytes:
+
+```java
+Bytes.wrap(array).indexOf((byte) 0xFD);
+Bytes.wrap(array).lastIndexOf((byte) 0xAE);
+```
+
+Length checks:
+
+```java
+Bytes.wrap(array).length();
+Bytes.wrap(array).lengthBit(); //8 * array.length
+Bytes.wrap(array).isEmpty();
+```
+
+And others:
+
+```java
+Bytes.wrap(array).byteAt(14);
+Bytes.wrap(array).count(0x01); //occurrence of 0x01
+Bytes.wrap(array).entropy();
+```
+
 ### Validation
 
 A simple validation framework which can be used to check the internal byte array:
@@ -250,10 +275,63 @@ Nesting is also possible:
 assertTrue(Bytes.allocate(16).validate(
                 or(
                    and(atLeast(8),not(onlyOf(((byte) 0)))),
-                   or(exactLength(16), exactLength(12)))));
+                   or(exactLength(16), exactLength(12))))); // true
 ```
 
 ### Converting
+
+The internal byte array can be converted or exported into many different formats.
+There are 2 different kinds of converters:
+
+* Ones that create a new type which reuses the same shared memory
+* Ones that create a copy of the internal array, which start with `to*`
+
+#### Shared Memory Conversion
+
+Not technically a conversation, but it is of course possible to access the internal array:
+
+```java
+Bytes.wrap(array).array();
+```
+
+Conversion to `InputStream` and `ByteBuffer`:
+
+```java
+Bytes.wrap(array).inputStream();
+Bytes.wrap(array).byteBuffer();
+```
+
+If you just want a duplicated instance, sharing the same array:
+
+```java
+Bytes.wrap(array).duplicate();
+```
+
+For the conversion to read-only and mutability, see below.
+
+#### Copy Conversion
+
+To primitives (if the internal array is not too long)
+
+```java
+Bytes.wrap(array).toByte();
+Bytes.wrap(array).toInt();
+Bytes.wrap(array).toLong();
+```
+
+To other collections
+
+```java
+Bytes.wrap(array).toList(); // of type List<Byte>
+Bytes.wrap(array).toObjectArray(); // of type Byte[Byte]
+Bytes.wrap(array).toBitSet();
+```
+
+and to BigInteger of course:
+
+```java
+Bytes.wrap(array).toBigInteger();
+```
 
 ### Mutable and Read-Only
 

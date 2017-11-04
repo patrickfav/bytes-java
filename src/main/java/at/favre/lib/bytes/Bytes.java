@@ -1026,7 +1026,6 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
         return ByteBuffer.wrap(internalArray()).order(byteOrder);
     }
 
-
     /**
      * Returns a mutable version of this instance with sharing the same underlying byte-array.
      * If you want the mutable version to be a copy, call {@link #copy()} first.
