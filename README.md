@@ -7,7 +7,22 @@ as well as **immutability** and **mutability**, so the caller may decide to favo
 performance. This can be seen as combination of the features provided by
 [`BigInteger`](https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html),
 [`ByteBuffer`](https://docs.oracle.com/javase/7/docs/api/java/nio/ByteBuffer.html) but
-providing a lot of additional features.
+providing a lot of additional features. The main goal is to minimize the need
+to blindly paste code snippets from
+[s](https://stackoverflow.com/questions/140131/convert-a-string-representation-of-a-hex-dump-to-a-byte-array-using-java)
+[t](https://stackoverflow.com/questions/12893758/how-to-reverse-the-byte-array-in-java)
+[a](https://stackoverflow.com/questions/3329163/is-there-an-equivalent-to-memcpy-in-java)
+[c](https://stackoverflow.com/questions/5513152/easy-way-to-concatenate-two-byte-arrays)
+[k](https://stackoverflow.com/questions/1936857/convert-integer-into-byte-array-java)
+[o](https://stackoverflow.com/questions/14243922/java-xor-over-two-arrays)
+[v](https://stackoverflow.com/questions/28997781/bit-shift-operations-on-a-byte-array-in-java)
+[e](https://stackoverflow.com/questions/13109588/base64-encoding-in-java)
+[r](https://stackoverflow.com/questions/2091454/byte-to-inputstream-or-outputstream)
+[f](https://stackoverflow.com/questions/3736058/java-object-to-byte-and-byte-to-object-converter-for-tokyo-cabinet)
+[l](https://stackoverflow.com/questions/4231674/converting-an-array-of-bytes-to-listbyte)
+[o](https://stackoverflow.com/questions/28703273/sorting-byte-arrays-in-numeric-order)
+[w](https://stackoverflow.com/questions/4385623/bytes-of-a-string-in-java)
+[.com](https://stackoverflow.com/questions/23360692/byte-position-in-java)
 
 [![Download](https://api.bintray.com/packages/patrickfav/maven/bytes-java/images/download.svg)](https://bintray.com/patrickfav/maven/bytes-java/_latestVersion)
 [![Build Status](https://travis-ci.org/patrickfav/bytes-java.svg?branch=master)](https://travis-ci.org/patrickfav/bytes-java)
@@ -247,6 +262,16 @@ Bytes.wrap(array).count(0x01); //occurrence of 0x01
 Bytes.wrap(array).entropy();
 ```
 
+Of course all standard Java Object methods are implemented including:
+`hashCode()`, `equals()`, `toString()` as well as it being
+[`Comparable`](https://docs.oracle.com/javase/7/docs/api/java/lang/Comparable.html).
+
+The `toString()` methods only shows the length and a preview of maximal 8 bytes:
+
+```
+16 bytes (0x7ed1fdaa...12af000a)
+```
+
 ### Validation
 
 A simple validation framework which can be used to check the internal byte array:
@@ -283,8 +308,8 @@ assertTrue(Bytes.allocate(16).validate(
 The internal byte array can be converted or exported into many different formats.
 There are 2 different kinds of converters:
 
-* Ones that create a new type which reuses the same shared memory
-* Ones that create a copy of the internal array, which start with `to*`
+* Ones that create a new type which **reuses the same shared memory**
+* Ones that create a **copy** of the internal array, which start with `to*`
 
 #### Shared Memory Conversion
 
@@ -294,7 +319,8 @@ Not technically a conversation, but it is of course possible to access the inter
 Bytes.wrap(array).array();
 ```
 
-Conversion to `InputStream` and `ByteBuffer`:
+Conversion to [`InputStream`](https://docs.oracle.com/javase/7/docs/api/java/io/InputStream.html)
+ and [`ByteBuffer`](https://docs.oracle.com/javase/7/docs/api/java/nio/ByteBuffer.html):
 
 ```java
 Bytes.wrap(array).inputStream();
@@ -323,17 +349,61 @@ To other collections
 
 ```java
 Bytes.wrap(array).toList(); // of type List<Byte>
-Bytes.wrap(array).toObjectArray(); // of type Byte[Byte]
+Bytes.wrap(array).toObjectArray(); // of type Byte[]
 Bytes.wrap(array).toBitSet();
 ```
 
-and to BigInteger of course:
+and to [`BigInteger`](https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html) of course:
 
 ```java
 Bytes.wrap(array).toBigInteger();
 ```
 
 ### Mutable and Read-Only
+
+Per default the instance is immutable, i.e. every transformation will create a
+a new internal byte array (very similar to the API of `BigInteger`). While
+this is usually the default way to design such a construct because it shows
+[various advantages](https://softwareengineering.stackexchange.com/questions/151733/if-immutable-objects-are-good-why-do-people-keep-creating-mutable-objects)
+this can introduce a major performance issue when handling big arrays
+or many transformations.
+
+#### Mutable Bytes
+
+All transformers (if possible) reuse or overwrite the same internal memory
+to avoid unneeded array creation to minimize time and space complexity.
+To create a mutable instance just do:
+
+```java
+MutableBytes b = Bytes.from(array).mutable();
+```
+
+Mutable classes also enable further APIs for directly modify the internal array:
+
+```java
+b.overwrite(anotherArray) //directly overwrite given array
+b.fill(0x03) // fills with e.g. 3
+b.wipe() //fills with zeros
+b.secureWipe() //fills with random data
+```
+
+#### Readonly Bytes
+
+On the other hand, if you want a export a instance with limited access,
+especially no easy way to alter the internal byte array, read-only instances
+may be created by:
+
+```java
+Bytes b = Bytes.from(array).readOnly();
+```
+
+Every call to the following conversation methods will throw a `ReadOnlyBufferException`:
+
+```java
+readOnlyBytes.array();
+readOnlyBytes.byteBuffer();
+readOnlyBytes.inputStream();
+```
 
 ## Digital Signatures
 
