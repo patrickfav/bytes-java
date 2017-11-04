@@ -33,29 +33,59 @@ public class BytesValidators {
      * Checks the length of a byte array
      *
      * @param byteLength to check against
-     * @return true if longer than given value
+     * @return true if longer or equal to given value
      */
     public static BytesValidator atLeast(int byteLength) {
         return new BytesValidator.Length(byteLength, BytesValidator.Length.Mode.GREATER_OR_EQ_THAN);
     }
 
+    /**
+     * Checks the length of a byte array
+     *
+     * @param byteLength to check against
+     * @return true if smaller or equal to given value
+     */
     public static BytesValidator atMost(int byteLength) {
         return new BytesValidator.Length(byteLength, BytesValidator.Length.Mode.SMALLER_OR_EQ_THAN);
     }
 
+    /**
+     * Checks the length of a byte array
+     *
+     * @param byteLength to check against
+     * @return true if equal to given value
+     */
     public static BytesValidator exactLength(int byteLength) {
         return new BytesValidator.Length(byteLength, BytesValidator.Length.Mode.EXACT);
     }
 
-    public static BytesValidator onlyOf(byte value) {
-        return new BytesValidator.IdenticalContent(value, BytesValidator.IdenticalContent.Mode.ONLY_OF);
+    /**
+     * Checks individual byte content
+     *
+     * @param refByte to check against
+     * @return true if array only consists of refByte
+     */
+    public static BytesValidator onlyOf(byte refByte) {
+        return new BytesValidator.IdenticalContent(refByte, BytesValidator.IdenticalContent.Mode.ONLY_OF);
     }
 
-    public static BytesValidator notOnlyOf(byte value) {
-        return new BytesValidator.IdenticalContent(value, BytesValidator.IdenticalContent.Mode.NOT_ONLY_OF);
+    /**
+     * Checks individual byte content
+     *
+     * @param refByte to check against
+     * @return true if array has at least one byte that is not refByte
+     */
+    public static BytesValidator notOnlyOf(byte refByte) {
+        return new BytesValidator.IdenticalContent(refByte, BytesValidator.IdenticalContent.Mode.NOT_ONLY_OF);
     }
 
-    public static BytesValidator noneOf(byte value) {
-        return new BytesValidator.IdenticalContent(value, BytesValidator.IdenticalContent.Mode.NONE_OF);
+    /**
+     * Checks individual byte content
+     *
+     * @param refByte to check against
+     * @return true if array has no value refByte
+     */
+    public static BytesValidator noneOf(byte refByte) {
+        return new BytesValidator.IdenticalContent(refByte, BytesValidator.IdenticalContent.Mode.NONE_OF);
     }
 }
