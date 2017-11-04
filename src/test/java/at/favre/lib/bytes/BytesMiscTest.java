@@ -161,6 +161,35 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
+    public void bitAt() throws Exception {
+        for (int i = 0; i < 8; i++) {
+            assertFalse(Bytes.allocate(1).bitAt(i));
+        }
+
+        for (int i = 0; i < 8; i++) {
+            assertTrue(Bytes.from((byte) 0xFF).bitAt(i));
+        }
+
+        assertFalse(Bytes.from((byte) 8).bitAt(0));
+        assertFalse(Bytes.from((byte) 8).bitAt(1));
+        assertFalse(Bytes.from((byte) 8).bitAt(2));
+        assertTrue(Bytes.from((byte) 8).bitAt(3));
+        assertFalse(Bytes.from((byte) 8).bitAt(4));
+
+        try {
+            Bytes.allocate(1).bitAt(8);
+            fail();
+        } catch (IndexOutOfBoundsException e) {
+        }
+
+        try {
+            Bytes.allocate(16).bitAt(-1);
+            fail();
+        } catch (IndexOutOfBoundsException e) {
+        }
+    }
+
+    @Test
     public void count() throws Exception {
         assertEquals(0, Bytes.allocate(0).count((byte) 0));
         assertEquals(1, Bytes.allocate(1).count((byte) 0));

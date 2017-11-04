@@ -6,12 +6,13 @@
 
     <groupId>at.favre.lib</groupId>
     <artifactId>bytes</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
     <packaging>jar</packaging>
 
-    <name>Bytes Java Primitive Tools</name>
-    <description>Convenience toolkit for easier handling, creating, converting and encoding of any form of byte arrays.
-        Per default everything is immutable, but also supports faster mutable version.
+    <name>Bytes Utility Library</name>
+    <description>Bytes is a utility library that makes it easy to create, parse, transform, validate and convert byte
+        arrays in Java. It supports endianness as well as immutability and mutability, so the caller may decide to favor
+        performance.
     </description>
     <url>https://github.com/patrickfav/bytes-java</url>
     <inceptionYear>2017</inceptionYear>
@@ -161,18 +162,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.6</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.10</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

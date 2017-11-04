@@ -926,13 +926,27 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      *
      * @param index the index of the {@code byte} value.
      * @return the {@code byte} value at the specified index of the underlying byte array.
-     * @throws IndexOutOfBoundsException if the {@code index} argument is negative or not less than the length of this string.
+     * @throws IndexOutOfBoundsException if the {@code index} argument is negative or not less than the length of this array.
      */
     public byte byteAt(int index) {
         if (index < 0 || index > length()) {
             throw new IndexOutOfBoundsException("cannot get byte from index out of bounds: " + index);
         }
         return internalArray()[index];
+    }
+
+    /**
+     * Returns the {@code bit} value as boolean at the specified index.
+     *
+     * @param bitIndex the index of the {@code bit} value.
+     * @return true if bit at given index is set, false otherwise
+     * @throws IndexOutOfBoundsException if the {@code bitIndex} argument is negative or not less than the length of this array in bits.
+     */
+    public boolean bitAt(int bitIndex) {
+        if (bitIndex < 0 || bitIndex > length() * 8) {
+            throw new IndexOutOfBoundsException("cannot get bit from index out of bounds: " + bitIndex);
+        }
+        return (byteAt(bitIndex / 8) >> (bitIndex % 8) & 1) == 1;
     }
 
     /**

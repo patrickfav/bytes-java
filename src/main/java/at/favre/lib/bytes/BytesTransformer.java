@@ -303,7 +303,6 @@ public interface BytesTransformer {
                 throw new IllegalArgumentException("bit index " + (position * 8) + " out of bounds");
             }
 
-
             int bytePosition = currentArray.length - 1 - position / 8;
             if (newBitValue == null) {
                 out[bytePosition] ^= (1 << position % 8);

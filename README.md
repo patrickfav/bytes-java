@@ -36,7 +36,7 @@ It's main features include:
 * **Validators** with the ability to arbitrarily combine multiple ones
 * **Parsing and Encoding** in most common binary-to-text-encodings: [hex](https://en.wikipedia.org/wiki/Hexadecimal), [base64](https://en.wikipedia.org/wiki/Base64), ...
 * **Immutable, Mutable and Read-Only** versions
-* **Utility Features** like `indexOf`, `count`, `isEmpty`, `byteAt`, ...
+* **Utility Features** like `indexOf`, `count`, `isEmpty`, `bitAt`, ...
 
 It is written in Java 7 to keep backwards compatibility with *Android* and older *Java* applications.
 
@@ -259,6 +259,7 @@ Bytes.wrap(array).isEmpty();
 And others:
 
 ```java
+Bytes.wrap(array).bitAt(4);
 Bytes.wrap(array).byteAt(14);
 Bytes.wrap(array).count(0x01); //occurrence of 0x01
 Bytes.wrap(array).entropy();

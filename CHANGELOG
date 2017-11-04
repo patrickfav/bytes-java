@@ -1,5 +1,9 @@
 # Releases
 
+## v0.4.1
+
+* add bitAt() utility
+
 ## v0.4.0
 
 * logical expressions in validators
