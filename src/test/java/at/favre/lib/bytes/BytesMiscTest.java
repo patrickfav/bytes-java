@@ -192,7 +192,7 @@ public class BytesMiscTest extends ABytesTest {
         assertTrue(b.resize(6).isReadOnly());
         assertTrue(b.sort().isReadOnly());
         assertTrue(b.shuffle().isReadOnly());
-        assertTrue(b.negate().isReadOnly());
+        assertTrue(b.not().isReadOnly());
         assertTrue(b.leftShift(1).isReadOnly());
         assertTrue(b.rightShift(1).isReadOnly());
         assertTrue(b.and(Bytes.random(b.length())).isReadOnly());

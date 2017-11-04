@@ -24,6 +24,7 @@ package at.favre.lib.bytes;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -79,12 +80,28 @@ public class BytesConstructorTests extends ABytesTest {
         checkBitSet(example_bytes_two);
         checkBitSet(example_bytes_seven);
         checkBitSet(example_bytes_eight);
+        checkBitSet(example_bytes_twentyfour);
     }
 
     private void checkBitSet(byte[] array) {
         BitSet bitSet = BitSet.valueOf(array);
         assertArrayEquals(array, Bytes.from(bitSet).array());
         assertEquals(bitSet, Bytes.from(bitSet).toBitSet());
+    }
+
+    @Test
+    public void fromBigInteger() throws Exception {
+        checkBigInteger(example_bytes_one);
+        checkBigInteger(example_bytes_two);
+        checkBigInteger(example_bytes_seven);
+        checkBigInteger(example_bytes_eight);
+        checkBigInteger(example_bytes_twentyfour);
+    }
+
+    private void checkBigInteger(byte[] array) {
+        BigInteger bigInteger = new BigInteger(array);
+        assertArrayEquals(array, Bytes.from(bigInteger).array());
+        assertEquals(bigInteger, Bytes.from(bigInteger).toBigInteger());
     }
 
     @Test

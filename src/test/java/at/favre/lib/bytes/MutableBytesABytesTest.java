@@ -117,7 +117,7 @@ public class MutableBytesABytesTest extends ABytesTest {
         assertTrue(b.resize(6).isMutable());
         assertTrue(b.sort().isMutable());
         assertTrue(b.shuffle().isMutable());
-        assertTrue(b.negate().isMutable());
+        assertTrue(b.not().isMutable());
         assertTrue(b.leftShift(1).isMutable());
         assertTrue(b.rightShift(1).isMutable());
         assertTrue(b.and(Bytes.random(b.length())).isMutable());

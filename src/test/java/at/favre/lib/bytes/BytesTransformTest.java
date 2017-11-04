@@ -164,14 +164,14 @@ public class BytesTransformTest extends ABytesTest {
 
     @Test
     public void negate() throws Exception {
-        assertArrayEquals(new byte[0], Bytes.from(new byte[0]).negate().array());
-        assertArrayEquals(new byte[]{(byte) 0xFF}, Bytes.from(new byte[1]).negate().array());
+        assertArrayEquals(new byte[0], Bytes.from(new byte[0]).not().array());
+        assertArrayEquals(new byte[]{(byte) 0xFF}, Bytes.from(new byte[1]).not().array());
 
-        assertArrayEquals(new byte[]{-104}, Bytes.from(example_bytes_one).negate().array());
-        assertArrayEquals(new byte[]{-27, -112}, Bytes.from(example_bytes_two).negate().array());
-        assertArrayEquals(new byte[]{81, -31}, Bytes.from(new byte[]{(byte) 0xAE, (byte) 0x1E}).negate().array());
+        assertArrayEquals(new byte[]{-104}, Bytes.from(example_bytes_one).not().array());
+        assertArrayEquals(new byte[]{-27, -112}, Bytes.from(example_bytes_two).not().array());
+        assertArrayEquals(new byte[]{81, -31}, Bytes.from(new byte[]{(byte) 0xAE, (byte) 0x1E}).not().array());
 
-        assertArrayNotEquals(new byte[0], Bytes.from(example_bytes_one).negate().array());
+        assertArrayNotEquals(new byte[0], Bytes.from(example_bytes_one).not().array());
     }
 
     @Test

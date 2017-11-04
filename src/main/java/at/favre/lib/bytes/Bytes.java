@@ -53,7 +53,7 @@ import java.util.*;
  * <strong>Example:</strong>
  * <pre>
  *     Bytes b = Bytes.from(array);
- *     b.negate();
+ *     b.not();
  *     System.out.println(b.encodeHex());
  * </pre>
  */
@@ -265,13 +265,24 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * Creates a new instance from given BitSet.
+     * Creates a new instance from given {@link BitSet}.
      *
      * @param set to get the byte array from
      * @return new instance
      */
     public static Bytes from(BitSet set) {
         return wrap(set.toByteArray());
+    }
+
+    /**
+     * /**
+     * Creates a new instance from given {@link BigInteger}.
+     *
+     * @param bigInteger to get the byte array from
+     * @return new instance
+     */
+    public static Bytes from(BigInteger bigInteger) {
+        return wrap(bigInteger.toByteArray());
     }
 
     /**
@@ -574,13 +585,13 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * Bitwise negate operation on the whole internal byte array.
+     * Bitwise not operation on the whole internal byte array.
      * See the considerations about possible in-place operation in {@link #transform(BytesTransformer)}.
      *
      * @return negated instance
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#NOT">Bitwise operators: NOT</a>
      */
-    public Bytes negate() {
+    public Bytes not() {
         return transform(new BytesTransformer.NegateTransformer());
     }
 
@@ -608,6 +619,27 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      */
     public Bytes rightShift(int shiftCount) {
         return transform(new BytesTransformer.ShiftTransformer(shiftCount, BytesTransformer.ShiftTransformer.Type.RIGHT_SHIFT));
+    }
+
+    /**
+     * Returns a Byte whose value is equivalent to this Byte with the designated bit set to newBitValue. Bits start to count from the LSB (ie. Bytes.from(0).switchBit(0,true) == 1)
+     *
+     * @param bitPosition not to confuse with byte position
+     * @param newBitValue if true set to 1, 0 otherwise
+     * @return instance with bit switched
+     */
+    public Bytes switchBit(int bitPosition, boolean newBitValue) {
+        return transform(new BytesTransformer.BitSwitchTransformer(bitPosition, newBitValue));
+    }
+
+    /**
+     * Returns a Byte whose value is equivalent to this Byte with the designated bit switched.
+     *
+     * @param bitPosition not to confuse with byte position
+     * @return instance with bit switched
+     */
+    public Bytes switchBit(int bitPosition) {
+        return transform(new BytesTransformer.BitSwitchTransformer(bitPosition, null));
     }
 
     /**
@@ -702,27 +734,6 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      */
     public Bytes resize(int newByteLength) {
         return transform(new BytesTransformer.ResizeTransformer(newByteLength));
-    }
-
-    /**
-     * Returns a Byte whose value is equivalent to this Byte with the designated bit set to newBitValue. Bits start to count from the LSB (ie. Bytes.from(0).switchBit(0,true) == 1)
-     *
-     * @param bitPosition not to confuse with byte position
-     * @param newBitValue if true set to 1, 0 otherwise
-     * @return instance with bit switched
-     */
-    public Bytes switchBit(int bitPosition, boolean newBitValue) {
-        return transform(new BytesTransformer.BitSwitchTransformer(bitPosition, newBitValue));
-    }
-
-    /**
-     * Returns a Byte whose value is equivalent to this Byte with the designated bit switched.
-     *
-     * @param bitPosition not to confuse with byte position
-     * @return instance with bit switched
-     */
-    public Bytes switchBit(int bitPosition) {
-        return transform(new BytesTransformer.BitSwitchTransformer(bitPosition, null));
     }
 
     /**
@@ -973,23 +984,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
         return ByteBuffer.wrap(internalArray()).order(byteOrder);
     }
 
-    /**
-     * The internal byte array wrapped in a {@link BigInteger} instance.
-     * <p>
-     * If the internal byte order is {@link ByteOrder#LITTLE_ENDIAN}, a copy of the internal
-     * array will be reversed and used as backing array with the big integer. Otherwise the internal
-     * array will be used directly.
-     *
-     * @return big integer
-     * @throws ReadOnlyBufferException if this is a read-only instance
-     */
-    public BigInteger bigInteger() {
-        if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
-            return new BigInteger(new BytesTransformer.ReverseTransformer().transform(array(), false));
-        } else {
-            return new BigInteger(array());
-        }
-    }
+
 
     /**
      * Returns a mutable version of this instance with sharing the same underlying byte-array.
@@ -1180,6 +1175,23 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      */
     public BitSet toBitSet() {
         return BitSet.valueOf(internalArray());
+    }
+
+    /**
+     * The internal byte array wrapped in a {@link BigInteger} instance.
+     * <p>
+     * If the internal byte order is {@link ByteOrder#LITTLE_ENDIAN}, a copy of the internal
+     * array will be reversed and used as backing array with the big integer. Otherwise the internal
+     * array will be used directly.
+     *
+     * @return big integer
+     */
+    public BigInteger toBigInteger() {
+        if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+            return new BigInteger(new BytesTransformer.ReverseTransformer().transform(internalArray(), false));
+        } else {
+            return new BigInteger(internalArray());
+        }
     }
 
     /**

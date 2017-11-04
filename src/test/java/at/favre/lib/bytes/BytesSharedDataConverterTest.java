@@ -42,12 +42,12 @@ public class BytesSharedDataConverterTest extends ABytesTest {
 
     @Test
     public void bigInteger() throws Exception {
-        assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).bigInteger().toByteArray());
-        assertArrayEquals(example_bytes_two, Bytes.from(example_bytes_two).bigInteger().toByteArray());
-        assertArrayEquals(example_bytes_four, Bytes.from(example_bytes_four).bigInteger().toByteArray());
-        assertArrayEquals(example_bytes_seven, Bytes.from(example_bytes_seven).bigInteger().toByteArray());
-        assertArrayEquals(example_bytes_eight, Bytes.from(example_bytes_eight).bigInteger().toByteArray());
-        assertArrayEquals(example_bytes_sixteen, Bytes.from(example_bytes_sixteen).bigInteger().toByteArray());
+        assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).toBigInteger().toByteArray());
+        assertArrayEquals(example_bytes_two, Bytes.from(example_bytes_two).toBigInteger().toByteArray());
+        assertArrayEquals(example_bytes_four, Bytes.from(example_bytes_four).toBigInteger().toByteArray());
+        assertArrayEquals(example_bytes_seven, Bytes.from(example_bytes_seven).toBigInteger().toByteArray());
+        assertArrayEquals(example_bytes_eight, Bytes.from(example_bytes_eight).toBigInteger().toByteArray());
+        assertArrayEquals(example_bytes_sixteen, Bytes.from(example_bytes_sixteen).toBigInteger().toByteArray());
     }
 
     @Test
