@@ -154,6 +154,21 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
+     * Creates a new instance from given array of byte arrays
+     *
+     * @param moreBytes must not be null
+     * @return new instance
+     */
+    public static Bytes from(Bytes... moreBytes) {
+        Objects.requireNonNull(moreBytes, "bytes most not be null");
+        byte[][] bytes = new byte[moreBytes.length][];
+        for (int i = 0; i < moreBytes.length; i++) {
+            bytes[i] = moreBytes[i].array();
+        }
+        return from(bytes);
+    }
+
+    /**
      * Creates a new instance from given collections. This will create a lot of auto-unboxing events,
      * so use with care with bigger lists.
      *
@@ -275,7 +290,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      * @param utf8String to get the internal byte array from
      * @return new instance
      */
-    public static Bytes from(String utf8String) {
+    public static Bytes from(CharSequence utf8String) {
         return from(utf8String, StandardCharsets.UTF_8);
     }
 
@@ -286,7 +301,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      * @param form       to normalize, usually you want {@link java.text.Normalizer.Form#NFKD} for compatibility
      * @return new instance
      */
-    public static Bytes from(String utf8String, Normalizer.Form form) {
+    public static Bytes from(CharSequence utf8String, Normalizer.Form form) {
         return from(Normalizer.normalize(utf8String, form), StandardCharsets.UTF_8);
     }
 
@@ -297,8 +312,8 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      * @param charset used to decode the string
      * @return new instance
      */
-    public static Bytes from(String string, Charset charset) {
-        return wrap(string.getBytes(charset));
+    public static Bytes from(CharSequence string, Charset charset) {
+        return wrap(string.toString().getBytes(charset));
     }
 
     /**

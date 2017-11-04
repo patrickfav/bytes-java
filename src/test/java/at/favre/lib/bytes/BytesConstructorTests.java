@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.LinkedList;
@@ -148,12 +149,20 @@ public class BytesConstructorTests extends ABytesTest {
     @Test
     public void fromString() throws Exception {
         checkString("", StandardCharsets.UTF_8);
+        checkString(" ", StandardCharsets.UTF_8);
+        checkString("\t", StandardCharsets.UTF_8);
         checkString("a", StandardCharsets.UTF_8);
+        checkString("12345678abcdefjkl", StandardCharsets.UTF_8);
         checkString("asdghasdu72Ahdans", StandardCharsets.UTF_8);
         checkString("asdghasdu72Ahdans", StandardCharsets.ISO_8859_1);
         checkString("7asdh#ö01^^`´dµ@€", StandardCharsets.UTF_8);
         checkString("7asdh#ö01^^`´dµ@€", StandardCharsets.US_ASCII);
         checkString("7asdh#ö01^^`´dµ@€", StandardCharsets.ISO_8859_1);
+    }
+
+    @Test
+    public void fromMultipleBytes() throws Exception {
+        assertArrayEquals(new byte[]{0x01, 0x02, 0x03}, Bytes.from(Bytes.from((byte) 0x01), Bytes.from((byte) 0x02), Bytes.from((byte) 0x03)).array());
     }
 
     private void checkString(String string, Charset charset) {
@@ -165,6 +174,9 @@ public class BytesConstructorTests extends ABytesTest {
             Bytes bUtf8 = Bytes.from(string);
             assertArrayEquals(string.getBytes(StandardCharsets.UTF_8), bUtf8.array());
             assertEquals(new String(string.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8), bUtf8.encodeUtf8());
+        } else {
+            Bytes bNormalized = Bytes.from(string, Normalizer.Form.NFKD);
+            assertArrayEquals(Normalizer.normalize(string, Normalizer.Form.NFKD).getBytes(charset), bNormalized.array());
         }
     }
 
