@@ -201,10 +201,9 @@ Bytes hash = Bytes.wrap(array).sha256();
 Bytes hash = Bytes.wrap(array).hash("MD5");
 ```
 
-Other transformers:
+**Reversing** of the byte order in the array
 
 ```java
-Bytes result = Bytes.wrap(array).sort(myComparator);
 Bytes result = Bytes.wrap(array).reverse();
 ```
 
