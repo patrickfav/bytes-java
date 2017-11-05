@@ -115,8 +115,6 @@ public class MutableBytesABytesTest extends ABytesTest {
         assertTrue(b.reverse().isMutable());
         assertTrue(b.resize(7).isMutable());
         assertTrue(b.resize(6).isMutable());
-        assertTrue(b.sort().isMutable());
-        assertTrue(b.shuffle().isMutable());
         assertTrue(b.not().isMutable());
         assertTrue(b.leftShift(1).isMutable());
         assertTrue(b.rightShift(1).isMutable());
@@ -124,5 +122,6 @@ public class MutableBytesABytesTest extends ABytesTest {
         assertTrue(b.or(Bytes.random(b.length())).isMutable());
         assertTrue(b.xor(Bytes.random(b.length())).isMutable());
         assertTrue(b.append(3).isMutable());
+        assertTrue(b.hashSha256().isMutable());
     }
 }

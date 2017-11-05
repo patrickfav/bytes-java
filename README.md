@@ -201,11 +201,25 @@ Bytes hash = Bytes.wrap(array).sha256();
 Bytes hash = Bytes.wrap(array).hash("MD5");
 ```
 
-**Checksum** can be calculated or automatically appended:
+Other transformers:
+
+```java
+Bytes result = Bytes.wrap(array).sort(myComparator);
+Bytes result = Bytes.wrap(array).reverse();
+```
+
+#### Additional Transformers
+
+More transformers can be accessed through the `BytesTransformers`, which
+can be statically imported for a less verbose syntax:
 
 ```java
 import static at.favre.lib.bytes.BytesTransformers.*;
+```
 
+**Checksum** can be calculated or automatically appended:
+
+```java
 Bytes.wrap(array).transform(checksumAppendCrc32());
 Bytes.wrap(array).transform(checksumCrc32());
 Bytes.wrap(array).transform(checksum(new Adler32(), ChecksumTransformer.Mode.TRANSFORM, 4));
@@ -214,18 +228,21 @@ Bytes.wrap(array).transform(checksum(new Adler32(), ChecksumTransformer.Mode.TRA
 **GZip compression** is supported by [`GZIPInputStream`](https://docs.oracle.com/javase/7/docs/api/java/util/zip/GZIPInputStream.html):
 
 ```java
-import static at.favre.lib.bytes.BytesTransformers.*;
-
 Bytes compressed = Bytes.wrap(array).transform(compressGzip());
 Bytes decompressed = compressed.transform(decompressGzip());
 ```
 
-Other transformers:
+**Sorting** of individual bytes with either [`Comparator`](https://docs.oracle.com/javase/7/docs/api/java/util/Comparator.html) or natural order:
 
 ```java
-Bytes.wrap(array).shuffle();
-Bytes.wrap(array).sort(myComparator);
-Bytes.wrap(array).reverse();
+Bytes.wrap(array).transform(sort());
+Bytes.wrap(array).transform(sort(byteComparator));
+```
+
+**Shuffling** of individual bytes:
+
+```java
+Bytes.wrap(array).transform(shuffle());
 ```
 
 ### Parser and Encoder for Binary-Text-Encodings

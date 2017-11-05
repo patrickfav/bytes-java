@@ -2,7 +2,8 @@ package at.favre.lib.bytes;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.Objects;
+import java.security.SecureRandom;
+import java.util.*;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 import java.util.zip.GZIPInputStream;
@@ -14,6 +15,45 @@ import java.util.zip.GZIPOutputStream;
 public final class BytesTransformers {
 
     private BytesTransformers() {
+    }
+
+    /**
+     * Create a {@link BytesTransformer} which shuffles the individual bytes in an array
+     * with an {@link SecureRandom} instance.
+     *
+     * @return transformer
+     */
+    public static BytesTransformer shuffle() {
+        return new ShuffleTransformer(new SecureRandom());
+    }
+
+    /**
+     * Create a {@link BytesTransformer} which shuffles the individual bytes in an array
+     *
+     * @param random to use for entropy
+     * @return transformer
+     */
+    public static BytesTransformer shuffle(Random random) {
+        return new ShuffleTransformer(random);
+    }
+
+    /**
+     * Create a {@link BytesTransformer} which sorts the internal byte array with it's natural ordering.
+     *
+     * @return transformer
+     */
+    public static BytesTransformer sort() {
+        return new SortTransformer();
+    }
+
+    /**
+     * Create a {@link BytesTransformer} which sorts the internal byte array according to given comparator.
+     *
+     * @param comparator to sort the bytes
+     * @return transformer
+     */
+    public static BytesTransformer sort(Comparator<Byte> comparator) {
+        return new SortTransformer(comparator);
     }
 
     /**
@@ -70,6 +110,54 @@ public final class BytesTransformers {
     }
 
     /**
+     * Shuffles the internal byte array
+     */
+    final static class ShuffleTransformer implements BytesTransformer {
+        private final Random random;
+
+        ShuffleTransformer(Random random) {
+            Objects.requireNonNull(random, "passed random must not be null");
+            this.random = random;
+        }
+
+        @Override
+        public byte[] transform(byte[] currentArray, boolean inPlace) {
+            byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
+            Util.shuffle(out, random);
+            return out;
+        }
+    }
+
+    /**
+     * Sorts the internal byte array with given {@link java.util.Comparator}
+     */
+    final static class SortTransformer implements BytesTransformer {
+        private final Comparator<Byte> comparator;
+
+        SortTransformer() {
+            this(null);
+        }
+
+        SortTransformer(Comparator<Byte> comparator) {
+            this.comparator = comparator;
+        }
+
+        @Override
+        public byte[] transform(byte[] currentArray, boolean inPlace) {
+            if (comparator == null) {
+                byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
+                Arrays.sort(out);
+                return out;
+            } else {
+                //no in-place implementation with comparator
+                List<Byte> list = Bytes.wrap(currentArray).toList();
+                Collections.sort(list, comparator);
+                return Bytes.from(list).array();
+            }
+        }
+    }
+
+    /**
      * Adds or converts to arbitrary checksum
      */
     final static class ChecksumTransformer implements BytesTransformer {
@@ -88,7 +176,7 @@ public final class BytesTransformers {
         private final Mode mode;
         private final int checksumLengthByte;
 
-        public ChecksumTransformer(Checksum checksum, Mode mode, int checksumLengthByte) {
+        ChecksumTransformer(Checksum checksum, Mode mode, int checksumLengthByte) {
             if (checksumLengthByte <= 0 || checksumLengthByte > 8)
                 throw new IllegalArgumentException("checksumlength must be between 1 and 8 bytes");
 
@@ -117,7 +205,7 @@ public final class BytesTransformers {
     final static class GzipCompressor implements BytesTransformer {
         private final boolean compress;
 
-        public GzipCompressor(boolean compress) {
+        GzipCompressor(boolean compress) {
             this.compress = compress;
         }
 

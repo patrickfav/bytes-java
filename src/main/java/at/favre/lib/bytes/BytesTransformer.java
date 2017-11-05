@@ -24,7 +24,7 @@ package at.favre.lib.bytes;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.Objects;
 
 /**
  * Interface for transforming {@link Bytes}
@@ -171,54 +171,6 @@ public interface BytesTransformer {
                 out[i] = out[out.length - i - 1];
                 out[out.length - i - 1] = temp;
             }
-            return out;
-        }
-    }
-
-    /**
-     * Sorts the internal byte array with given {@link java.util.Comparator}
-     */
-    final class SortTransformer implements BytesTransformer {
-        private final Comparator<Byte> comparator;
-
-        SortTransformer() {
-            this(null);
-        }
-
-        SortTransformer(Comparator<Byte> comparator) {
-            this.comparator = comparator;
-        }
-
-        @Override
-        public byte[] transform(byte[] currentArray, boolean inPlace) {
-            if (comparator == null) {
-                byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
-                Arrays.sort(out);
-                return out;
-            } else {
-                //no in-place implementation with comparator
-                List<Byte> list = Bytes.wrap(currentArray).toList();
-                Collections.sort(list, comparator);
-                return Bytes.from(list).array();
-            }
-        }
-    }
-
-    /**
-     * Shuffles the internal byte array
-     */
-    final class ShuffleTransformer implements BytesTransformer {
-        private final Random random;
-
-        ShuffleTransformer(Random random) {
-            Objects.requireNonNull(random, "passed random must not be null");
-            this.random = random;
-        }
-
-        @Override
-        public byte[] transform(byte[] currentArray, boolean inPlace) {
-            byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
-            Util.shuffle(out, random);
             return out;
         }
     }

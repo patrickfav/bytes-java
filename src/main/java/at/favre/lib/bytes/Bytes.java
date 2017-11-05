@@ -720,52 +720,6 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
-     * Sorts the internal byte array according to given comparator.
-     * <p>
-     * See the considerations about possible in-place operation in {@link #transform(BytesTransformer)}.
-     *
-     * @param comparator to sort the bytes
-     * @return sorted instance
-     */
-    public Bytes sort(Comparator<Byte> comparator) {
-        return transform(new BytesTransformer.SortTransformer(comparator));
-    }
-
-    /**
-     * Sorts the internal byte array with it's natural ordering
-     * <p>
-     * See the considerations about possible in-place operation in {@link #transform(BytesTransformer)}.
-     *
-     * @return sorted instance
-     */
-    public Bytes sort() {
-        return transform(new BytesTransformer.SortTransformer());
-    }
-
-    /**
-     * Shuffles the internal byte array
-     * <p>
-     * See the considerations about possible in-place operation in {@link #transform(BytesTransformer)}.
-     *
-     * @param random used to create entropy for the shuffle
-     * @return a shuffled instance
-     */
-    public Bytes shuffle(Random random) {
-        return transform(new BytesTransformer.ShuffleTransformer(random));
-    }
-
-    /**
-     * Shuffles the internal byte array with a new {@link SecureRandom} instance.
-     * <p>
-     * See the considerations about possible in-place operation in {@link #transform(BytesTransformer)}.
-     *
-     * @return a shuffled instance
-     */
-    public Bytes shuffle() {
-        return transform(new BytesTransformer.ShuffleTransformer(new SecureRandom()));
-    }
-
-    /**
      * Copies the specified array, truncating or padding with zeros (if necessary)
      * so the copy has the specified length.  For all indices that are
      * valid in both the original array and the copy, the two arrays will
@@ -782,7 +736,6 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
         return transform(new BytesTransformer.ResizeTransformer(newByteLength));
     }
 
-
     /**
      * Calculates sha256 on the underlying byte array and returns a byte instance containing the hash.
      *
@@ -792,17 +745,6 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
      */
     public Bytes hashSha256() {
         return hash(BytesTransformer.MessageDigestTransformer.ALGORITHM_SHA_256);
-    }
-
-    /**
-     * Calculates sha512 on the underlying byte array and returns a byte instance containing the hash.
-     *
-     * @return sha512 hash (64 bytes) of internal byte array
-     * @throws IllegalArgumentException if the message digest algorithm can not be found in the security providers
-     * @see <a href="https://en.wikipedia.org/wiki/Secure_Hash_Algorithms">Secure Hash Algorithms</a>
-     */
-    public Bytes hashSha512() {
-        return hash(BytesTransformer.MessageDigestTransformer.ALGORITHM_SHA_512);
     }
 
     /**

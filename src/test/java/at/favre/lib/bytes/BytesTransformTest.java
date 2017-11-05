@@ -208,23 +208,23 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void shuffle() throws Exception {
-        assertArrayNotEquals(example_bytes_twentyfour, Bytes.from(example_bytes_twentyfour).shuffle().array());
-        assertArrayNotEquals(example_bytes_twentyfour, Bytes.from(example_bytes_twentyfour).shuffle(new SecureRandom()).array());
-        assertArrayNotEquals(new byte[24], Bytes.from(example_bytes_twentyfour).shuffle(new SecureRandom()).array());
+    public void shuffleTest() throws Exception {
+        assertArrayNotEquals(example_bytes_twentyfour, Bytes.from(example_bytes_twentyfour).transform(shuffle()).array());
+        assertArrayNotEquals(example_bytes_twentyfour, Bytes.from(example_bytes_twentyfour).transform(shuffle(new SecureRandom())).array());
+        assertArrayNotEquals(new byte[24], Bytes.from(example_bytes_twentyfour).transform(shuffle(new SecureRandom())).array());
     }
 
     @Test
-    public void sort() throws Exception {
+    public void sortTest() throws Exception {
         byte[] sorted = new byte[]{0, 1, 2, 3, 4, 5, 6};
-        assertArrayEquals(sorted, Bytes.from(sorted).shuffle().sort().array());
-        assertArrayEquals(sorted, Bytes.from(new byte[]{6, 0, 3, 4, 1, 5, 2}).sort().array());
-        assertArrayEquals(Bytes.from(sorted).reverse().array(), Bytes.from(new byte[]{6, 0, 3, 4, 1, 5, 2}).sort(new Comparator<Byte>() {
+        assertArrayEquals(sorted, Bytes.from(sorted).transform(shuffle()).transform(sort()).array());
+        assertArrayEquals(sorted, Bytes.from(new byte[]{6, 0, 3, 4, 1, 5, 2}).transform(sort()).array());
+        assertArrayEquals(Bytes.from(sorted).reverse().array(), Bytes.from(new byte[]{6, 0, 3, 4, 1, 5, 2}).transform(sort(new Comparator<Byte>() {
             @Override
             public int compare(Byte o1, Byte o2) {
                 return o2.compareTo(o1);
             }
-        }).array());
+        })).array());
     }
 
     @Test
@@ -274,8 +274,8 @@ public class BytesTransformTest extends ABytesTest {
     public void hash() throws Exception {
         assertEquals(Bytes.parseHex("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"), Bytes.from("").hashSha256());
         assertEquals(Bytes.parseHex("e362eea626386c93a54c9b82e6b896c0350fbff0ee12f284660253aac0908cfb"), Bytes.from("ö9h%6Ghh1\"").hashSha256());
-        assertEquals(Bytes.parseHex("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"), Bytes.from("").hashSha512());
-        assertEquals(Bytes.parseHex("106747C3DDC117091BEF8D21AEBAA8D314656D3AE1135AB36F4C0B07A264127CF625FE616751BEC66B43032B904E2D3B6C21BF14E078F6BB775A72503F48111D"), Bytes.from("ö9h%6Ghh1\"").hashSha512());
+        assertEquals(Bytes.parseHex("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"), Bytes.from("").hash("SHA-512"));
+        assertEquals(Bytes.parseHex("106747C3DDC117091BEF8D21AEBAA8D314656D3AE1135AB36F4C0B07A264127CF625FE616751BEC66B43032B904E2D3B6C21BF14E078F6BB775A72503F48111D"), Bytes.from("ö9h%6Ghh1\"").hash("SHA-512"));
         assertEquals(Bytes.parseHex("d41d8cd98f00b204e9800998ecf8427e"), Bytes.from("").hash("MD5"));
         assertEquals(Bytes.parseHex("ff38205f1cb22f588d8bc9ae21f22092"), Bytes.from("ö9h%6Ghh1\"").hash("MD5"));
     }

@@ -219,8 +219,6 @@ public class BytesMiscTest extends ABytesTest {
         assertTrue(b.reverse().isReadOnly());
         assertTrue(b.resize(7).isReadOnly());
         assertTrue(b.resize(6).isReadOnly());
-        assertTrue(b.sort().isReadOnly());
-        assertTrue(b.shuffle().isReadOnly());
         assertTrue(b.not().isReadOnly());
         assertTrue(b.leftShift(1).isReadOnly());
         assertTrue(b.rightShift(1).isReadOnly());
@@ -228,6 +226,7 @@ public class BytesMiscTest extends ABytesTest {
         assertTrue(b.or(Bytes.random(b.length())).isReadOnly());
         assertTrue(b.xor(Bytes.random(b.length())).isReadOnly());
         assertTrue(b.append(3).isReadOnly());
+        assertTrue(b.hashSha256().isReadOnly());
     }
 
     @Test
