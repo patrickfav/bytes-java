@@ -5,6 +5,7 @@
 * add bitAt() utility
 * add hash feature
 * add checksum transformer
+* add gzip transformer
 
 ## v0.4.0
 

@@ -211,6 +211,15 @@ Bytes.wrap(array).transform(checksumCrc32());
 Bytes.wrap(array).transform(checksum(new Adler32(), ChecksumTransformer.Mode.TRANSFORM, 4));
 ```
 
+**GZip compression**:
+
+```java
+import static at.favre.lib.bytes.BytesTransformers.*;
+
+Bytes compressed = Bytes.wrap(array).transform(compressGzip());
+Bytes decompressed = compressed.transform(decompressGzip());
+```
+
 Other transformers:
 
 ```java

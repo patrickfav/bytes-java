@@ -27,7 +27,7 @@ import java.util.Collections;
 /**
  * Util and easy access for {@link BytesValidators}
  */
-public class BytesValidators {
+public final class BytesValidators {
 
     private BytesValidators() {
     }

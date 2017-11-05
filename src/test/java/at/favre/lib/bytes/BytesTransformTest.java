@@ -273,7 +273,11 @@ public class BytesTransformTest extends ABytesTest {
     @Test
     public void hash() throws Exception {
         assertEquals(Bytes.parseHex("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"), Bytes.from("").hashSha256());
+        assertEquals(Bytes.parseHex("e362eea626386c93a54c9b82e6b896c0350fbff0ee12f284660253aac0908cfb"), Bytes.from("ö9h%6Ghh1\"").hashSha256());
         assertEquals(Bytes.parseHex("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"), Bytes.from("").hashSha512());
+        assertEquals(Bytes.parseHex("106747C3DDC117091BEF8D21AEBAA8D314656D3AE1135AB36F4C0B07A264127CF625FE616751BEC66B43032B904E2D3B6C21BF14E078F6BB775A72503F48111D"), Bytes.from("ö9h%6Ghh1\"").hashSha512());
+        assertEquals(Bytes.parseHex("d41d8cd98f00b204e9800998ecf8427e"), Bytes.from("").hash("MD5"));
+        assertEquals(Bytes.parseHex("ff38205f1cb22f588d8bc9ae21f22092"), Bytes.from("ö9h%6Ghh1\"").hash("MD5"));
     }
 
     @Test
@@ -287,6 +291,32 @@ public class BytesTransformTest extends ABytesTest {
         adlerChecksum.update(example2_bytes_seven, 0, example2_bytes_seven.length);
         assertEquals(Bytes.from(adlerChecksum.getValue()).resize(4),
                 Bytes.from(example2_bytes_seven).transform(checksum(new Adler32(), ChecksumTransformer.Mode.TRANSFORM, 4)));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void checksumTestIllegalByteLengthTooShort() throws Exception {
+        Bytes.from(example2_bytes_seven).transform(checksum(new CRC32(), ChecksumTransformer.Mode.TRANSFORM, 0));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void checksumTestIllegalByteLengthTooLong() throws Exception {
+        Bytes.from(example2_bytes_seven).transform(checksum(new CRC32(), ChecksumTransformer.Mode.TRANSFORM, 9));
+    }
+
+    @Test
+    public void testCompress() throws Exception {
+        for (int i = 1; i < 10; i++) {
+            testCompressInternal(256 * i);
+        }
+    }
+
+    private void testCompressInternal(int length) {
+        Bytes emptyArray = Bytes.allocate(length);
+        byte[] compressed = Bytes.from(emptyArray).transform(compressGzip()).array();
+        byte[] uncompressed = Bytes.wrap(compressed).transform(decompressGzip()).array();
+        assertArrayEquals(emptyArray.array(), uncompressed);
+        assertArrayNotEquals(compressed, uncompressed);
+        assertTrue("compressed is not smaller " + compressed.length + " vs " + uncompressed.length, compressed.length < uncompressed.length);
     }
 
     @Test
