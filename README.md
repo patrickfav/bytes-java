@@ -172,13 +172,13 @@ Bytes result = Bytes.wrap(array1).append((byte) 3);
 **Bitwise operations**: XOR, OR, AND, NOT as well as left and right shifts and switching bits:
 
 ```java
-Bytes result = Bytes.wrap(array).xor(array2);
-Bytes result = Bytes.wrap(array).or(array2);
-Bytes result = Bytes.wrap(array).and(array2);
-Bytes result = Bytes.wrap(array).negate();
-Bytes result = Bytes.wrap(array).leftShift(8);
-Bytes result = Bytes.wrap(array).rightShift(8);
-Bytes result = Bytes.wrap(array).switchBit(3, true);
+Bytes.wrap(array).xor(array2);
+Bytes.wrap(array).or(array2);
+Bytes.wrap(array).and(array2);
+Bytes.wrap(array).negate();
+Bytes.wrap(array).leftShift(8);
+Bytes.wrap(array).rightShift(8);
+Bytes.wrap(array).switchBit(3, true);
 ```
 
 **Copy** operations, which copies the internal byte array to a new instance:
@@ -211,7 +211,7 @@ Bytes.wrap(array).transform(checksumCrc32());
 Bytes.wrap(array).transform(checksum(new Adler32(), ChecksumTransformer.Mode.TRANSFORM, 4));
 ```
 
-**GZip compression**:
+**GZip compression** is supported by [`GZIPInputStream`](https://docs.oracle.com/javase/7/docs/api/java/util/zip/GZIPInputStream.html):
 
 ```java
 import static at.favre.lib.bytes.BytesTransformers.*;
@@ -223,9 +223,9 @@ Bytes decompressed = compressed.transform(decompressGzip());
 Other transformers:
 
 ```java
-Bytes result = Bytes.wrap(array).shuffle();
-Bytes result = Bytes.wrap(array).sort(myComparator);
-Bytes result = Bytes.wrap(array).reverse();
+Bytes.wrap(array).shuffle();
+Bytes.wrap(array).sort(myComparator);
+Bytes.wrap(array).reverse();
 ```
 
 ### Parser and Encoder for Binary-Text-Encodings
@@ -289,7 +289,7 @@ And others:
 ```java
 Bytes.wrap(array).bitAt(4);
 Bytes.wrap(array).byteAt(14);
-Bytes.wrap(array).count(0x01); //occurrence of 0x01
+Bytes.wrap(array).count(0x01); //occurrences of 0x01
 Bytes.wrap(array).entropy();
 ```
 
@@ -310,13 +310,13 @@ A simple validation framework which can be used to check the internal byte array
 ```java
 import static at.favre.lib.bytes.BytesValidators.*;
 
-Bytes.wrap(new byte[]{8, 3, 9}.validate(startsWith((byte) 8), atLeast(3)); // true
+Bytes.wrap(new byte[]{8, 3, 9}).validate(startsWith((byte) 8), atLeast(3)); // true
 ```
 
 This is especially convenient when combining validators:
 
 ```java
-Bytes.wrap(new byte[]{0, 1}.validate(atMost(2), notOnlyOf((byte)  0)); // true
+Bytes.wrap(new byte[]{0, 1}).validate(atMost(2), notOnlyOf((byte)  0)); // true
 ```
 
 Validators also support nestable logical expressions AND, OR as well as NOT:
