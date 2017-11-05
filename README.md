@@ -201,6 +201,16 @@ Bytes hash = Bytes.wrap(array).sha256();
 Bytes hash = Bytes.wrap(array).hash("MD5");
 ```
 
+**Checksum** can be calculated or automatically appended:
+
+```java
+import static at.favre.lib.bytes.BytesTransformers.*;
+
+Bytes.wrap(array).transform(checksumAppendCrc32());
+Bytes.wrap(array).transform(checksumCrc32());
+Bytes.wrap(array).transform(checksum(new Adler32(), ChecksumTransformer.Mode.TRANSFORM, 4));
+```
+
 Other transformers:
 
 ```java
@@ -289,13 +299,15 @@ The `toString()` methods only shows the length and a preview of maximal 8 bytes:
 A simple validation framework which can be used to check the internal byte array:
 
 ```java
-Bytes.wrap(new byte[]{8, 3, 9}.validate(BytesValidators.startsWith((byte) 8), BytesValidators.atLeast(3)); // true
+import static at.favre.lib.bytes.BytesValidators.*;
+
+Bytes.wrap(new byte[]{8, 3, 9}.validate(startsWith((byte) 8), atLeast(3)); // true
 ```
 
 This is especially convenient when combining validators:
 
 ```java
-Bytes.wrap(new byte[]{0, 1}.validate(BytesValidators.atMost(2), BytesValidators.notOnlyOf((byte)  0)); // true
+Bytes.wrap(new byte[]{0, 1}.validate(atMost(2), notOnlyOf((byte)  0)); // true
 ```
 
 Validators also support nestable logical expressions AND, OR as well as NOT:

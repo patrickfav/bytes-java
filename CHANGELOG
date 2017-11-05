@@ -4,6 +4,7 @@
 
 * add bitAt() utility
 * add hash feature
+* add checksum transformer
 
 ## v0.4.0
 

@@ -27,7 +27,11 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.Comparator;
+import java.util.zip.Adler32;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
+import static at.favre.lib.bytes.BytesTransformers.*;
 import static org.junit.Assert.*;
 
 public class BytesTransformTest extends ABytesTest {
@@ -270,6 +274,19 @@ public class BytesTransformTest extends ABytesTest {
     public void hash() throws Exception {
         assertEquals(Bytes.parseHex("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"), Bytes.from("").hashSha256());
         assertEquals(Bytes.parseHex("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"), Bytes.from("").hashSha512());
+    }
+
+    @Test
+    public void checksumTest() throws Exception {
+        Checksum crc32Checksum = new CRC32();
+        crc32Checksum.update(example2_bytes_seven, 0, example2_bytes_seven.length);
+        assertEquals(crc32Checksum.getValue(), Bytes.from(example2_bytes_seven).transform(checksumCrc32()).resize(8).toLong());
+        assertEquals(Bytes.from(example2_bytes_seven, Bytes.from(crc32Checksum.getValue()).resize(4).array()), Bytes.from(example2_bytes_seven).transform(checksumAppendCrc32()));
+
+        Checksum adlerChecksum = new Adler32();
+        adlerChecksum.update(example2_bytes_seven, 0, example2_bytes_seven.length);
+        assertEquals(Bytes.from(adlerChecksum.getValue()).resize(4),
+                Bytes.from(example2_bytes_seven).transform(checksum(new Adler32(), ChecksumTransformer.Mode.TRANSFORM, 4)));
     }
 
     @Test

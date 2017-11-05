@@ -4,13 +4,47 @@ import java.util.Objects;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
+/**
+ * Collection of additional {@link BytesTransformer} for more specific use cases
+ */
 public final class BytesTransformers {
 
     private BytesTransformers() {
     }
 
-    public static BytesTransformer appendCrc32() {
+    /**
+     * Create a {@link BytesTransformer} which appends 4 byte Crc32 checksum to given bytes
+     *
+     * @return transformer
+     */
+    public static BytesTransformer checksumAppendCrc32() {
         return new ChecksumTransformer(new CRC32(), ChecksumTransformer.Mode.APPEND, 4);
+    }
+
+    /**
+     * Create a {@link BytesTransformer} which transforms to 4 byte Crc32 checksum of given bytes
+     *
+     * @return transformer
+     */
+    public static BytesTransformer checksumCrc32() {
+        return new ChecksumTransformer(new CRC32(), ChecksumTransformer.Mode.TRANSFORM, 4);
+    }
+
+    /**
+     * Create a {@link BytesTransformer} which transforms to 4 byte Crc32 checksum of given bytes
+     * @return transformer
+     */
+    /**
+     * Create a {@link BytesTransformer} which transforms to 4 byte Crc32 checksum of given bytes
+     *
+     * @param checksum           used algorithm
+     * @param mode               mode (append or convert)
+     * @param checksumLengthByte the byte length of the checksum; the {@link Checksum} class always returns 8 byte, but some
+     *                           checksum algorithms (e.g. CRC32) only require smaller output. Must  be between 1 and 8 byte.
+     * @return transformer
+     */
+    public static BytesTransformer checksum(Checksum checksum, ChecksumTransformer.Mode mode, int checksumLengthByte) {
+        return new ChecksumTransformer(checksum, mode, checksumLengthByte);
     }
 
     /**
