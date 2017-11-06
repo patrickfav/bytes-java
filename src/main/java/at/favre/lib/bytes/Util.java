@@ -21,10 +21,7 @@
 
 package at.favre.lib.bytes;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.util.*;
@@ -269,6 +266,24 @@ final class Util {
             return out.toByteArray();
         } catch (Exception e) {
             throw new IllegalStateException("could not read from input stream", e);
+        }
+    }
+
+    /**
+     * Read all bytes until length from given byte array.
+     *
+     * @param dataInput to read from
+     * @return all bytes from the dataInput
+     */
+    static byte[] readFromDataInput(DataInput dataInput, int length) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            for (int i = 0; i < length; i++) {
+                out.write(dataInput.readUnsignedByte());
+            }
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new IllegalStateException("could not read from data input", e);
         }
     }
 

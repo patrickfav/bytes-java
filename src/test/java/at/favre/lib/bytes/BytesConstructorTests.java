@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigInteger;
@@ -232,6 +233,25 @@ public class BytesConstructorTests extends ABytesTest {
 
     private void checkInputStream(byte[] array) {
         assertArrayEquals(array, Bytes.from(new ByteArrayInputStream(array)).array());
+    }
+
+    @Test
+    public void fromDataInput() throws Exception {
+        checkDataInput(example_bytes_one);
+        checkDataInput(example_bytes_two);
+        checkDataInput(example_bytes_four);
+        checkDataInput(example_bytes_seven);
+        checkDataInput(example_bytes_eight);
+        checkDataInput(example_bytes_sixteen);
+    }
+
+    private void checkDataInput(byte[] array) {
+        assertArrayEquals(array, Bytes.from(new DataInputStream(new ByteArrayInputStream(array)), array.length).array());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void fromDataInputShouldThrowException() throws Exception {
+        Bytes.from(new DataInputStream(new ByteArrayInputStream(example_bytes_one)), 2);
     }
 
     @Test

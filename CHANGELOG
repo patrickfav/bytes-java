@@ -3,8 +3,10 @@
 ## v0.4.2
 
 * add check method if transformer supports inplace
-* adds contains method
-* adds Iterable interface
+* add contains method
+* add Iterable interface
+* add setByteAt
+* add construction from DataInput
 
 ## v0.4.1
 

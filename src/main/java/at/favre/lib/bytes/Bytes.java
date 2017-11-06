@@ -21,10 +21,7 @@
 
 package at.favre.lib.bytes;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -327,6 +324,17 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public static Bytes from(InputStream stream) {
         return wrap(Util.readFromStream(stream));
+    }
+
+    /**
+     * Reads given {@link DataInput} and creates a new instance from read data
+     *
+     * @param dataInput to read from
+     * @param length    how many bytes should be read
+     * @return new instance
+     */
+    public static Bytes from(DataInput dataInput, int length) {
+        return wrap(Util.readFromDataInput(dataInput, length));
     }
 
     /**
