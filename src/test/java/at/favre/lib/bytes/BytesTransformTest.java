@@ -367,6 +367,6 @@ public class BytesTransformTest extends ABytesTest {
                 return 0;
             }
         }).supportInPlaceTransformation());
-        assertFalse(new BytesTransformers.ShuffleTransformer(new SecureRandom()).supportInPlaceTransformation());
+        assertTrue(new BytesTransformers.ShuffleTransformer(new SecureRandom()).supportInPlaceTransformation());
     }
 }

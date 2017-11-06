@@ -113,6 +113,15 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
+    public void containsTest() throws Exception {
+        assertEquals(false, Bytes.allocate(0).contains((byte) 0xFD));
+        assertEquals(true, Bytes.allocate(128).contains((byte) 0x00));
+        assertEquals(true, Bytes.from(example_bytes_seven).contains((byte) 0xFD));
+        assertEquals(true, Bytes.from(example_bytes_seven).contains((byte) 0xAF));
+        assertEquals(false, Bytes.from(example_bytes_seven).contains((byte) 0x00));
+    }
+
+    @Test
     public void indexOfByte() throws Exception {
         assertEquals(-1, Bytes.allocate(0).indexOf((byte) 0xFD));
         assertEquals(0, Bytes.allocate(128).indexOf((byte) 0x00));

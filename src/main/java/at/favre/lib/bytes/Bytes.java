@@ -857,6 +857,16 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
     }
 
     /**
+     * Checks if given byte value is contained in internal array
+     *
+     * @param target a primitive {@code byte} value
+     * @return true if this Bytes instance contains the specified element
+     */
+    public boolean contains(byte target) {
+        return indexOf(target) != -1;
+    }
+
+    /**
      * Returns the index of the first appearance of the value {@code target} in
      * {@code array}.
      *

@@ -1,5 +1,10 @@
 # Releases
 
+## v0.4.2
+
+* add check method if transformer supports inplace
+* adds contains method
+
 ## v0.4.1
 
 * add bitAt() utility
