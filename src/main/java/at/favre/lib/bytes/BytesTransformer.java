@@ -40,6 +40,13 @@ public interface BytesTransformer {
     byte[] transform(byte[] currentArray, boolean inPlace);
 
     /**
+     * If this transformer supports transformation without creation a new array
+     *
+     * @return true if supported
+     */
+    boolean supportInPlaceTransformation();
+
+    /**
      * Simple transformer for bitwise operations on {@link Bytes} instances
      *
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#Bitwise_operators">Bitwise operation</a>
@@ -85,6 +92,11 @@ public interface BytesTransformer {
 
             return out;
         }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return true;
+        }
     }
 
     /**
@@ -102,6 +114,11 @@ public interface BytesTransformer {
             }
 
             return out;
+        }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return true;
         }
     }
 
@@ -137,6 +154,11 @@ public interface BytesTransformer {
                     return bigInt.shiftRight(shiftCount).toByteArray();
             }
         }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return true;
+        }
     }
 
     /**
@@ -156,6 +178,11 @@ public interface BytesTransformer {
         public byte[] transform(byte[] currentArray, boolean inPlace) {
             return Util.concat(currentArray, secondArray);
         }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return false;
+        }
     }
 
     /**
@@ -172,6 +199,11 @@ public interface BytesTransformer {
                 out[out.length - i - 1] = temp;
             }
             return out;
+        }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return true;
         }
     }
 
@@ -192,6 +224,11 @@ public interface BytesTransformer {
             byte[] copy = new byte[length];
             System.arraycopy(currentArray, offset, copy, 0, copy.length);
             return copy;
+        }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return false;
         }
     }
 
@@ -235,6 +272,11 @@ public interface BytesTransformer {
 
             return resizedArray;
         }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return false;
+        }
     }
 
     /**
@@ -267,6 +309,11 @@ public interface BytesTransformer {
             }
             return out;
         }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return true;
+        }
     }
 
     /**
@@ -274,7 +321,6 @@ public interface BytesTransformer {
      */
     class MessageDigestTransformer implements BytesTransformer {
         final static String ALGORITHM_SHA_256 = "SHA-256";
-        final static String ALGORITHM_SHA_512 = "SHA-512";
 
         private final MessageDigest messageDigest;
 
@@ -290,6 +336,11 @@ public interface BytesTransformer {
         public byte[] transform(byte[] currentArray, boolean inPlace) {
             messageDigest.update(currentArray);
             return messageDigest.digest();
+        }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return false;
         }
     }
 }

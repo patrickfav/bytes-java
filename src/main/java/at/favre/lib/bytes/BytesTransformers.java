@@ -126,6 +126,11 @@ public final class BytesTransformers {
             Util.shuffle(out, random);
             return out;
         }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return true;
+        }
     }
 
     /**
@@ -154,6 +159,11 @@ public final class BytesTransformers {
                 Collections.sort(list, comparator);
                 return Bytes.from(list).array();
             }
+        }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return comparator == null;
         }
     }
 
@@ -196,6 +206,11 @@ public final class BytesTransformers {
             } else {
                 return Bytes.from(currentArray, checksumBytes).array();
             }
+        }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return false;
         }
     }
 
@@ -250,6 +265,11 @@ public final class BytesTransformers {
             } catch (Exception e) {
                 throw new IllegalStateException("could not compress gzip", e);
             }
+        }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return false;
         }
     }
 }

@@ -326,12 +326,47 @@ public class BytesTransformTest extends ABytesTest {
             public byte[] transform(byte[] currentArray, boolean inPlace) {
                 return Bytes.from(currentArray).array();
             }
+
+            @Override
+            public boolean supportInPlaceTransformation() {
+                return false;
+            }
         }).array());
         assertArrayEquals(new byte[2], Bytes.from(example_bytes_two).transform(new BytesTransformer() {
             @Override
             public byte[] transform(byte[] currentArray, boolean inPlace) {
                 return Bytes.allocate(currentArray.length).array();
             }
+
+            @Override
+            public boolean supportInPlaceTransformation() {
+                return false;
+            }
         }).array());
+    }
+
+    @Test
+    public void transformerInPlaceTest() throws Exception {
+        assertTrue(new BytesTransformer.BitSwitchTransformer(0, true).supportInPlaceTransformation());
+        assertTrue(new BytesTransformer.BitWiseOperatorTransformer(new byte[]{}, BytesTransformer.BitWiseOperatorTransformer.Mode.XOR).supportInPlaceTransformation());
+        assertTrue(new BytesTransformer.NegateTransformer().supportInPlaceTransformation());
+        assertTrue(new BytesTransformer.ShiftTransformer(0, BytesTransformer.ShiftTransformer.Type.LEFT_SHIFT).supportInPlaceTransformation());
+        assertTrue(new BytesTransformer.ReverseTransformer().supportInPlaceTransformation());
+
+        assertFalse(new BytesTransformer.MessageDigestTransformer("SHA1").supportInPlaceTransformation());
+        assertFalse(new BytesTransformer.CopyTransformer(0, 0).supportInPlaceTransformation());
+        assertFalse(new BytesTransformer.ResizeTransformer(0).supportInPlaceTransformation());
+        assertFalse(new BytesTransformer.ConcatTransformer(new byte[]{}).supportInPlaceTransformation());
+
+        assertFalse(new BytesTransformers.GzipCompressor(false).supportInPlaceTransformation());
+        assertFalse(new BytesTransformers.ChecksumTransformer(new CRC32(), ChecksumTransformer.Mode.TRANSFORM, 4).supportInPlaceTransformation());
+        assertTrue(new BytesTransformers.SortTransformer().supportInPlaceTransformation());
+        assertFalse(new BytesTransformers.SortTransformer(new Comparator<Byte>() {
+            @Override
+            public int compare(Byte o1, Byte o2) {
+                return 0;
+            }
+        }).supportInPlaceTransformation());
+        assertFalse(new BytesTransformers.ShuffleTransformer(new SecureRandom()).supportInPlaceTransformation());
     }
 }
