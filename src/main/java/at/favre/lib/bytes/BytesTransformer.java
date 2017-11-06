@@ -53,7 +53,7 @@ public interface BytesTransformer {
      */
     final class BitWiseOperatorTransformer implements BytesTransformer {
 
-        enum Mode {
+        public enum Mode {
             AND, OR, XOR
         }
 
@@ -128,7 +128,7 @@ public interface BytesTransformer {
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#Bit_shifts">Bit shifts</a>
      */
     final class ShiftTransformer implements BytesTransformer {
-        enum Type {
+        public enum Type {
             LEFT_SHIFT, RIGHT_SHIFT
         }
 

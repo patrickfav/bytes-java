@@ -19,24 +19,19 @@
  * under the License.
  */
 
-package at.favre.lib.bytes;
+package at.favre.lib.bytes.otherPackage;
 
-/**
- * Base interface for bytes
- */
-interface AbstractBytes {
+import at.favre.lib.bytes.BytesTransformers;
+import org.junit.Test;
 
-    /**
-     * Checks if instance is mutable
-     *
-     * @return true if mutable, ie. transformers will change internal array
-     */
-    boolean isMutable();
+import java.util.zip.CRC32;
 
-    /**
-     * Checks if instance is readonly
-     *
-     * @return true if readonly, ie. no direct access to the internal array
-     */
-    boolean isReadOnly();
+import static at.favre.lib.bytes.BytesTransformers.ChecksumTransformer;
+import static org.junit.Assert.assertFalse;
+
+public class BytesTransformTest {
+    @Test
+    public void testApiVisible() throws Exception {
+        assertFalse(BytesTransformers.checksum(new CRC32(), ChecksumTransformer.Mode.TRANSFORM, 4).supportInPlaceTransformation());
+    }
 }

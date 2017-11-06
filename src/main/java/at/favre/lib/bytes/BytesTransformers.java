@@ -112,7 +112,7 @@ public final class BytesTransformers {
     /**
      * Shuffles the internal byte array
      */
-    final static class ShuffleTransformer implements BytesTransformer {
+    public final static class ShuffleTransformer implements BytesTransformer {
         private final Random random;
 
         ShuffleTransformer(Random random) {
@@ -136,7 +136,7 @@ public final class BytesTransformers {
     /**
      * Sorts the internal byte array with given {@link java.util.Comparator}
      */
-    final static class SortTransformer implements BytesTransformer {
+    public final static class SortTransformer implements BytesTransformer {
         private final Comparator<Byte> comparator;
 
         SortTransformer() {
@@ -170,8 +170,8 @@ public final class BytesTransformers {
     /**
      * Adds or converts to arbitrary checksum
      */
-    final static class ChecksumTransformer implements BytesTransformer {
-        enum Mode {
+    public final static class ChecksumTransformer implements BytesTransformer {
+        public enum Mode {
             /**
              * Appends checksum to given byte array
              */
@@ -217,7 +217,7 @@ public final class BytesTransformers {
     /**
      * Byte compression with gzip
      */
-    final static class GzipCompressor implements BytesTransformer {
+    public final static class GzipCompressor implements BytesTransformer {
         private final boolean compress;
 
         GzipCompressor(boolean compress) {
