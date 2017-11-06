@@ -141,6 +141,7 @@ Bytes.from(byteList); //List<Byte> byteList = ...
 Bytes.from(myBitSet); //BitSet myBitSet = ...
 Bytes.from(bigInteger);
 Bytes.from(file); //reads bytes from any java.io.File
+Bytes.from(dataInput, 16); //reads bytes from any java.io.DataInput
 ```
 
 For parsing binary-text-encoded strings, see below.
