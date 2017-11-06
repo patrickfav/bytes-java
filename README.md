@@ -440,6 +440,7 @@ MutableBytes b = Bytes.from(array).mutable();
 Mutable classes also enable further APIs for directly modify the internal array:
 
 ```java
+b.setByteAt(3, (byte) 0xF1)
 b.overwrite(anotherArray) //directly overwrite given array
 b.fill(0x03) // fills with e.g. 3
 b.wipe() //fills with zeros

@@ -69,6 +69,19 @@ public class MutableBytesABytesTest extends ABytesTest {
     }
 
     @Test
+    public void setByteAtTest() throws Exception {
+        MutableBytes b = fromAndTest(example_bytes_sixteen).mutable();
+
+        for (int i = 0; i < b.length(); i++) {
+            byte old = b.byteAt(i);
+            b.setByteAt(i, (byte) 0);
+            if (old != 0) {
+                assertNotEquals(old, b.byteAt(i));
+            }
+        }
+    }
+
+    @Test
     public void wipe() throws Exception {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         assertSame(b, b.wipe());

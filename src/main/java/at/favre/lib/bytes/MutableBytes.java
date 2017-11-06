@@ -31,6 +31,7 @@ import java.util.Objects;
  * <p>
  * Adds additional mutator, which may change the internal array in-place, like {@link #wipe()}
  */
+@SuppressWarnings("WeakerAccess")
 public final class MutableBytes extends Bytes {
 
     MutableBytes(byte[] byteArray, ByteOrder byteOrder) {
@@ -65,6 +66,18 @@ public final class MutableBytes extends Bytes {
     public MutableBytes overwrite(byte[] newArray, int offsetInternalArray) {
         Objects.requireNonNull(newArray, "must provide non-null array as source");
         System.arraycopy(newArray, 0, internalArray(), offsetInternalArray, newArray.length);
+        return this;
+    }
+
+    /**
+     * Sets new byte to given index
+     *
+     * @param index   the index to change
+     * @param newByte the new byte to set
+     * @return this instance
+     */
+    public MutableBytes setByteAt(int index, byte newByte) {
+        internalArray()[index] = newByte;
         return this;
     }
 
