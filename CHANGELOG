@@ -4,6 +4,7 @@
 
 * add check method if transformer supports inplace
 * adds contains method
+* adds Iterable interface
 
 ## v0.4.1
 

@@ -322,7 +322,7 @@ final class Util {
      limitations under the License.
      =================================================================================================
      */
-    public static final class Entropy<T> {
+    static final class Entropy<T> {
         private final Map<T, Integer> map = new HashMap<>();
         private int total = 0;
 
@@ -347,6 +347,43 @@ final class Util {
                 entropy -= prob * Log2(prob);
             }
             return entropy;
+        }
+    }
+
+    /**
+     * A simple iterator for the bytes class, which does not support remove
+     */
+    static final class BytesIterator implements Iterator<Byte> {
+        private final byte[] array;
+        /**
+         * Index of element to be returned by subsequent call to next.
+         */
+        private int cursor = 0;
+
+        BytesIterator(byte[] array) {
+            this.array = array;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cursor != array.length;
+        }
+
+        @Override
+        public Byte next() {
+            try {
+                int i = cursor;
+                Byte next = array[i];
+                cursor = i + 1;
+                return next;
+            } catch (IndexOutOfBoundsException e) {
+                throw new NoSuchElementException();
+            }
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("The Bytes iterator does not support removing");
         }
     }
 }

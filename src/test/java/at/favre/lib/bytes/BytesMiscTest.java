@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import java.nio.ByteOrder;
 import java.nio.ReadOnlyBufferException;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
 
@@ -253,5 +254,26 @@ public class BytesMiscTest extends ABytesTest {
 
         Bytes b = Bytes.from(example_bytes_twentyfour).readOnly();
         assertSame(b, b.readOnly());
+    }
+
+    @Test
+    public void iteratorTest() throws Exception {
+        Bytes b = Bytes.wrap(example_bytes_seven);
+
+        int counter = 0;
+        for (Byte aByte : b) {
+            assertEquals((Byte) example_bytes_seven[counter], aByte);
+            counter++;
+        }
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void iteratorTestRemoveNotPossible() throws Exception {
+        Bytes.wrap(example_bytes_seven).iterator().remove();
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void iteratorNoElement() throws Exception {
+        Bytes.allocate(0).iterator().next();
     }
 }

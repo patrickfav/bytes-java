@@ -24,6 +24,7 @@ package at.favre.lib.bytes;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -59,7 +60,7 @@ import java.util.*;
  * </pre>
  */
 @SuppressWarnings("WeakerAccess")
-public class Bytes implements Comparable<Bytes>, AbstractBytes {
+public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, Iterable<Byte> {
 
     /* FACTORY ***************************************************************************************************/
 
@@ -1387,6 +1388,11 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
         return length() + " bytes " + preview;
     }
 
+    @Override
+    public Iterator<Byte> iterator() {
+        return new Util.BytesIterator(internalArray());
+    }
+
     /**
      * Internal factory for {@link Bytes} instances
      */
@@ -1397,4 +1403,5 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes {
         }
     }
 
+    static final long serialVersionUID = 1L;
 }

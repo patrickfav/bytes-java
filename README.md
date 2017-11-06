@@ -288,6 +288,7 @@ Methods that return additional information about the instance.
 Finding occurrence of specific bytes:
 
 ```java
+Bytes.wrap(array).contains((byte) 0xE1);
 Bytes.wrap(array).indexOf((byte) 0xFD);
 Bytes.wrap(array).lastIndexOf((byte) 0xAE);
 ```
@@ -317,6 +318,15 @@ The `toString()` methods only shows the length and a preview of maximal 8 bytes:
 
 ```
 16 bytes (0x7ed1fdaa...12af000a)
+```
+
+Bytes also implements the `Iterable` interface, so it can be used in a
+foreach loop:
+
+```java
+for (Byte aByte : bytesInstance) {
+    ...
+}
 ```
 
 ### Validation
