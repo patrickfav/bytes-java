@@ -31,12 +31,12 @@ to blindly paste code snippets from
 
 It's main features include:
 
-* **Creation** from a wide variety of sources: multiple arrays, integers, streams, random, strings, files, ...
-* **Transformation** with many built-in: append, xor, and, hash, shifts, shuffle, reverse, sort, ...
+* **Creation** from a wide variety of sources: multiple arrays, integers, [streams](https://docs.oracle.com/javase/7/docs/api/java/io/InputStream.html), random, strings, files, ...
+* **Transformation** with many built-in: append, [xor](https://en.wikipedia.org/wiki/Exclusive_or), [and](https://en.wikipedia.org/wiki/Logical_conjunction), [hash](https://en.wikipedia.org/wiki/Cryptographic_hash_function), [shifts](https://en.wikipedia.org/wiki/Bitwise_operation#Bit_shifts), shuffle, reverse, [checksum](https://en.wikipedia.org/wiki/Checksum), ...
 * **Validators** with the ability to arbitrarily combine multiple ones with logical expressions
-* **Parsing and Encoding** in most common binary-to-text-encodings: [hex](https://en.wikipedia.org/wiki/Hexadecimal), [base64](https://en.wikipedia.org/wiki/Base64), ...
+* **Parsing and Encoding** in most common binary-to-text-encodings: [hex](https://en.wikipedia.org/wiki/Hexadecimal), [base36](https://en.wikipedia.org/wiki/Base36), [base64](https://en.wikipedia.org/wiki/Base64), ...
 * **Immutable, Mutable and Read-Only** versions
-* **Utility Features** like `indexOf`, `count`, `isEmpty`, `bitAt`, ...
+* **Utility Features** like `indexOf`, `count`, `isEmpty`, `bitAt`, `contains` ...
 * **Flexibility** provide your own Transformers, Validators and Encoders
 
 It is written in [Java 7](https://en.wikipedia.org/wiki/Java_version_history#Java_SE_7) to keep backwards compatibility with *Android* and older *Java* applications.
@@ -136,10 +136,10 @@ Bytes.from(asciiString, StandardCharset.US_ASCII) //any charset
 And other types:
 
 ```java
-Bytes.from(byteInputStream); //any inputStream
+Bytes.from(byteInputStream); //any java.io.InputStream
 Bytes.from(byteList); //List<Byte> byteList = ...
-Bytes.from(myBitSet); //BitSet myBitSet = ...
-Bytes.from(bigInteger);
+Bytes.from(myBitSet); //java.util.BitSet myBitSet = ...
+Bytes.from(bigInteger); //java.math.BigInteger
 Bytes.from(file); //reads bytes from any java.io.File
 Bytes.from(dataInput, 16); //reads bytes from any java.io.DataInput
 ```
@@ -173,10 +173,10 @@ Bytes result = Bytes.wrap(array1).append((byte) 3);
 **Bitwise operations**: XOR, OR, AND, NOT as well as left and right shifts and switching bits:
 
 ```java
-Bytes.wrap(array).xor(array2);
-Bytes.wrap(array).or(array2);
-Bytes.wrap(array).and(array2);
-Bytes.wrap(array).negate();
+Bytes.wrap(array).xor(array2); // 0010 0011 xor() 1011 1000 = 1001 1011
+Bytes.wrap(array).or(array2); // 0010 0011 or() 1101 0100 = 1111 0111
+Bytes.wrap(array).and(array2); // 0010 0011 and() 1011 1000 = 0010 0000
+Bytes.wrap(array).negate(); // 0010 0011 negate() = 1101 1100
 Bytes.wrap(array).leftShift(8);
 Bytes.wrap(array).rightShift(8);
 Bytes.wrap(array).switchBit(3, true);
@@ -198,7 +198,7 @@ Bytes resized = Bytes.wrap(array).resize(3); //from {3, 9, 2, 1} to {9, 2, 1}
 **Hashing** the internal byte array using the [`MessageDigest`](https://docs.oracle.com/javase/7/docs/api/java/security/MessageDigest.html) Java crypto API:
 
 ```java
-Bytes hash = Bytes.wrap(array).sha256();
+Bytes hash = Bytes.wrap(array).hashSha256();
 Bytes hash = Bytes.wrap(array).hash("MD5");
 ```
 
@@ -247,8 +247,9 @@ Bytes.wrap(array).transform(shuffle());
 
 ### Parser and Encoder for Binary-Text-Encodings
 
-This library can parse and encode a variety of encodings: binary, decimal, octal,
-hex, base36 and base64. Additionally custom parsers are supported by providing your own
+This library can parse and encode a variety of encodings: binary, decimal, [octal](https://en.wikipedia.org/wiki/Octal),
+[hex](https://en.wikipedia.org/wiki/Hexadecimal), [base36](https://en.wikipedia.org/wiki/Base36) and
+[base64](https://en.wikipedia.org/wiki/Base64). Additionally custom parsers are supported by providing your own
 implementation:
 
 ```java
@@ -350,7 +351,7 @@ Validators also support nestable logical expressions AND, OR as well as NOT:
 
 ```java
 Bytes.allocate(0).validate(or(exactLength(1), exactLength(0))) //true
-Bytes.allocate(21).validate(and(atLeast(3), atMost(20))) //true
+Bytes.allocate(19).validate(and(atLeast(3), atMost(20))) //true
 Bytes.allocate(2).validate(not(onlyOf((byte) 0))); //false
 ```
 
@@ -402,7 +403,7 @@ To primitives (if the internal array is not too long)
 ```java
 Bytes.wrap(array).toByte();
 Bytes.wrap(array).toInt();
-Bytes.wrap(array).toLong();
+Bytes.wrap(array).toDouble();
 ```
 
 To other collections
@@ -410,7 +411,7 @@ To other collections
 ```java
 Bytes.wrap(array).toList(); // of type List<Byte>
 Bytes.wrap(array).toObjectArray(); // of type Byte[]
-Bytes.wrap(array).toBitSet();
+Bytes.wrap(array).toBitSet(); //of type java.util.BitSet
 ```
 
 and to [`BigInteger`](https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html) of course:
