@@ -146,4 +146,36 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         } catch (UnsupportedOperationException e) {
         }
     }
+
+    @Test
+    public void toFloat() throws Exception {
+        assertEquals(1.0134550690550691E-17, Bytes.from(example_bytes_four).toFloat(), 0.001);
+
+        assertEquals(5.1E-322, Bytes.from(example_bytes_one).toFloat(), 0.001);
+        assertEquals(3.3433E-320, Bytes.from(example_bytes_two).toFloat(), 0.001);
+        assertEquals(0, Bytes.from(new byte[2]).toFloat(), 0);
+        assertEquals(0, Bytes.from(new byte[4]).toFloat(), 0);
+
+        try {
+            Bytes.from(new byte[5]).toFloat();
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
+    }
+
+    @Test
+    public void toDouble() throws Exception {
+        assertEquals(-6.659307728279082E225, Bytes.from(example_bytes_eight).toDouble(), 0.001);
+
+        assertEquals(5.1E-322, Bytes.from(example_bytes_one).toDouble(), 0.001);
+        assertEquals(3.3433E-320, Bytes.from(example_bytes_two).toDouble(), 0.001);
+        assertEquals(0, Bytes.from(new byte[4]).toDouble(), 0);
+        assertEquals(0, Bytes.from(new byte[8]).toDouble(), 0);
+
+        try {
+            Bytes.from(new byte[9]).toDouble();
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
+    }
 }

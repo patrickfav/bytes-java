@@ -1,5 +1,9 @@
 # Releases
 
+## v0.4.3
+
+* add toFloat/toDouble
+
 ## v0.4.2
 
 * add check method if transformer supports inplace

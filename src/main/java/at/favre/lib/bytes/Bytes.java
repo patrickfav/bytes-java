@@ -1320,6 +1320,37 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
     }
 
     /**
+     * If the underlying byte array is smaller than or equal to 4 byte / 32 bit returns the
+     * representation for a Java float value. The output is dependent on the set {@link #byteOrder()}.
+     *
+     * @return the float representation
+     * @throws UnsupportedOperationException if byte array is longer than 4 byte
+     * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
+     */
+    public float toFloat() {
+        if (length() > 4) {
+            throw new UnsupportedOperationException("cannot convert to float if length > 4 byte");
+        }
+        return resize(4).internalBuffer().getFloat();
+    }
+
+    /**
+     * If the underlying byte array is smaller than or equal to 8 byte / 64 bit returns the
+     * representation for a Java float value. The output is dependent on the set {@link #byteOrder()}.
+     *
+     * @return the float representation
+     * @throws UnsupportedOperationException if byte array is longer than 8 byte
+     * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
+     */
+    public double toDouble() {
+        if (length() > 8) {
+            throw new UnsupportedOperationException("cannot convert to float if length > 8 byte");
+        }
+        return resize(8).internalBuffer().getDouble();
+    }
+
+
+    /**
      * Compares this bytes instance to another.
      * <p>
      * Two byte bytes are compared by comparing their sequences of
