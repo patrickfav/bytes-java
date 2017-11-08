@@ -325,6 +325,25 @@ final class Util {
         }
     }
 
+    /**
+     * Shows the length and a preview of max 8 bytes of the given byte
+     *
+     * @param bytes to convert to string
+     * @return string representation
+     */
+    static String toString(Bytes bytes) {
+        String preview;
+        if (bytes.isEmpty()) {
+            preview = "";
+        } else if (bytes.length() > 8) {
+            preview = "(0x" + bytes.copy(0, 4).encodeHex() + "..." + bytes.copy(bytes.length() - 4, 4).encodeHex() + ")";
+        } else {
+            preview = "(0x" + bytes.encodeHex() + ")";
+        }
+
+        return bytes.length() + " bytes " + preview;
+    }
+
     /*
     =================================================================================================
      Copyright 2011 Twitter, Inc.

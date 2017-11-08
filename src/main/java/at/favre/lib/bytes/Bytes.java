@@ -1349,7 +1349,6 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
         return resize(8).internalBuffer().getDouble();
     }
 
-
     /**
      * Compares this bytes instance to another.
      * <p>
@@ -1415,16 +1414,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     @Override
     public String toString() {
-        String preview;
-        if (isEmpty()) {
-            preview = "";
-        } else if (length() > 8) {
-            preview = "(0x" + copy(0, 4).encodeHex() + "..." + copy(length() - 4, 4).encodeHex() + ")";
-        } else {
-            preview = "(0x" + encodeHex() + ")";
-        }
-
-        return length() + " bytes " + preview;
+        return Util.toString(this);
     }
 
     @Override
