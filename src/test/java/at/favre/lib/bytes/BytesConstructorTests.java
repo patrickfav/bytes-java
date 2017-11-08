@@ -229,6 +229,7 @@ public class BytesConstructorTests extends ABytesTest {
         checkInputStream(example_bytes_seven);
         checkInputStream(example_bytes_eight);
         checkInputStream(example_bytes_sixteen);
+        checkInputStream(Bytes.random(32 * 987).array());
     }
 
     private void checkInputStream(byte[] array) {
@@ -243,6 +244,7 @@ public class BytesConstructorTests extends ABytesTest {
         checkDataInput(example_bytes_seven);
         checkDataInput(example_bytes_eight);
         checkDataInput(example_bytes_sixteen);
+        checkDataInput(Bytes.random(32 * 987).array());
     }
 
     private void checkDataInput(byte[] array) {
@@ -266,7 +268,7 @@ public class BytesConstructorTests extends ABytesTest {
 
     private void checkList(byte[] array) {
         Bytes bList = Bytes.from(Util.toList(array));
-        Bytes bLinkedList = Bytes.from(new LinkedList<Byte>(Util.toList(array)));
+        Bytes bLinkedList = Bytes.from(new LinkedList<>(Util.toList(array)));
         assertArrayEquals(array, bList.array());
         assertArrayEquals(array, bLinkedList.array());
     }

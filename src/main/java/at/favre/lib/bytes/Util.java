@@ -278,8 +278,13 @@ final class Util {
     static byte[] readFromDataInput(DataInput dataInput, int length) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
+            byte[] buf;
+            int remaining = length;
             for (int i = 0; i < length; i++) {
-                out.write(dataInput.readUnsignedByte());
+                buf = new byte[Math.min(remaining, BUF_SIZE)];
+                dataInput.readFully(buf);
+                out.write(buf);
+                remaining -= buf.length;
             }
             return out.toByteArray();
         } catch (Exception e) {
