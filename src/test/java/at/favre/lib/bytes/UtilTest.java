@@ -23,8 +23,10 @@ package at.favre.lib.bytes;
 
 import org.junit.Test;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.*;
@@ -222,5 +224,61 @@ public class UtilTest {
         input = Arrays.copyOf(input, input.length);
         Util.reverse(input, fromIndex, toIndex);
         assertTrue(Arrays.equals(expectedOutput, input));
+    }
+
+    @Test
+    public void testLeftShift() {
+        byte[] test = new byte[]{0, 0, 1, 0};
+        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.shiftLeft(new byte[]{0, 0, -128, 0}, 1));
+        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.shiftLeft(new byte[]{0, 0, 64, 0}, 2));
+        assertArrayEquals(new byte[]{1, 1, 1, 0}, Util.shiftLeft(new byte[]{-128, -128, -128, -128}, 1));
+        assertArrayEquals(new byte[]{0, 0, 2, 0}, Util.shiftLeft(Bytes.from(test).array(), 1));
+        assertArrayEquals(new byte[]{0, 0, 4, 0}, Util.shiftLeft(Bytes.from(test).array(), 2));
+        assertArrayEquals(new byte[]{0, 0, 8, 0}, Util.shiftLeft(Bytes.from(test).array(), 3));
+        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 8));
+        assertArrayEquals(new byte[]{0, 2, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 9));
+        assertArrayEquals(new byte[]{1, 0, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 16));
+        assertArrayEquals(new byte[]{2, 0, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 17));
+        assertArrayEquals(new byte[]{-128, 0, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 23));
+        assertArrayEquals(new byte[]{0, 0, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 24));
+        assertArrayEquals(new byte[]{0, 0, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 24));
+
+        assertSame(test, Util.shiftLeft(test, 1));
+
+        for (int i = 0; i < 1000; i++) {
+            int shift = 1;
+            Bytes rnd = Bytes.random(2 + new Random().nextInt(128));
+            assertArrayEquals(Bytes.wrap(new BigInteger(rnd.array()).shiftLeft(shift).toByteArray()).resize(rnd.length()).array(), Util.shiftLeft(rnd.copy().array(), shift));
+        }
+    }
+
+    @Test
+    public void testRightShift() {
+        byte[] test = new byte[]{0, 0, 16, 0};
+        assertArrayEquals(new byte[]{0, -128, -128, -128}, Util.shiftRight(new byte[]{1, 1, 1, 1}, 1));
+        assertArrayEquals(new byte[]{0, -128, 66, 0}, Util.shiftRight(new byte[]{2, 1, 8, 2}, 2));
+        assertArrayEquals(new byte[]{0, -128, 66, 0}, new BigInteger(new byte[]{2, 1, 8, 2}).shiftRight(2).toByteArray());
+        assertArrayEquals(new byte[]{0, 0, 0, -128}, Util.shiftRight(Bytes.from(test).array(), 5));
+        assertArrayEquals(new byte[]{0, 0, 0, -128}, Util.shiftRight(new byte[]{0, 0, 1, 0}, 1));
+        assertArrayEquals(new byte[]{0, 0, 8, 0}, Util.shiftRight(Bytes.from(test).array(), 1));
+        assertArrayEquals(new byte[]{0, 0, 4, 0}, Util.shiftRight(Bytes.from(test).array(), 2));
+        assertArrayEquals(new byte[]{0, 0, 2, 0}, Util.shiftRight(Bytes.from(test).array(), 3));
+        assertArrayEquals(new byte[]{0, 0, 1, 0}, Util.shiftRight(Bytes.from(test).array(), 4));
+
+        assertSame(test, Util.shiftRight(test, 1));
+
+
+        for (int i = 0; i < 1000; i++) {
+            int shift = 1;
+            Bytes rnd = Bytes.random(8);
+            byte[] expected = new BigInteger(rnd.array()).shiftRight(shift).toByteArray();
+            byte[] actual = Util.shiftRight(rnd.copy().array(), shift);
+
+            System.out.println("Original  \t" + rnd.encodeBinary());
+            System.out.println("Expected \t " + Bytes.wrap(expected).encodeBinary());
+            System.out.println("Actual   \t " + Bytes.wrap(actual).encodeBinary() + "\n\n");
+
+            assertArrayEquals(expected, actual);
+        }
     }
 }

@@ -21,7 +21,6 @@
 
 package at.favre.lib.bytes;
 
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
@@ -144,14 +143,14 @@ public interface BytesTransformer {
 
         @Override
         public byte[] transform(byte[] currentArray, boolean inPlace) {
-            BigInteger bigInt = new BigInteger(currentArray);
+            byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
 
             switch (type) {
                 default:
                 case LEFT_SHIFT:
-                    return bigInt.shiftLeft(shiftCount).toByteArray();
+                    return Util.shiftLeft(out, shiftCount);
                 case RIGHT_SHIFT:
-                    return bigInt.shiftRight(shiftCount).toByteArray();
+                    return Util.shiftRight(out, shiftCount);
             }
         }
 
