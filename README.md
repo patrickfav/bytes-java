@@ -522,6 +522,7 @@ Use maven (3.1+) to create a jar including all dependencies
 # Credits
 
 * Byte util methods derived from primitives.Bytes from [Google Guava](https://github.com/google/guava)
+* Entropy class derived from [Twitter Commons](https://github.com/twitter/commons)
 
 # License
 
