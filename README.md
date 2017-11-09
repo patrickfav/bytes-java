@@ -519,6 +519,10 @@ Use maven (3.1+) to create a jar including all dependencies
 * Java 7
 * Maven
 
+# Credits
+
+* Byte util methods derived from primitives.Bytes from [Google Guava](https://github.com/google/guava)
+
 # License
 
 Copyright 2017 Patrick Favre-Bulle
