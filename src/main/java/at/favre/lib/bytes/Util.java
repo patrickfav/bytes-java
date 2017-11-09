@@ -244,6 +244,24 @@ final class Util {
         }
     }
 
+    /**
+     * Reverses the elements of {@code array} between {@code fromIndex} inclusive and {@code toIndex}
+     * exclusive. This is equivalent to {@code
+     * Collections.reverse(Bytes.asList(array).subList(fromIndex, toIndex))}, but is likely to be more
+     * efficient.
+     *
+     * @throws IndexOutOfBoundsException if {@code fromIndex < 0}, {@code toIndex > array.length}, or
+     *                                   {@code toIndex > fromIndex}
+     */
+    static void reverse(byte[] array, int fromIndex, int toIndex) {
+        Objects.requireNonNull(array);
+        for (int i = fromIndex, j = toIndex - 1; i < j; i++, j--) {
+            byte tmp = array[i];
+            array[i] = array[j];
+            array[j] = tmp;
+        }
+    }
+
     private static final int BUF_SIZE = 0x1000; // 4K
 
     /**

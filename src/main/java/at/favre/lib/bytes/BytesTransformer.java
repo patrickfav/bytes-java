@@ -192,12 +192,7 @@ public interface BytesTransformer {
         @Override
         public byte[] transform(byte[] currentArray, boolean inPlace) {
             byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
-
-            for (int i = 0; i < out.length / 2; i++) {
-                byte temp = out[i];
-                out[i] = out[out.length - i - 1];
-                out[out.length - i - 1] = temp;
-            }
+            Util.reverse(out, 0, out.length);
             return out;
         }
 
