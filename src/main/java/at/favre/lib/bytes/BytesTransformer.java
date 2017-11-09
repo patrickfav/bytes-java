@@ -243,10 +243,17 @@ public interface BytesTransformer {
      * keeping the value the same.
      */
     final class ResizeTransformer implements BytesTransformer {
-        private final int newSize;
+        public enum Mode {
+            RESIZE_KEEP_FROM_ZERO_INDEX,
+            RESIZE_KEEP_FROM_MAX_LENGTH
+        }
 
-        ResizeTransformer(int newSize) {
+        private final int newSize;
+        private final Mode mode;
+
+        ResizeTransformer(int newSize, Mode mode) {
             this.newSize = newSize;
+            this.mode = mode;
         }
 
         @Override
@@ -264,10 +271,15 @@ public interface BytesTransformer {
             }
 
             byte[] resizedArray = new byte[newSize];
-            if (newSize > currentArray.length) {
-                System.arraycopy(currentArray, 0, resizedArray, Math.max(0, Math.abs(newSize - currentArray.length)), Math.min(newSize, currentArray.length));
+
+            if (mode == Mode.RESIZE_KEEP_FROM_MAX_LENGTH) {
+                if (newSize > currentArray.length) {
+                    System.arraycopy(currentArray, 0, resizedArray, Math.max(0, Math.abs(newSize - currentArray.length)), Math.min(newSize, currentArray.length));
+                } else {
+                    System.arraycopy(currentArray, Math.max(0, Math.abs(newSize - currentArray.length)), resizedArray, Math.min(0, Math.abs(newSize - currentArray.length)), Math.min(newSize, currentArray.length));
+                }
             } else {
-                System.arraycopy(currentArray, Math.max(0, Math.abs(newSize - currentArray.length)), resizedArray, Math.min(0, Math.abs(newSize - currentArray.length)), Math.min(newSize, currentArray.length));
+                System.arraycopy(currentArray, 0, resizedArray, 0, Math.min(currentArray.length, resizedArray.length));
             }
 
             return resizedArray;

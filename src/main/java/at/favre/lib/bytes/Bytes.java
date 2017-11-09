@@ -735,14 +735,37 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      * contain identical values.  For any indices that are valid in the
      * copy but not the original, the copy will contain {@code (byte)0}.
      * <p>
-     * If if the internal array will be grown, zero bytes will be added on the left,
-     * keeping the value the same.
+     * Resize from LSB or length, so an array [0,1,2,3] resized to 3 will result in [1,2,3] or resized to 5 [0,0,1,2,3].
+     * So when a 8 byte value resized to 4 byte will result in the same 32 bit integer value
      *
      * @param newByteLength the length of the copy to be returned
      * @return a copy with the desired size or "this" instance if newByteLength == current length
      */
     public Bytes resize(int newByteLength) {
-        return transform(new BytesTransformer.ResizeTransformer(newByteLength));
+        return resize(newByteLength, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH);
+    }
+
+    /**
+     * Copies the specified array, truncating or padding with zeros (if necessary)
+     * so the copy has the specified length.  For all indices that are
+     * valid in both the original array and the copy, the two arrays will
+     * contain identical values.  For any indices that are valid in the
+     * copy but not the original, the copy will contain {@code (byte)0}.
+     * <p>
+     * <strong>Modes:</strong>
+     * <ul>
+     * <li>{@link BytesTransformer.ResizeTransformer.Mode#RESIZE_KEEP_FROM_ZERO_INDEX}: Resize from MSB or index 0;
+     * so an array [0,1,2,3] resized to 3 will result in [0,1,2] or resized to 5 [0,1,2,3,0]</li>
+     * <li>{@link BytesTransformer.ResizeTransformer.Mode#RESIZE_KEEP_FROM_MAX_LENGTH}: Resize from LSB or length;
+     * so an array [0,1,2,3] resized to 3 will result in [1,2,3] or resized to 5 [0,0,1,2,3]</li>
+     * </ul>
+     *
+     * @param newByteLength the length of the copy to be returned
+     * @param mode          from which end the length will start to count (either index 0 or length())
+     * @return a copy with the desired size or "this" instance if newByteLength == current length
+     */
+    public Bytes resize(int newByteLength, BytesTransformer.ResizeTransformer.Mode mode) {
+        return transform(new BytesTransformer.ResizeTransformer(newByteLength, mode));
     }
 
     /**

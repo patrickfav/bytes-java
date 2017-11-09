@@ -67,7 +67,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void resizeGrow() throws Exception {
+    public void resizeGrowLsb() throws Exception {
         assertArrayEquals(new byte[8], Bytes.from(new byte[0]).resize(8).array());
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).resize(1).array());
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).resize(1).array());
@@ -77,7 +77,17 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void resizeShrink() throws Exception {
+    public void resizeGrowMsb() throws Exception {
+        assertArrayEquals(new byte[8], Bytes.from(new byte[0]).resize(8, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+        assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).resize(1, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+        assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).resize(1, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+        assertArrayEquals(Util.concat(example_bytes_one, new byte[7]), Bytes.from(example_bytes_one).resize(8, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+        assertArrayEquals(Util.concat(example_bytes_seven, new byte[1]), Bytes.from(example_bytes_seven).resize(8, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+        assertArrayEquals(Util.concat(example_bytes_sixteen, new byte[1]), Bytes.from(example_bytes_sixteen).resize(17, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+    }
+
+    @Test
+    public void resizeShrinkLsb() throws Exception {
         assertArrayEquals(new byte[0], Bytes.from(example_bytes_one).resize(0).array());
         assertArrayEquals(new byte[]{example_bytes_two[1]}, Bytes.from(example_bytes_two).resize(1).array());
         assertArrayEquals(new byte[]{example_bytes_four[3]}, Bytes.from(example_bytes_four).resize(1).array());
@@ -89,8 +99,21 @@ public class BytesTransformTest extends ABytesTest {
         try {
             Bytes.from(new byte[0]).resize(-1);
             fail();
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException ignore) {
+        }
+    }
 
+    @Test
+    public void resizeShrinkMsb() throws Exception {
+        assertArrayEquals(new byte[0], Bytes.from(example_bytes_one).resize(0, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+        assertArrayEquals(new byte[]{example_bytes_two[0]}, Bytes.from(example_bytes_two).resize(1, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+        assertArrayEquals(new byte[]{example_bytes_four[0]}, Bytes.from(example_bytes_four).resize(1, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+        assertArrayEquals(new byte[]{example_bytes_four[0], example_bytes_four[1]}, Bytes.from(example_bytes_four).resize(2, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+
+        try {
+            Bytes.from(new byte[0]).resize(-1, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX);
+            fail();
+        } catch (IllegalArgumentException ignore) {
         }
     }
 
@@ -142,7 +165,7 @@ public class BytesTransformTest extends ABytesTest {
         try {
             Bytes.from(example_bytes_seven).or(example_bytes_eight);
             fail();
-        } catch (Exception e) {
+        } catch (Exception ignore) {
         }
     }
 
@@ -162,7 +185,7 @@ public class BytesTransformTest extends ABytesTest {
         try {
             Bytes.from(example_bytes_seven).and(example_bytes_eight);
             fail();
-        } catch (Exception e) {
+        } catch (Exception ignore) {
         }
     }
 
@@ -355,7 +378,7 @@ public class BytesTransformTest extends ABytesTest {
 
         assertFalse(new BytesTransformer.MessageDigestTransformer("SHA1").supportInPlaceTransformation());
         assertFalse(new BytesTransformer.CopyTransformer(0, 0).supportInPlaceTransformation());
-        assertFalse(new BytesTransformer.ResizeTransformer(0).supportInPlaceTransformation());
+        assertFalse(new BytesTransformer.ResizeTransformer(0, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).supportInPlaceTransformation());
         assertFalse(new BytesTransformer.ConcatTransformer(new byte[]{}).supportInPlaceTransformation());
 
         assertFalse(new BytesTransformers.GzipCompressor(false).supportInPlaceTransformation());
