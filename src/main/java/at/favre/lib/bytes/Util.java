@@ -363,53 +363,55 @@ final class Util {
     }
 
     /**
-     * Shifts input byte array shiftBitCount bits left. This method will alter the input byte array.
+     * Light shift of whole byte array by shiftBitCount bits.
+     * This method will alter the input byte array.
      */
-    static byte[] shiftLeft(byte[] data, int shiftBitCount) {
-        final int shiftMod = shiftBitCount % 8; //6 % 8 = 2
-        final byte carryMask = (byte) ((1 << shiftMod) - 1);  // 0000 0010 << 2 = 0000 1000 - 0000 0001 = 0000 0111
-        final int offsetBytes = (shiftBitCount / 8); // = 0
+    static byte[] shiftLeft(byte[] byteArray, int shiftBitCount) {
+        final int shiftMod = shiftBitCount % 8;
+        final byte carryMask = (byte) ((1 << shiftMod) - 1);
+        final int offsetBytes = (shiftBitCount / 8);
 
         int sourceIndex;
-        for (int i = 0; i < data.length; i++) {
+        for (int i = 0; i < byteArray.length; i++) {
             sourceIndex = i + offsetBytes;
-            if (sourceIndex >= data.length) {
-                data[i] = 0;
+            if (sourceIndex >= byteArray.length) {
+                byteArray[i] = 0;
             } else {
-                byte src = data[sourceIndex];
+                byte src = byteArray[sourceIndex];
                 byte dst = (byte) (src << shiftMod);
-                if (sourceIndex + 1 < data.length) {
-                    dst |= data[sourceIndex + 1] >>> (8 - shiftMod) & carryMask;
+                if (sourceIndex + 1 < byteArray.length) {
+                    dst |= byteArray[sourceIndex + 1] >>> (8 - shiftMod) & carryMask;
                 }
-                data[i] = dst;
+                byteArray[i] = dst;
             }
         }
-        return data;
+        return byteArray;
     }
 
     /**
-     * Shifts input byte array shiftBitCount bits right. This method will alter the input byte array.
+     * Unsigned/logical right shift of whole byte array by shiftBitCount bits.
+     * This method will alter the input byte array.
      */
-    static byte[] shiftRight(byte[] data, int shiftBitCount) {
+    static byte[] shiftRight(byte[] byteArray, int shiftBitCount) {
         final int shiftMod = shiftBitCount % 8;
         final byte carryMask = (byte) (0xFF << (8 - shiftMod));
-        final int offset = (shiftBitCount / 8);
+        final int offsetBytes = (shiftBitCount / 8);
 
         int sourceIndex;
-        for (int i = data.length - 1; i >= 0; i--) {
-            sourceIndex = i - offset;
+        for (int i = byteArray.length - 1; i >= 0; i--) {
+            sourceIndex = i - offsetBytes;
             if (sourceIndex < 0) {
-                data[i] = 0;
+                byteArray[i] = 0;
             } else {
-                byte src = data[sourceIndex];
+                byte src = byteArray[sourceIndex];
                 byte dst = (byte) ((0xff & src) >>> shiftMod);
                 if (sourceIndex - 1 >= 0) {
-                    dst |= data[sourceIndex - 1] << (8 - shiftMod) & carryMask;
+                    dst |= byteArray[sourceIndex - 1] << (8 - shiftMod) & carryMask;
                 }
-                data[i] = dst;
+                byteArray[i] = dst;
             }
         }
-        return data;
+        return byteArray;
     }
 
     /*

@@ -674,7 +674,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
     }
 
     /**
-     * Bitwise right shifting of internal byte array.
+     * Bitwise unsigned/logical right shifting of internal byte array (i.e. <code>&#x3E;&#x3E;&#x3E;</code>).
      * <p>
      * See the considerations about possible in-place operation in {@link #transform(BytesTransformer)}.
      *
