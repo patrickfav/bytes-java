@@ -306,7 +306,7 @@ Bytes.wrap(array).isEmpty();
 And others:
 
 ```java
-Bytes.wrap(array).bitAt(4);
+Bytes.wrap(array).bitAt(4); // 0010 1000 -> true
 Bytes.wrap(array).byteAt(14);
 Bytes.wrap(array).count(0x01); //occurrences of 0x01
 Bytes.wrap(array).entropy();
