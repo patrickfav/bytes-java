@@ -23,9 +23,11 @@ package at.favre.lib.bytes;
 
 import org.junit.Test;
 
+import java.math.BigInteger;
 import java.nio.ByteOrder;
 import java.nio.ReadOnlyBufferException;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -172,6 +174,7 @@ public class BytesMiscTest extends ABytesTest {
 
     @Test
     public void bitAt() throws Exception {
+
         for (int i = 0; i < 8; i++) {
             assertFalse(Bytes.allocate(1).bitAt(i));
         }
@@ -185,17 +188,30 @@ public class BytesMiscTest extends ABytesTest {
         assertFalse(Bytes.from((byte) 8).bitAt(2));
         assertTrue(Bytes.from((byte) 8).bitAt(3));
         assertFalse(Bytes.from((byte) 8).bitAt(4));
+        assertFalse(Bytes.from((byte) 0b11010000).bitAt(0));
+        assertFalse(Bytes.from((byte) 0b10010000).bitAt(0));
+        assertTrue(Bytes.from((byte) 0b10010001).bitAt(0));
+        assertFalse(Bytes.parseBinary("101111110101100100110010011111001011101110110011011000010000000").bitAt(54));
 
         try {
             Bytes.allocate(1).bitAt(8);
             fail();
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException ignored) {
         }
 
         try {
             Bytes.allocate(16).bitAt(-1);
             fail();
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+    }
+
+    @Test
+    public void bitAtAgainstRefImpl() throws Exception {
+        for (int i = 0; i < 1000; i++) {
+            Bytes rnd = Bytes.random(4 + new Random().nextInt(8));
+            int index = new Random().nextInt(rnd.lengthBit() - 1);
+            assertEquals(new BigInteger(rnd.array()).testBit(index), rnd.bitAt(index));
         }
     }
 

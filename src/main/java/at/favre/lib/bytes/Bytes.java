@@ -383,6 +383,16 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
     }
 
     /**
+     * Parses a big endian binary string (e.g. <code>10010001</code>)
+     *
+     * @param binaryString the encoded string
+     * @return decoded instance
+     */
+    public static Bytes parseBinary(String binaryString) {
+        return parse(binaryString, new BinaryToTextEncoding.BaseRadix(2));
+    }
+
+    /**
      * Parsing of octal encoded byte arrays.
      *
      * @param octalString the encoded string
@@ -955,17 +965,18 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
     }
 
     /**
-     * Returns the {@code bit} value as boolean at the specified index.
+     * Returns the {@code bit} value as boolean at the specified index. Bit index 0 is the LSB, so for example byte word
+     * <code>1000 0000</code> has <code>bitAt(0) == false</code> and <code>bitAt(7) == true</code>.
      *
      * @param bitIndex the index of the {@code bit} value.
      * @return true if bit at given index is set, false otherwise
      * @throws IndexOutOfBoundsException if the {@code bitIndex} argument is negative or not less than the length of this array in bits.
      */
     public boolean bitAt(int bitIndex) {
-        if (bitIndex < 0 || bitIndex > length() * 8) {
+        if (bitIndex < 0 || bitIndex > lengthBit()) {
             throw new IndexOutOfBoundsException("cannot get bit from index out of bounds: " + bitIndex);
         }
-        return (byteAt(bitIndex / 8) >> (bitIndex % 8) & 1) == 1;
+        return ((byteAt(length() - 1 - (bitIndex / 8)) >>> bitIndex % 8) & 1) != 0;
     }
 
     /**

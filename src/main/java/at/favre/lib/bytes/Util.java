@@ -392,7 +392,7 @@ final class Util {
      */
     static byte[] shiftRight(byte[] data, int shiftBitCount) {
         final int shiftMod = shiftBitCount % 8;
-        final byte carryMask = (byte) (0xFF << (8 - shiftBitCount));
+        final byte carryMask = (byte) (0xFF << (8 - shiftMod));
         final int offset = (shiftBitCount / 8);
 
         int sourceIndex;

@@ -3,6 +3,9 @@
 ## v0.4.3
 
 * add toFloat/toDouble
+* add resize mode (from 0 or length)
+* fix bitAt bug
+* add in place byte array shift feature
 
 ## v0.4.2
 

@@ -21,6 +21,7 @@
 
 package at.favre.lib.bytes;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigInteger;
@@ -244,11 +245,25 @@ public class UtilTest {
         assertArrayEquals(new byte[]{0, 0, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 24));
 
         assertSame(test, Util.shiftLeft(test, 1));
+    }
 
+    @Test
+    @Ignore
+    public void testLeftShiftAgainstRefImpl() {
         for (int i = 0; i < 1000; i++) {
             int shift = 1;
-            Bytes rnd = Bytes.random(2 + new Random().nextInt(128));
-            assertArrayEquals(Bytes.wrap(new BigInteger(rnd.array()).shiftLeft(shift).toByteArray()).resize(rnd.length()).array(), Util.shiftLeft(rnd.copy().array(), shift));
+            Bytes rnd = Bytes.random(4 + new Random().nextInt(14));
+
+
+            byte[] expected = Bytes.from(new BigInteger(rnd.array()).shiftLeft(shift).toByteArray()).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
+            byte[] actual = Bytes.from(Util.shiftLeft(rnd.copy().array(), shift)).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
+
+            System.out.println("Original  \t" + rnd.encodeBinary() + " << " + shift);
+            System.out.println("Expected \t" + Bytes.wrap(expected).encodeBinary());
+            System.out.println("Actual   \t" + Bytes.wrap(actual).encodeBinary() + "\n\n");
+
+            assertArrayEquals(expected, actual);
+            assertEquals(Bytes.wrap(expected).encodeHex(), Bytes.wrap(actual).encodeHex());
         }
     }
 
@@ -268,19 +283,24 @@ public class UtilTest {
         assertArrayEquals(new byte[]{0, 0, 1, 0}, Util.shiftRight(Bytes.from(test).array(), 4));
 
         assertSame(test, Util.shiftRight(test, 1));
+    }
 
-
+    @Test
+    public void testRightShiftAgainstRefImpl() {
         for (int i = 0; i < 1000; i++) {
-            int shift = 1;
-            Bytes rnd = Bytes.random(8);
-            byte[] expected = new BigInteger(rnd.array()).shiftRight(shift).toByteArray();
-            byte[] actual = Util.shiftRight(rnd.copy().array(), shift);
+            int shift = new Random().nextInt(64);
+            Bytes rnd = Bytes.random(4 + new Random().nextInt(12));
+            if (!rnd.bitAt(rnd.lengthBit() - 1)) { //only unsigned
+                byte[] expected = Bytes.from(new BigInteger(rnd.array()).shiftRight(shift).toByteArray()).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
+                byte[] actual = Bytes.from(Util.shiftRight(rnd.copy().array(), shift)).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
 
-            System.out.println("Original  \t" + rnd.encodeBinary());
-            System.out.println("Expected \t" + Bytes.wrap(expected).encodeBinary());
-            System.out.println("Actual   \t" + Bytes.wrap(actual).encodeBinary() + "\n\n");
+//                System.out.println("Original  \t" + rnd.encodeBinary() + " >> " + shift);
+//                System.out.println("Expected \t" + Bytes.wrap(expected).encodeBinary());
+//                System.out.println("Actual   \t" + Bytes.wrap(actual).encodeBinary() + "\n\n");
 
-            assertArrayEquals(expected, actual);
+                assertArrayEquals(expected, actual);
+                assertEquals(Bytes.wrap(expected).encodeHex(), Bytes.wrap(actual).encodeHex());
+            }
         }
     }
 }
