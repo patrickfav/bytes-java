@@ -402,7 +402,7 @@ final class Util {
                 data[i] = 0;
             } else {
                 byte src = data[sourceIndex];
-                byte dst = (byte) (src >> shiftMod);
+                byte dst = (byte) ((0xff & src) >>> shiftMod);
                 if (sourceIndex - 1 >= 0) {
                     dst |= data[sourceIndex - 1] << (8 - shiftMod) & carryMask;
                 }

@@ -255,6 +255,8 @@ public class UtilTest {
     @Test
     public void testRightShift() {
         byte[] test = new byte[]{0, 0, 16, 0};
+        assertEquals(0b01111110, 0b11111101 >>> 1);
+        assertArrayEquals(new byte[]{0b00101101, (byte) 0b01111110}, Util.shiftRight(new byte[]{0b01011010, (byte) 0b11111101}, 1));
         assertArrayEquals(new byte[]{0, -128, -128, -128}, Util.shiftRight(new byte[]{1, 1, 1, 1}, 1));
         assertArrayEquals(new byte[]{0, -128, 66, 0}, Util.shiftRight(new byte[]{2, 1, 8, 2}, 2));
         assertArrayEquals(new byte[]{0, -128, 66, 0}, new BigInteger(new byte[]{2, 1, 8, 2}).shiftRight(2).toByteArray());
@@ -275,8 +277,8 @@ public class UtilTest {
             byte[] actual = Util.shiftRight(rnd.copy().array(), shift);
 
             System.out.println("Original  \t" + rnd.encodeBinary());
-            System.out.println("Expected \t " + Bytes.wrap(expected).encodeBinary());
-            System.out.println("Actual   \t " + Bytes.wrap(actual).encodeBinary() + "\n\n");
+            System.out.println("Expected \t" + Bytes.wrap(expected).encodeBinary());
+            System.out.println("Actual   \t" + Bytes.wrap(actual).encodeBinary() + "\n\n");
 
             assertArrayEquals(expected, actual);
         }
