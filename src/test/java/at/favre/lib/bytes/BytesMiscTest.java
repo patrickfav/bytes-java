@@ -36,6 +36,7 @@ public class BytesMiscTest extends ABytesTest {
     @Test
     public void testToString() throws Exception {
         testToString(Bytes.wrap(new byte[0]));
+        testToString(Bytes.wrap(example_bytes_one));
         testToString(Bytes.wrap(new byte[2]));
         testToString(Bytes.wrap(example_bytes_seven));
         testToString(Bytes.wrap(example2_bytes_seven));

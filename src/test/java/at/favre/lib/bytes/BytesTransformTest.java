@@ -252,11 +252,11 @@ public class BytesTransformTest extends ABytesTest {
 
     @Test
     public void leftShift() throws Exception {
-        assertArrayEquals(new byte[]{2}, Bytes.from(1).leftShift(1).array());
-        assertArrayEquals(new byte[]{4}, Bytes.from(1).leftShift(2).array());
-        assertArrayEquals(new byte[]{8}, Bytes.from(1).leftShift(3).array());
-        assertArrayEquals(new byte[]{example_bytes_two[0], example_bytes_two[1], 0}, Bytes.from(example_bytes_two).leftShift(8).array());
-        assertArrayEquals(new byte[]{example_bytes_two[0], example_bytes_two[1], 0, 0}, Bytes.from(example_bytes_two).leftShift(16).array());
+        assertArrayEquals(new byte[]{2}, Bytes.from((byte) 1).leftShift(1).array());
+        assertArrayEquals(new byte[]{4}, Bytes.from((byte) 1).leftShift(2).array());
+        assertArrayEquals(new byte[]{8}, Bytes.from((byte) 1).leftShift(3).array());
+        assertArrayEquals(new byte[]{example_bytes_two[1], 0}, Bytes.from(example_bytes_two).leftShift(8).array());
+        assertArrayEquals(new byte[]{0, 0}, Bytes.from(example_bytes_two).leftShift(16).array());
     }
 
     @Test

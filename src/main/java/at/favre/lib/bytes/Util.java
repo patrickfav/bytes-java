@@ -359,7 +359,7 @@ final class Util {
             preview = "(0x" + bytes.encodeHex() + ")";
         }
 
-        return bytes.length() + " bytes " + preview;
+        return bytes.length() + " " + (bytes.length() == 1 ? "byte" : "bytes") + " " + preview;
     }
 
     /**
