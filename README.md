@@ -52,12 +52,23 @@ Add dependency to your `pom.xml`:
         <version>{latest-version}</version>
     </dependency>
 
-A very simple example:
+Some simple example:
 
 ```java
 Bytes b = Bytes.wrap(someByteArray);  //reuse given reference
 b.copy().reverse(); //reverse the bytes on a copied instance
 String hex = b.encodeHex(); //encode base16/hex
+```
+
+```java
+Bytes b = Bytes.parseHex("0ae422f3");  //parse from hex string
+int result = b.toInt(); //get as signed int
+```
+
+```java
+Bytes b = Bytes.from(array1);  //create from copy of array1
+b.resize(2).xor(arry2); //shrink to 2 bytes and xor with other array
+byte[] result = b.array(); //get as byte array
 ```
 
 ## API Description
