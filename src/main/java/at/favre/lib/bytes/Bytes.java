@@ -661,7 +661,8 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
     }
 
     /**
-     * Bitwise left shifting of internal byte array.
+     * Bitwise left shifting of internal byte array (i.e. <code>&#x3C;&#x3C;</code>). Unlike {@link BigInteger}'s implementation, this one will never
+     * grow or shrink the underlying array. Either a bit is pushed out of the array or a zero is pushed in.
      * <p>
      * See the considerations about possible in-place operation in {@link #transform(BytesTransformer)}.
      *
@@ -674,7 +675,9 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
     }
 
     /**
-     * Bitwise unsigned/logical right shifting of internal byte array (i.e. <code>&#x3E;&#x3E;&#x3E;</code>).
+     * Bitwise unsigned/logical right shifting of internal byte array (i.e. <code>&#x3E;&#x3E;&#x3E;</code>). Unlike
+     * {@link BigInteger}'s implementation, this one will never grow or shrink the underlying array. Either a bit is pushed
+     * out of the array or a zero is pushed in.
      * <p>
      * See the considerations about possible in-place operation in {@link #transform(BytesTransformer)}.
      *
@@ -949,6 +952,21 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
     }
 
     /**
+     * Returns the {@code bit} value as boolean at the specified index. Bit index 0 is the LSB, so for example byte word
+     * <code>1000 0000</code> has <code>bitAt(0) == false</code> and <code>bitAt(7) == true</code>.
+     *
+     * @param bitIndex the index of the {@code bit} value.
+     * @return true if bit at given index is set, false otherwise
+     * @throws IndexOutOfBoundsException if the {@code bitIndex} argument is negative or not less than the length of this array in bits.
+     */
+    public boolean bitAt(int bitIndex) {
+        if (bitIndex < 0 || bitIndex > lengthBit()) {
+            throw new IndexOutOfBoundsException("cannot get bit from index out of bounds: " + bitIndex);
+        }
+        return ((byteAt(length() - 1 - (bitIndex / 8)) >>> bitIndex % 8) & 1) != 0;
+    }
+
+    /**
      * Returns the {@code byte} value at the specified index.
      * An index ranges from {@code 0} to {@code length() - 1}. The first {@code char} value of the sequence
      * is at index {@code 0}, the next at index {@code 1}, and so on, as for array indexing.
@@ -965,18 +983,55 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
     }
 
     /**
-     * Returns the {@code bit} value as boolean at the specified index. Bit index 0 is the LSB, so for example byte word
-     * <code>1000 0000</code> has <code>bitAt(0) == false</code> and <code>bitAt(7) == true</code>.
+     * Returns the {@code char} value at the specified index.
+     * Reads the primitive from given index and the following byte and interprets it according to byte order.
      *
-     * @param bitIndex the index of the {@code bit} value.
-     * @return true if bit at given index is set, false otherwise
-     * @throws IndexOutOfBoundsException if the {@code bitIndex} argument is negative or not less than the length of this array in bits.
+     * @param index the index of the {@code char} value.
+     * @return the {@code char} value at the specified index of the underlying byte array.
+     * @throws IndexOutOfBoundsException if the {@code index} argument is negative or length is greater than index - 2
      */
-    public boolean bitAt(int bitIndex) {
-        if (bitIndex < 0 || bitIndex > lengthBit()) {
-            throw new IndexOutOfBoundsException("cannot get bit from index out of bounds: " + bitIndex);
-        }
-        return ((byteAt(length() - 1 - (bitIndex / 8)) >>> bitIndex % 8) & 1) != 0;
+    public char charAt(int index) {
+        Util.checkIndexBounds(length(), index, 2, "char");
+        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getChar();
+    }
+
+    /**
+     * Returns the {@code short} value at the specified index.
+     * Reads the primitive from given index and the following byte and interprets it according to byte order.
+     *
+     * @param index the index of the {@code short} value.
+     * @return the {@code short} value at the specified index of the underlying byte array.
+     * @throws IndexOutOfBoundsException if the {@code index} argument is negative or length is greater than index - 2
+     */
+    public short shortAt(int index) {
+        Util.checkIndexBounds(length(), index, 2, "short");
+        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getShort();
+    }
+
+    /**
+     * Returns the {@code int} value at the specified index.
+     * Reads the primitive from given index and the following 3 bytes and interprets it according to byte order.
+     *
+     * @param index the index of the {@code int} value.
+     * @return the {@code int} value at the specified index of the underlying byte array.
+     * @throws IndexOutOfBoundsException if the {@code int} argument is negative or length is greater than index - 4
+     */
+    public int intAt(int index) {
+        Util.checkIndexBounds(length(), index, 4, "int");
+        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getInt();
+    }
+
+    /**
+     * Returns the {@code long} value at the specified index.
+     * Reads the primitive from given index and the following 7 bytes and interprets it according to byte order.
+     *
+     * @param index the index of the {@code long} value.
+     * @return the {@code long} value at the specified index of the underlying byte array.
+     * @throws IndexOutOfBoundsException if the {@code long} argument is negative or length is greater than index - 8
+     */
+    public long longAt(int index) {
+        Util.checkIndexBounds(length(), index, 8, "long");
+        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getLong();
     }
 
     /**
@@ -1279,107 +1334,103 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
     }
 
     /**
-     * If the underlying byte array is smaller than or equal to 1 byte / 8 bit returns unsigned two-complement
+     * If the underlying byte array is exactly 1 byte / 8 bit long, returns unsigned two-complement
      * representation for a Java byte value.
+     * <p>
+     * If you just want to get the first element as {@code byte}, see {@link #byteAt(int)}, using index zero.
      *
      * @return the byte representation
-     * @throws UnsupportedOperationException if byte array is longer than 1 byte
+     * @throws IllegalStateException if byte array has length not equal to 1
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public byte toByte() {
-        if (length() > 1) {
-            throw new UnsupportedOperationException("cannot convert to byte if length > 1 byte");
-        }
-        return internalBuffer().get();
+        Util.checkExactLength(length(), 1, "byte");
+        return internalArray()[0];
     }
 
     /**
-     * If the underlying byte array is smaller than or equal to 2 byte / 16 bit returns unsigned two-complement
+     * If the underlying byte array is exactly 2 byte / 16 bit long, return unsigned two-complement
      * representation for a Java char integer value. The output is dependent on the set {@link #byteOrder()}.
+     * <p>
+     * If you just want to get the first 2 bytes as {@code char}, see {@link #charAt(int)} using index zero.
      *
      * @return the int representation
-     * @throws UnsupportedOperationException if byte array is longer than 2 byte
+     * @throws IllegalStateException if byte array has length not equal to 2
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public char toChar() {
-        if (length() > 2) {
-            throw new UnsupportedOperationException("cannot convert to char if length > 2 byte");
-        }
-        return resize(2).internalBuffer().getChar();
+        Util.checkExactLength(length(), 2, "char");
+        return internalBuffer().getChar();
     }
 
     /**
-     * If the underlying byte array is smaller than or equal to 2 byte / 16 bit returns signed two-complement
+     * If the underlying byte array is exactly 2 byte / 16 bit long, return signed two-complement
      * representation for a Java short integer value. The output is dependent on the set {@link #byteOrder()}.
+     * <p>
+     * If you just want to get the first 2 bytes as {@code short}, see {@link #shortAt(int)} using index zero.
      *
      * @return the int representation
-     * @throws UnsupportedOperationException if byte array is longer than 2 byte
+     * @throws IllegalStateException if byte array has length not equal to 2
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public short toShort() {
-        if (length() > 2) {
-            throw new UnsupportedOperationException("cannot convert to short if length > 2 byte");
-        }
-        return resize(2).internalBuffer().getShort();
+        Util.checkExactLength(length(), 2, "short");
+        return internalBuffer().getShort();
     }
 
     /**
-     * If the underlying byte array is smaller than or equal to 4 byte / 32 bit returns signed two-complement
+     * If the underlying byte array is exactly 4 byte / 32 bit long, return signed two-complement
      * representation for a Java signed integer value. The output is dependent on the set {@link #byteOrder()}.
+     * <p>
+     * If you just want to get the first 4 bytes as {@code int}, see {@link #intAt(int)} using index zero.
      *
      * @return the int representation
-     * @throws UnsupportedOperationException if byte array is longer than 4 byte
+     * @throws IllegalStateException if byte array has length not equal to 4
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public int toInt() {
-        if (length() > 4) {
-            throw new UnsupportedOperationException("cannot convert to int if length > 4 byte");
-        }
-        return resize(4).internalBuffer().getInt();
+        Util.checkExactLength(length(), 4, "int");
+        return internalBuffer().getInt();
     }
 
     /**
-     * If the underlying byte array is smaller than or equal to 8 byte / 64 bit returns signed two-complement
+     * If the underlying byte array is exactly 8 byte / 64 bit long, return signed two-complement
      * representation for a Java signed long integer value. The output is dependent on the set {@link #byteOrder()}.
+     * <p>
+     * If you just want to get the first 4 bytes as {@code long}, see {@link #longAt(int)} using index zero.
      *
      * @return the long representation
-     * @throws UnsupportedOperationException if byte array is longer than 8 byte
+     * @throws IllegalStateException if byte array has length not equal to 8
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public long toLong() {
-        if (length() > 8) {
-            throw new UnsupportedOperationException("cannot convert to long if length > 8 byte");
-        }
+        Util.checkExactLength(length(), 8, "long");
         return resize(8).internalBuffer().getLong();
     }
 
     /**
-     * If the underlying byte array is smaller than or equal to 4 byte / 32 bit returns the
+     * If the underlying byte array is exactly 4 byte / 32 bit long, return the
      * representation for a Java float value. The output is dependent on the set {@link #byteOrder()}.
      *
      * @return the float representation
-     * @throws UnsupportedOperationException if byte array is longer than 4 byte
+     * @throws IllegalStateException if byte array has length not equal to 4
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public float toFloat() {
-        if (length() > 4) {
-            throw new UnsupportedOperationException("cannot convert to float if length > 4 byte");
-        }
-        return resize(4).internalBuffer().getFloat();
+        Util.checkExactLength(length(), 4, "float");
+        return internalBuffer().getFloat();
     }
 
     /**
-     * If the underlying byte array is smaller than or equal to 8 byte / 64 bit returns the
+     * If the underlying byte array is exactly 8 byte / 64 bit long, return the
      * representation for a Java float value. The output is dependent on the set {@link #byteOrder()}.
      *
-     * @return the float representation
-     * @throws UnsupportedOperationException if byte array is longer than 8 byte
+     * @return the double representation
+     * @throws IllegalStateException if byte array has length not equal to 8
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public double toDouble() {
-        if (length() > 8) {
-            throw new UnsupportedOperationException("cannot convert to float if length > 8 byte");
-        }
+        Util.checkExactLength(length(), 8, "double");
         return resize(8).internalBuffer().getDouble();
     }
 

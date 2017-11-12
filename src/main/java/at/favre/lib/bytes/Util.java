@@ -414,6 +414,18 @@ final class Util {
         return byteArray;
     }
 
+    static void checkIndexBounds(int length, int index, int primitiveLength, String type) {
+        if (index < 0 || index + primitiveLength > length) {
+            throw new IndexOutOfBoundsException("cannot get " + type + " from index out of bounds: " + index);
+        }
+    }
+
+    static void checkExactLength(int length, int expectedLength, String type) {
+        if (length != expectedLength) {
+            throw new IllegalStateException("cannot convert to " + type + " if length != " + expectedLength + " bytes");
+        }
+    }
+
     /*
     =================================================================================================
      Copyright 2011 Twitter, Inc.

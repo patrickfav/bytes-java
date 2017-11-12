@@ -152,28 +152,6 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void byteAt() throws Exception {
-        assertEquals(0, Bytes.allocate(1).byteAt(0));
-        assertEquals(0, Bytes.allocate(128).byteAt(127));
-
-        for (int i = 0; i < example_bytes_twentyfour.length; i++) {
-            assertEquals(example_bytes_twentyfour[i], Bytes.wrap(example_bytes_twentyfour).byteAt(i));
-        }
-
-        try {
-            Bytes.allocate(1).byteAt(1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-        }
-
-        try {
-            Bytes.allocate(16).byteAt(-1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-        }
-    }
-
-    @Test
     public void bitAt() throws Exception {
 
         for (int i = 0; i < 8; i++) {
@@ -192,6 +170,7 @@ public class BytesMiscTest extends ABytesTest {
         assertFalse(Bytes.from((byte) 0b11010000).bitAt(0));
         assertFalse(Bytes.from((byte) 0b10010000).bitAt(0));
         assertTrue(Bytes.from((byte) 0b10010001).bitAt(0));
+        assertFalse(Bytes.from((byte) 0b0010_1000).bitAt(4));
         assertFalse(Bytes.parseBinary("101111110101100100110010011111001011101110110011011000010000000").bitAt(54));
 
         try {
@@ -205,6 +184,126 @@ public class BytesMiscTest extends ABytesTest {
             fail();
         } catch (IndexOutOfBoundsException ignored) {
         }
+    }
+
+    @Test
+    public void byteAt() throws Exception {
+        assertEquals(0, Bytes.allocate(1).byteAt(0));
+        assertEquals(0, Bytes.allocate(128).byteAt(127));
+
+        for (int i = 0; i < example_bytes_twentyfour.length; i++) {
+            assertEquals(example_bytes_twentyfour[i], Bytes.wrap(example_bytes_twentyfour).byteAt(i));
+        }
+
+        try {
+            Bytes.allocate(1).byteAt(1);
+            fail();
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+
+        try {
+            Bytes.allocate(16).byteAt(-1);
+            fail();
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+    }
+
+    @Test
+    public void charAt() throws Exception {
+        assertEquals(0, Bytes.allocate(2).charAt(0));
+        assertEquals(0, Bytes.allocate(128).charAt(0));
+        assertEquals(8, Bytes.wrap(new byte[]{0, 0b00001000}).charAt(0));
+        assertEquals(2048, Bytes.wrap(new byte[]{0b00001000, 0}).charAt(0));
+        assertEquals(32768, Bytes.wrap(new byte[]{(byte) 0b10000000, 0}).charAt(0));
+        assertEquals(Character.MAX_VALUE, Bytes.wrap(new byte[]{(byte) 0b11111111, (byte) 0b11111111}).charAt(0));
+
+        try {
+            Bytes.allocate(1).charAt(0);
+            fail();
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+
+        try {
+            Bytes.allocate(16).charAt(-1);
+            fail();
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+    }
+
+    @Test
+    public void shortAt() throws Exception {
+        assertEquals(0, Bytes.allocate(2).shortAt(0));
+        assertEquals(0, Bytes.allocate(128).shortAt(0));
+        assertEquals(8, Bytes.wrap(new byte[]{0, 0b00001000}).shortAt(0));
+        assertEquals(2048, Bytes.wrap(new byte[]{0b00001000, 0}).shortAt(0));
+        assertEquals(Short.MAX_VALUE, Bytes.wrap(new byte[]{(byte) 0b01111111, (byte) 0b11111111}).shortAt(0));
+        assertEquals(Short.MIN_VALUE, Bytes.wrap(new byte[]{(byte) 0b10000000, 0}).shortAt(0));
+
+        try {
+            Bytes.allocate(1).shortAt(0);
+            fail();
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+
+        try {
+            Bytes.allocate(16).shortAt(-1);
+            fail();
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+    }
+
+    @Test
+    public void intAt() throws Exception {
+        assertEquals(0, Bytes.allocate(4).intAt(0));
+        assertEquals(0, Bytes.allocate(128).intAt(0));
+        assertEquals(8, Bytes.wrap(new byte[]{0, 0, 0, 0b00001000}).intAt(0));
+        assertEquals(2048, Bytes.wrap(new byte[]{0, 0, 0b00001000, 0}).intAt(0));
+        assertEquals(32768, Bytes.wrap(new byte[]{0, 0, (byte) 0b10000000, 0}).intAt(0));
+        assertEquals(Integer.MIN_VALUE, Bytes.wrap(new byte[]{(byte) 0b10000000, 0, 0, 0}).intAt(0));
+        assertEquals(Integer.MAX_VALUE, Bytes.wrap(new byte[]{(byte) 0b01111111, (byte) 0b11111111, (byte) 0b11111111, (byte) 0b11111111}).intAt(0));
+
+        try {
+            Bytes.allocate(3).intAt(0);
+            fail();
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+
+        try {
+            Bytes.allocate(16).intAt(-1);
+            fail();
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+    }
+
+    @Test
+    public void longAt() throws Exception {
+        assertEquals(0, Bytes.allocate(8).longAt(0));
+        assertEquals(0, Bytes.allocate(128).longAt(0));
+        assertEquals(8, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0, 0b00001000}).longAt(0));
+        assertEquals(2048, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0b00001000, 0}).longAt(0));
+        assertEquals(32768, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, (byte) 0b10000000, 0}).longAt(0));
+        assertEquals(2147483648L, Bytes.wrap(new byte[]{0, 0, 0, 0, (byte) 0b10000000, 0, 0, 0}).longAt(0));
+        assertEquals(Integer.MAX_VALUE, Bytes.wrap(new byte[]{0, 0, 0, 0, (byte) 0b01111111, (byte) 0b11111111, (byte) 0b11111111, (byte) 0b11111111}).longAt(0));
+
+        try {
+            Bytes.allocate(7).longAt(0);
+            fail();
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+
+        try {
+            Bytes.allocate(16).longAt(-1);
+            fail();
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+    }
+
+    @Test
+    public void primitiveAtLittleEndian() throws Exception {
+        assertEquals(576460752303423488L, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0, 0b00001000}).byteOrder(ByteOrder.LITTLE_ENDIAN).longAt(0)); //2^59
+        assertEquals(134217728, Bytes.wrap(new byte[]{0, 0, 0, 0b00001000}).byteOrder(ByteOrder.LITTLE_ENDIAN).intAt(0));
+        assertEquals(2048, Bytes.wrap(new byte[]{0, 0b00001000}).byteOrder(ByteOrder.LITTLE_ENDIAN).shortAt(0)); //2^11
+        assertEquals(2048, Bytes.wrap(new byte[]{0, 0b00001000}).byteOrder(ByteOrder.LITTLE_ENDIAN).charAt(0)); //2^11
     }
 
     @Test

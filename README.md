@@ -303,11 +303,18 @@ Bytes.wrap(array).lengthBit(); //8 * array.length
 Bytes.wrap(array).isEmpty();
 ```
 
+Accessing part of the array as primitives from arbitrary position:
+
+```java
+Bytes.wrap(array).bitAt(4); // 0010 1000 -> false
+Bytes.wrap(array).byteAt(14);
+Bytes.wrap(array).intAt(4);
+Bytes.wrap(array).longAt(6);
+```
+
 And others:
 
 ```java
-Bytes.wrap(array).bitAt(4); // 0010 1000 -> true
-Bytes.wrap(array).byteAt(14);
 Bytes.wrap(array).count(0x01); //occurrences of 0x01
 Bytes.wrap(array).entropy();
 ```

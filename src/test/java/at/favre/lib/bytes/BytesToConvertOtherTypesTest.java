@@ -83,7 +83,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         try {
             Bytes.from(example_bytes_two).toByte();
             fail();
-        } catch (UnsupportedOperationException e) {
+        } catch (IllegalStateException ignored) {
         }
     }
 
@@ -96,38 +96,53 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         try {
             Bytes.from(new byte[3]).toChar();
             fail();
-        } catch (UnsupportedOperationException e) {
+        } catch (IllegalStateException ignored) {
+        }
+        try {
+            Bytes.from(new byte[1]).toChar();
+            fail();
+        } catch (IllegalStateException ignored) {
         }
     }
 
     @Test
     public void toShort() throws Exception {
         assertEquals(6767, Bytes.from(example_bytes_two).toShort());
-        assertEquals(Bytes.from(example_bytes_one).toByte(), Bytes.from(example_bytes_one).toShort());
+        assertEquals(Bytes.from(example_bytes_one).toByte(), Bytes.from((byte) 0, example_bytes_one).toShort());
         assertEquals((short) 0, Bytes.from(new byte[2]).toShort());
 
         try {
             Bytes.from(new byte[3]).toShort();
             fail();
-        } catch (UnsupportedOperationException e) {
+        } catch (IllegalStateException ignored) {
+        }
+        try {
+            Bytes.from(new byte[1]).toShort();
+            fail();
+        } catch (IllegalStateException ignored) {
         }
     }
 
     @Test
     public void toInt() throws Exception {
         assertEquals(591065872, Bytes.from(example_bytes_four).toInt());
-        assertEquals(Bytes.from(example_bytes_four).toLong(), Bytes.from(example_bytes_four).toInt());
+        assertEquals(Bytes.from(new byte[]{0, 0, 0, 0}, example_bytes_four).toLong(), Bytes.from(example_bytes_four).toInt());
 
-        System.out.println(Bytes.from(new byte[]{0x01, 0x02}).resize(4).encodeHex());
+        System.out.println(Bytes.from(new byte[]{0, 0, 0x01, 0x02}).resize(4).encodeHex());
         System.out.println(Bytes.from(new byte[]{0x01, 0x02, 0x03, 0x04}).resize(4).encodeHex());
 
-        assertEquals(6767, Bytes.from(example_bytes_two).toInt());
+        assertEquals(6767, Bytes.from(new byte[]{(byte) 0, (byte) 0}, example_bytes_two).toInt());
         assertEquals(0, Bytes.from(new byte[4]).toInt());
 
         try {
             Bytes.from(new byte[5]).toInt();
             fail();
-        } catch (UnsupportedOperationException e) {
+        } catch (IllegalStateException ignored) {
+        }
+        try {
+            Bytes.from(new byte[3]).toInt();
+            fail();
+        } catch (IllegalStateException ignored) {
         }
     }
 
@@ -135,15 +150,19 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     public void toLong() throws Exception {
         assertEquals(-1237929515650418679L, Bytes.from(example_bytes_eight).toLong());
 
-        assertEquals(example_bytes_one[0], Bytes.from(example_bytes_one).toLong());
-        assertEquals(6767, Bytes.from(example_bytes_two).toLong());
-        assertEquals(0, Bytes.from(new byte[4]).toLong());
+        assertEquals(example_bytes_one[0], Bytes.from(new byte[]{0, 0, 0, 0, 0, 0, 0}, example_bytes_one).toLong());
+        assertEquals(6767, Bytes.from(new byte[]{0, 0, 0, 0, 0, 0}, example_bytes_two).toLong());
         assertEquals(0, Bytes.from(new byte[8]).toLong());
 
         try {
             Bytes.from(new byte[9]).toLong();
             fail();
-        } catch (UnsupportedOperationException e) {
+        } catch (IllegalStateException ignored) {
+        }
+        try {
+            Bytes.from(new byte[7]).toLong();
+            fail();
+        } catch (IllegalStateException ignored) {
         }
     }
 
@@ -151,15 +170,19 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     public void toFloat() throws Exception {
         assertEquals(1.0134550690550691E-17, Bytes.from(example_bytes_four).toFloat(), 0.001);
 
-        assertEquals(5.1E-322, Bytes.from(example_bytes_one).toFloat(), 0.001);
-        assertEquals(3.3433E-320, Bytes.from(example_bytes_two).toFloat(), 0.001);
-        assertEquals(0, Bytes.from(new byte[2]).toFloat(), 0);
+        assertEquals(5.1E-322, Bytes.from(new byte[]{0, 0, 0}, example_bytes_one).toFloat(), 0.001);
+        assertEquals(3.3433E-320, Bytes.from(new byte[]{0, 0}, example_bytes_two).toFloat(), 0.001);
         assertEquals(0, Bytes.from(new byte[4]).toFloat(), 0);
 
         try {
             Bytes.from(new byte[5]).toFloat();
             fail();
-        } catch (UnsupportedOperationException e) {
+        } catch (IllegalStateException ignored) {
+        }
+        try {
+            Bytes.from(new byte[3]).toFloat();
+            fail();
+        } catch (IllegalStateException ignored) {
         }
     }
 
@@ -167,15 +190,19 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     public void toDouble() throws Exception {
         assertEquals(-6.659307728279082E225, Bytes.from(example_bytes_eight).toDouble(), 0.001);
 
-        assertEquals(5.1E-322, Bytes.from(example_bytes_one).toDouble(), 0.001);
-        assertEquals(3.3433E-320, Bytes.from(example_bytes_two).toDouble(), 0.001);
-        assertEquals(0, Bytes.from(new byte[4]).toDouble(), 0);
+        assertEquals(5.1E-322, Bytes.from(new byte[]{0, 0, 0, 0, 0, 0, 0}, example_bytes_one).toDouble(), 0.001);
+        assertEquals(3.3433E-320, Bytes.from(new byte[]{0, 0, 0, 0, 0, 0}, example_bytes_two).toDouble(), 0.001);
         assertEquals(0, Bytes.from(new byte[8]).toDouble(), 0);
 
         try {
             Bytes.from(new byte[9]).toDouble();
             fail();
-        } catch (UnsupportedOperationException e) {
+        } catch (IllegalStateException ignored) {
+        }
+        try {
+            Bytes.from(new byte[7]).toDouble();
+            fail();
+        } catch (IllegalStateException ignored) {
         }
     }
 }
