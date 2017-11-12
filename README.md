@@ -52,7 +52,7 @@ Add dependency to your `pom.xml`:
         <version>{latest-version}</version>
     </dependency>
 
-Some simple example:
+Some simple examples:
 
 ```java
 Bytes b = Bytes.wrap(someByteArray);  //reuse given reference
