@@ -190,6 +190,7 @@ public class BytesMiscTest extends ABytesTest {
     public void byteAt() throws Exception {
         assertEquals(0, Bytes.allocate(1).byteAt(0));
         assertEquals(0, Bytes.allocate(128).byteAt(127));
+        assertEquals(-1, Bytes.from((byte) 0b1111_1111).byteAt(0));
 
         for (int i = 0; i < example_bytes_twentyfour.length; i++) {
             assertEquals(example_bytes_twentyfour[i], Bytes.wrap(example_bytes_twentyfour).byteAt(i));
@@ -203,6 +204,25 @@ public class BytesMiscTest extends ABytesTest {
 
         try {
             Bytes.allocate(16).byteAt(-1);
+            fail();
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+    }
+
+    @Test
+    public void unsignedByteAt() throws Exception {
+        assertEquals(0, Bytes.allocate(1).unsignedByteAt(0));
+        assertEquals(0, Bytes.allocate(128).unsignedByteAt(127));
+        assertEquals(255, Bytes.from((byte) 0b1111_1111).unsignedByteAt(0));
+
+        try {
+            Bytes.allocate(1).unsignedByteAt(1);
+            fail();
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+
+        try {
+            Bytes.allocate(16).unsignedByteAt(-1);
             fail();
         } catch (IndexOutOfBoundsException ignored) {
         }

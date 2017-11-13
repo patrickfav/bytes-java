@@ -960,9 +960,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      * @throws IndexOutOfBoundsException if the {@code bitIndex} argument is negative or not less than the length of this array in bits.
      */
     public boolean bitAt(int bitIndex) {
-        if (bitIndex < 0 || bitIndex > lengthBit()) {
-            throw new IndexOutOfBoundsException("cannot get bit from index out of bounds: " + bitIndex);
-        }
+        Util.checkIndexBounds(lengthBit(), bitIndex, 1, "bit");
         return ((byteAt(length() - 1 - (bitIndex / 8)) >>> bitIndex % 8) & 1) != 0;
     }
 
@@ -976,10 +974,22 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      * @throws IndexOutOfBoundsException if the {@code index} argument is negative or not less than the length of this array.
      */
     public byte byteAt(int index) {
-        if (index < 0 || index > length()) {
-            throw new IndexOutOfBoundsException("cannot get byte from index out of bounds: " + index);
-        }
+        Util.checkIndexBounds(length(), index, 1, "byte");
         return internalArray()[index];
+    }
+
+    /**
+     * Returns the unsigned {@code byte} value at the specified index as an int.
+     * An index ranges from {@code 0} to {@code length() - 1}. The first {@code char} value of the sequence
+     * is at index {@code 0}, the next at index {@code 1}, and so on, as for array indexing.
+     *
+     * @param index the index of the unsigned {@code byte} value.
+     * @return the unsigned {@code byte} value at the specified index of the underlying byte array as type 4 byte integer
+     * @throws IndexOutOfBoundsException if the {@code index} argument is negative or not less than the length of this array.
+     */
+    public int unsignedByteAt(int index) {
+        Util.checkIndexBounds(length(), index, 1, "unsigned byte");
+        return 0xff & internalArray()[index];
     }
 
     /**
@@ -1334,7 +1344,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
     }
 
     /**
-     * If the underlying byte array is exactly 1 byte / 8 bit long, returns unsigned two-complement
+     * If the underlying byte array is exactly 1 byte / 8 bit long, returns signed two-complement
      * representation for a Java byte value.
      * <p>
      * If you just want to get the first element as {@code byte}, see {@link #byteAt(int)}, using index zero.
@@ -1346,6 +1356,21 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
     public byte toByte() {
         Util.checkExactLength(length(), 1, "byte");
         return internalArray()[0];
+    }
+
+    /**
+     * If the underlying byte array is exactly 1 byte / 8 bit long, returns unsigned two-complement
+     * representation for a Java byte value wrapped in an 4 byte int.
+     * <p>
+     * If you just want to get the first element as {@code byte}, see {@link #byteAt(int)}, using index zero.
+     *
+     * @return the unsigned byte representation wrapped in an int
+     * @throws IllegalStateException if byte array has length not equal to 1
+     * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
+     */
+    public int toUnsignedByte() {
+        Util.checkExactLength(length(), 1, "unsigned byte");
+        return unsignedByteAt(0);
     }
 
     /**

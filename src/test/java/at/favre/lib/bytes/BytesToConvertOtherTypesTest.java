@@ -79,9 +79,23 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     public void toByte() throws Exception {
         assertEquals(example_bytes_one[0], Bytes.from(example_bytes_one).toByte());
         assertEquals((byte) 0, Bytes.from(new byte[1]).toByte());
+        assertEquals(-1, Bytes.from((byte) 0b1111_1111).toByte());
 
         try {
             Bytes.from(example_bytes_two).toByte();
+            fail();
+        } catch (IllegalStateException ignored) {
+        }
+    }
+
+    @Test
+    public void toUnsignedByte() throws Exception {
+        assertEquals(example_bytes_one[0], Bytes.from(example_bytes_one).toUnsignedByte());
+        assertEquals((byte) 0, Bytes.from(new byte[1]).toUnsignedByte());
+        assertEquals(255, Bytes.from((byte) 0b1111_1111).toUnsignedByte());
+
+        try {
+            Bytes.from(example_bytes_two).toUnsignedByte();
             fail();
         } catch (IllegalStateException ignored) {
         }

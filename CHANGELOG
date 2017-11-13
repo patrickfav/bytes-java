@@ -3,6 +3,7 @@
 ## v0.4.4
 
 * add feature for gathering parts of the array as primitives (e.g. intAt(int position))
+* add to unsigned byte conversations
 
 ## v0.4.3
 

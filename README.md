@@ -318,7 +318,8 @@ Accessing part of the array as primitives from arbitrary position:
 
 ```java
 Bytes.wrap(array).bitAt(4); // 0010 1000 -> false
-Bytes.wrap(array).byteAt(14);
+Bytes.wrap(array).byteAt(14); // 1111 1111 -> -1
+Bytes.wrap(array).unsignedByteAt(14); // 1111 1111 -> 255
 Bytes.wrap(array).intAt(4);
 Bytes.wrap(array).longAt(6);
 ```
@@ -420,6 +421,7 @@ To primitives (if the internal array is not too long)
 
 ```java
 Bytes.wrap(array).toByte();
+Bytes.wrap(array).toUnsignedByte();
 Bytes.wrap(array).toInt();
 Bytes.wrap(array).toDouble();
 ```
