@@ -1360,7 +1360,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public char toChar() {
         Util.checkExactLength(length(), 2, "char");
-        return internalBuffer().getChar();
+        return charAt(0);
     }
 
     /**
@@ -1375,7 +1375,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public short toShort() {
         Util.checkExactLength(length(), 2, "short");
-        return internalBuffer().getShort();
+        return shortAt(0);
     }
 
     /**
@@ -1390,7 +1390,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public int toInt() {
         Util.checkExactLength(length(), 4, "int");
-        return internalBuffer().getInt();
+        return intAt(0);
     }
 
     /**
@@ -1405,7 +1405,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public long toLong() {
         Util.checkExactLength(length(), 8, "long");
-        return resize(8).internalBuffer().getLong();
+        return longAt(0);
     }
 
     /**
@@ -1431,7 +1431,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public double toDouble() {
         Util.checkExactLength(length(), 8, "double");
-        return resize(8).internalBuffer().getDouble();
+        return internalBuffer().getDouble();
     }
 
     /**
