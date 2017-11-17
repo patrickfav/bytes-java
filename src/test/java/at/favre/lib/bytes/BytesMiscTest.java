@@ -24,6 +24,7 @@ package at.favre.lib.bytes;
 import org.junit.Test;
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ReadOnlyBufferException;
 import java.util.NoSuchElementException;
@@ -67,6 +68,28 @@ public class BytesMiscTest extends ABytesTest {
         assertTrue(Bytes.wrap(example2_bytes_seven).equals(Bytes.from(example2_bytes_seven)));
         assertFalse(Bytes.wrap(example_bytes_seven).equals(Bytes.wrap(example2_bytes_seven)));
         assertFalse(Bytes.wrap(example_bytes_eight).equals(Bytes.wrap(example2_bytes_seven)));
+    }
+
+    @Test
+    public void testEqualsWithArray() throws Exception {
+        assertTrue(Bytes.allocate(4).equals(new byte[4]));
+        assertFalse(Bytes.allocate(4).equals(new byte[3]));
+        assertFalse(Bytes.random(16).equals(new byte[16]));
+    }
+
+    @Test
+    public void testEqualsWithObjectArray() throws Exception {
+        assertFalse(Bytes.allocate(4).equals(new Byte[4]));
+        assertTrue(Bytes.allocate(4).equals(new Byte[]{0, 0, 0, 0}));
+        assertFalse(Bytes.allocate(4).equals(new Byte[3]));
+        assertFalse(Bytes.random(16).equals(new Byte[16]));
+    }
+
+    @Test
+    public void testEqualsWithByteBuffer() throws Exception {
+        assertTrue(Bytes.allocate(4).equals(ByteBuffer.wrap(new byte[4])));
+        assertFalse(Bytes.allocate(4).equals(ByteBuffer.wrap(new byte[3])));
+        assertFalse(Bytes.random(16).equals(ByteBuffer.wrap(new byte[16])));
     }
 
     @Test

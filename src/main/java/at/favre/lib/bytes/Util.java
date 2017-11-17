@@ -426,6 +426,17 @@ final class Util {
         }
     }
 
+    static boolean equals(byte[] obj, Byte[] anotherArray) {
+        if (anotherArray == null) return false;
+        if (obj.length != anotherArray.length) return false;
+        for (int i = 0; i < obj.length; i++) {
+            if (anotherArray[i] == null || obj[i] != anotherArray[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /*
     =================================================================================================
      Copyright 2011 Twitter, Inc.

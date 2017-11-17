@@ -350,6 +350,15 @@ for (Byte aByte : bytesInstance) {
 }
 ```
 
+The `equals` method has overloaded versions for `byte[]`, `Byte[]` and `ByteBuffer` which can be used to directly
+compare the inner array:
+
+```java
+byte[] primitiveArray1 = ...
+byte[] primitiveArray2 = ...
+Bytes.wrap(primitiveArray1).equals(primitiveArray2); //compares primitiveArray1 with primitiveArray2
+```
+
 ### Validation
 
 A simple validation framework which can be used to check the internal byte array:

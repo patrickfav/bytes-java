@@ -1002,7 +1002,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public char charAt(int index) {
         Util.checkIndexBounds(length(), index, 2, "char");
-        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getChar();
+        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getChar();
     }
 
     /**
@@ -1015,7 +1015,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public short shortAt(int index) {
         Util.checkIndexBounds(length(), index, 2, "short");
-        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getShort();
+        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getShort();
     }
 
     /**
@@ -1028,7 +1028,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public int intAt(int index) {
         Util.checkIndexBounds(length(), index, 4, "int");
-        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getInt();
+        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getInt();
     }
 
     /**
@@ -1041,7 +1041,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public long longAt(int index) {
         Util.checkIndexBounds(length(), index, 8, "long");
-        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getLong();
+        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getLong();
     }
 
     /**
@@ -1478,6 +1478,12 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
         return internalBuffer().compareTo(o.internalBuffer());
     }
 
+    /**
+     * Checks if this instance is equal to given other instance o
+     *
+     * @param o other instance
+     * @return if the instance are equal
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -1487,6 +1493,37 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
 
         if (!Arrays.equals(byteArray, bytes.byteArray)) return false;
         return byteOrder != null ? byteOrder.equals(bytes.byteOrder) : bytes.byteOrder == null;
+    }
+
+    /**
+     * Compares the inner array with given array
+     *
+     * @param anotherArray to compare with
+     * @return true if {@link Arrays#equals(byte[], byte[])} returns true on given and internal array
+     */
+    public boolean equals(byte[] anotherArray) {
+        return anotherArray != null && Arrays.equals(internalArray(), anotherArray);
+    }
+
+    /**
+     * Compares the inner array with given array.
+     * Note: a <code>null</code> Byte will not be equal to a <code>0</code> byte
+     *
+     * @param anotherArray to compare with
+     * @return true if both array have same length and every byte element is the same
+     */
+    public boolean equals(Byte[] anotherArray) {
+        return Util.equals(internalArray(), anotherArray);
+    }
+
+    /**
+     * Compares the inner array with the inner array of given ByteBuffer
+     *
+     * @param buffer to compare with
+     * @return true if both array have same length and every byte element is the same
+     */
+    public boolean equals(ByteBuffer buffer) {
+        return buffer != null && Arrays.equals(internalArray(), buffer.array());
     }
 
     /**

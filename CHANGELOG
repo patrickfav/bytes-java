@@ -4,6 +4,7 @@
 
 * add feature for gathering parts of the array as primitives (e.g. intAt(int position))
 * add to unsigned byte conversations
+* add overloaded equals
 
 ## v0.4.3
 
