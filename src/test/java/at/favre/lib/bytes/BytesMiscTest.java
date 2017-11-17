@@ -90,6 +90,8 @@ public class BytesMiscTest extends ABytesTest {
         assertTrue(Bytes.allocate(4).equals(ByteBuffer.wrap(new byte[4])));
         assertFalse(Bytes.allocate(4).equals(ByteBuffer.wrap(new byte[3])));
         assertFalse(Bytes.random(16).equals(ByteBuffer.wrap(new byte[16])));
+        assertTrue(Bytes.allocate(16).byteOrder(ByteOrder.LITTLE_ENDIAN).equals(ByteBuffer.wrap(new byte[16]).order(ByteOrder.LITTLE_ENDIAN)));
+        assertFalse(Bytes.wrap(new byte[]{3, 2}).byteOrder(ByteOrder.BIG_ENDIAN).equals(ByteBuffer.wrap(new byte[]{3, 2}).order(ByteOrder.LITTLE_ENDIAN)));
     }
 
     @Test
@@ -99,7 +101,6 @@ public class BytesMiscTest extends ABytesTest {
         assertTrue(Bytes.from(example_bytes_seven).mutable().equalsContent(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
         assertTrue(Bytes.from(example_bytes_seven).mutable().equalsContent(Bytes.from(example_bytes_seven)));
         assertTrue(Bytes.from(example_bytes_seven).readOnly().equalsContent(Bytes.from(example_bytes_seven)));
-        assertTrue(Bytes.from(example_bytes_seven).readOnly().equalsContent(example_bytes_seven));
     }
 
     @Test

@@ -1002,7 +1002,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public char charAt(int index) {
         Util.checkIndexBounds(length(), index, 2, "char");
-        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getChar();
+        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getChar();
     }
 
     /**
@@ -1015,7 +1015,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public short shortAt(int index) {
         Util.checkIndexBounds(length(), index, 2, "short");
-        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getShort();
+        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getShort();
     }
 
     /**
@@ -1028,7 +1028,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public int intAt(int index) {
         Util.checkIndexBounds(length(), index, 4, "int");
-        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getInt();
+        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getInt();
     }
 
     /**
@@ -1041,7 +1041,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      */
     public long longAt(int index) {
         Util.checkIndexBounds(length(), index, 8, "long");
-        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getLong();
+        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getLong();
     }
 
     /**
@@ -1077,7 +1077,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
         return new Util.Entropy<>(toList()).entropy();
     }
 
-    /* CONSERVATORS POSSIBLY REUSING THE INTERNAL ARRAY ***************************************************************/
+    /* CONVERTERS POSSIBLY REUSING THE INTERNAL ARRAY ***************************************************************/
 
     /**
      * Create a new instance which shares the same underlying array
@@ -1517,13 +1517,14 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
     }
 
     /**
-     * Compares the inner array with the inner array of given ByteBuffer
+     * Compares the inner array with the inner array of given ByteBuffer.
+     * Will check for internal array and byte order.
      *
      * @param buffer to compare with
      * @return true if both array have same length and every byte element is the same
      */
     public boolean equals(ByteBuffer buffer) {
-        return buffer != null && Arrays.equals(internalArray(), buffer.array());
+        return buffer != null && byteOrder == buffer.order() && ByteBuffer.wrap(internalArray()).order(byteOrder).equals(buffer);
     }
 
     /**
@@ -1533,17 +1534,7 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      * @return true if the internal array are equals (see {@link Arrays#equals(byte[], byte[])})
      */
     public boolean equalsContent(Bytes other) {
-        return other != null && equalsContent(other.internalArray());
-    }
-
-    /**
-     * Checks only for internal array content
-     *
-     * @param array to compare to
-     * @return true if the internal array are equals (see {@link Arrays#equals(byte[], byte[])})
-     */
-    public boolean equalsContent(byte[] array) {
-        return array != null && Arrays.equals(internalArray(), array);
+        return other != null && Arrays.equals(internalArray(), other.internalArray());
     }
 
     @Override
