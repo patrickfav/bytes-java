@@ -164,12 +164,12 @@ public interface BytesValidator {
             boolean bool = operator != OR;
             for (BytesValidator bytesValidator : validatorList) {
                 switch (operator) {
+                    case AND:
+                        bool &= bytesValidator.validate(byteArrayToValidate);
+                        break;
                     default:
                     case OR:
                         bool |= bytesValidator.validate(byteArrayToValidate);
-                        break;
-                    case AND:
-                        bool &= bytesValidator.validate(byteArrayToValidate);
                         break;
                 }
             }

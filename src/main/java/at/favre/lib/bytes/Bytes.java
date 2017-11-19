@@ -57,7 +57,7 @@ import java.util.*;
  * </pre>
  */
 @SuppressWarnings("WeakerAccess")
-public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, Iterable<Byte> {
+public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     /* FACTORY ***************************************************************************************************/
 
@@ -886,7 +886,6 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      *
      * @return true if mutable, ie. transformers will change internal array
      */
-    @Override
     public boolean isMutable() {
         return false;
     }
@@ -896,7 +895,6 @@ public class Bytes implements Comparable<Bytes>, AbstractBytes, Serializable, It
      *
      * @return true if read only
      */
-    @Override
     public boolean isReadOnly() {
         return false;
     }

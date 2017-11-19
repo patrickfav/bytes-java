@@ -14,7 +14,7 @@ before_install:
   - tar xvf secrets.tar
 
 script:
-  - mvn clean install -X -Djarsigner.skip=false
+  - mvn clean install -X -Djarsigner.skip=false checkstyle:check
 
 after_success:
   - mvn test jacoco:report coveralls:report

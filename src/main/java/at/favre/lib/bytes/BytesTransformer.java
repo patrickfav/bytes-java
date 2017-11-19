@@ -76,15 +76,15 @@ public interface BytesTransformer {
 
             for (int i = 0; i < currentArray.length; i++) {
                 switch (mode) {
-                    default:
-                    case OR:
-                        out[i] = (byte) (currentArray[i] | secondArray[i]);
-                        break;
                     case AND:
                         out[i] = (byte) (currentArray[i] & secondArray[i]);
                         break;
                     case XOR:
                         out[i] = (byte) (currentArray[i] ^ secondArray[i]);
+                        break;
+                    default:
+                    case OR:
+                        out[i] = (byte) (currentArray[i] | secondArray[i]);
                         break;
                 }
             }
@@ -146,11 +146,11 @@ public interface BytesTransformer {
             byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
 
             switch (type) {
+                case RIGHT_SHIFT:
+                    return Util.shiftRight(out, shiftCount);
                 default:
                 case LEFT_SHIFT:
                     return Util.shiftLeft(out, shiftCount);
-                case RIGHT_SHIFT:
-                    return Util.shiftRight(out, shiftCount);
             }
         }
 
@@ -326,7 +326,7 @@ public interface BytesTransformer {
      * Converts to hash
      */
     class MessageDigestTransformer implements BytesTransformer {
-        final static String ALGORITHM_SHA_256 = "SHA-256";
+        static final String ALGORITHM_SHA_256 = "SHA-256";
 
         private final MessageDigest messageDigest;
 
