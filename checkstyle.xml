@@ -145,5 +145,13 @@
         <module name="RedundantImport"/> <!-- e.g. double import statements: http://checkstyle.sourceforge.net/config_imports.html#RedundantImport -->
         <module name="UnusedImports"/> <!-- http://checkstyle.sourceforge.net/config_imports.html#UnusedImports -->
         <module name="IllegalImport"/> <!-- checks if import sun.* is used http://checkstyle.sourceforge.net/config_imports.html#IllegalImport -->
+
+        <!-- Javadoc -->
+        <module name="JavadocType">
+            <property name="scope" value="protected"/> <!-- means protected and public -->
+        </module>
+        <module name="JavadocMethod">
+            <property name="scope" value="protected"/> <!-- means protected and public -->
+        </module>
     </module>
 </module>

@@ -454,6 +454,12 @@ final class Util {
      limitations under the License.
      =================================================================================================
      */
+
+    /**
+     * Class that calculates the entropy factor
+     *
+     * @param <T>
+     */
     static final class Entropy<T> {
         private final Map<T, Integer> map = new HashMap<>();
         private int total = 0;

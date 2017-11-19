@@ -171,6 +171,9 @@ public final class BytesTransformers {
      * Adds or converts to arbitrary checksum
      */
     public static final class ChecksumTransformer implements BytesTransformer {
+        /**
+         * Definitions of the mode
+         */
         public enum Mode {
             /**
              * Appends checksum to given byte array
