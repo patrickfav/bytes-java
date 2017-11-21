@@ -103,6 +103,22 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * The new instance will be backed by the given byte array;
      * that is, modifications to the bytes will cause the array to be modified
      * and vice versa.
+     * <p>
+     * If given array is null, a zero length byte array will be created and used instead.
+     *
+     * @param array to use directly or zero length byte array
+     * @return new instance
+     */
+    public static Bytes wrapNullSafe(byte[] array) {
+        return wrap(array != null ? array : new byte[0], ByteOrder.BIG_ENDIAN);
+    }
+
+    /**
+     * Creates a new instance with given byte array.
+     * <p>
+     * The new instance will be backed by the given byte array;
+     * that is, modifications to the bytes will cause the array to be modified
+     * and vice versa.
      *
      * @param array to use directly
      * @return new instance
@@ -1000,7 +1016,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public char charAt(int index) {
         Util.checkIndexBounds(length(), index, 2, "char");
-        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getChar();
+        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getChar();
     }
 
     /**
@@ -1013,7 +1029,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public short shortAt(int index) {
         Util.checkIndexBounds(length(), index, 2, "short");
-        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getShort();
+        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getShort();
     }
 
     /**
@@ -1026,7 +1042,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public int intAt(int index) {
         Util.checkIndexBounds(length(), index, 4, "int");
-        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getInt();
+        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getInt();
     }
 
     /**
@@ -1039,7 +1055,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public long longAt(int index) {
         Util.checkIndexBounds(length(), index, 8, "long");
-        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getLong();
+        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getLong();
     }
 
     /**

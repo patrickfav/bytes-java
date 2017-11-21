@@ -120,7 +120,9 @@ public final class MutableBytes extends Bytes {
      */
     public MutableBytes secureWipe(SecureRandom random) {
         Objects.requireNonNull(random, "must non-null random");
-        random.nextBytes(internalArray());
+        if (length() > 0) {
+            random.nextBytes(internalArray());
+        }
         return this;
     }
 

@@ -108,6 +108,12 @@ Bytes.wrap(myArray).copy() ~ Bytes.from(myArray)
 
 #### More Constructors
 
+For a **null-safe version**, which uses the empty array in case of a null byte array:
+
+```java
+Bytes.wrapNullSafe(null);
+```
+
 **Concatenating** of multiple byte arrays or bytes:
 
 ```java

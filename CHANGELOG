@@ -1,5 +1,9 @@
 # Releases
 
+## v0.4.5
+
+* add nullSafe wrapper
+
 ## v0.4.4
 
 * add feature for gathering parts of the array as primitives (e.g. intAt(int position))

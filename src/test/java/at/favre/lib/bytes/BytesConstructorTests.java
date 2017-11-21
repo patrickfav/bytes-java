@@ -57,6 +57,22 @@ public class BytesConstructorTests extends ABytesTest {
 
         Bytes b2 = Bytes.wrap(b);
         assertSame(b.array(), b2.array());
+
+        Bytes bNullSafe = Bytes.wrapNullSafe(example_bytes_seven);
+        assertSame(example_bytes_seven, bNullSafe.array());
+
+        Bytes bNullSafe1 = Bytes.wrapNullSafe(null);
+        assertEquals(0, bNullSafe1.length());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void wrapTestNullExpected() throws Exception {
+        Bytes.wrap((byte[]) null);
+    }
+
+    @Test
+    public void wrapTestNullSafe() throws Exception {
+        Bytes.wrapNullSafe(null);
     }
 
     @Test
