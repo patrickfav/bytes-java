@@ -1016,7 +1016,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public char charAt(int index) {
         Util.checkIndexBounds(length(), index, 2, "char");
-        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getChar();
+        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getChar();
     }
 
     /**
@@ -1029,7 +1029,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public short shortAt(int index) {
         Util.checkIndexBounds(length(), index, 2, "short");
-        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getShort();
+        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getShort();
     }
 
     /**
@@ -1042,7 +1042,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public int intAt(int index) {
         Util.checkIndexBounds(length(), index, 4, "int");
-        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getInt();
+        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getInt();
     }
 
     /**
@@ -1055,7 +1055,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public long longAt(int index) {
         Util.checkIndexBounds(length(), index, 8, "long");
-        return ByteBuffer.wrap(internalArray()).order(byteOrder).position(index).getLong();
+        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getLong();
     }
 
     /**
