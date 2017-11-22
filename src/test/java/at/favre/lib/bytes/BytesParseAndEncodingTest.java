@@ -38,9 +38,9 @@ public class BytesParseAndEncodingTest extends ABytesTest {
     @Test
     public void parseHex() throws Exception {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1};
+        assertArrayEquals(defaultArray, Bytes.parseHex("0xA0E1").array());
         assertArrayEquals(defaultArray, Bytes.parseHex("A0E1").array());
         assertArrayEquals(defaultArray, Bytes.parseHex("a0e1").array());
-        assertArrayEquals(defaultArray, Bytes.parseHex("0xA0E1").array());
         assertArrayEquals(defaultArray, Bytes.parseHex(Bytes.parseHex("A0E1").encodeHex()).array());
     }
 

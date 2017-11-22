@@ -36,6 +36,11 @@ public class BinaryToTextEncodingTest {
         assertNotEquals(new BinaryToTextEncoding.Hex(false).encode(new byte[]{1, 2, 3}, ByteOrder.LITTLE_ENDIAN), new BinaryToTextEncoding.Hex(false).encode(new byte[]{1, 2, 3}, ByteOrder.BIG_ENDIAN));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void decodeHexShouldFail() throws Exception {
+        new BinaryToTextEncoding.Hex(false).decode("AAI=");
+    }
+
     @Test
     public void encodeBaseRadix() throws Exception {
         assertEquals("100211", new BinaryToTextEncoding.BaseRadix(16).encode(new byte[]{16, 2, 17}, ByteOrder.BIG_ENDIAN));

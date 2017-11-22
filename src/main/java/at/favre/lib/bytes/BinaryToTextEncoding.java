@@ -99,16 +99,24 @@ public interface BinaryToTextEncoding {
             if (hexString.length() % 2 != 0)
                 throw new IllegalArgumentException("invalid hex string, must be mod 2 == 0");
 
+            int start;
             if (hexString.startsWith("0x")) {
-                hexString = hexString.substring(2, hexString.length());
+                start = 2;
+            } else {
+                start = 0;
             }
 
             int len = hexString.length();
-            byte[] data = new byte[len / 2];
-            for (int i = 0; i < len; i += 2) {
-                data[i / 2] = (byte)
-                        ((Character.digit(hexString.charAt(i), 16) << 4)
-                                + Character.digit(hexString.charAt(i + 1), 16));
+            byte[] data = new byte[(len - start) / 2];
+            for (int i = start; i < len; i += 2) {
+                int first4Bits = Character.digit(hexString.charAt(i), 16);
+                int second4Bits = Character.digit(hexString.charAt(i + 1), 16);
+
+                if (first4Bits == -1 || second4Bits == -1) {
+                    throw new IllegalArgumentException("'" + hexString.charAt(i) + hexString.charAt(i + 1) + "' at index " + i + " is not hex formatted");
+                }
+
+                data[(i - start) / 2] = (byte) ((first4Bits << 4) + second4Bits);
             }
             return data;
         }

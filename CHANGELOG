@@ -3,6 +3,7 @@
 ## v0.4.5
 
 * add nullSafe wrapper
+* fix accepting illegal hex string when parsing
 
 ## v0.4.4
 
