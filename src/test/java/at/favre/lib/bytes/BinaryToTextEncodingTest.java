@@ -46,7 +46,16 @@ public class BinaryToTextEncodingTest {
         assertEquals("100211", new BinaryToTextEncoding.BaseRadix(16).encode(new byte[]{16, 2, 17}, ByteOrder.BIG_ENDIAN));
         assertEquals("110210", new BinaryToTextEncoding.BaseRadix(16).encode(new byte[]{16, 2, 17}, ByteOrder.LITTLE_ENDIAN));
         assertNotEquals(new BinaryToTextEncoding.BaseRadix(2).encode(new byte[]{1, 2, 3}, ByteOrder.LITTLE_ENDIAN), new BinaryToTextEncoding.BaseRadix(2).encode(new byte[]{1, 2, 3}, ByteOrder.BIG_ENDIAN));
+    }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void decodeInvalidRadix116() throws Exception {
+        new BinaryToTextEncoding.BaseRadix(16).decode("AAI=");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void decodeInvalidRadix36() throws Exception {
+        new BinaryToTextEncoding.BaseRadix(36).decode("AAI=");
     }
 
     @Test
@@ -55,5 +64,15 @@ public class BinaryToTextEncodingTest {
         assertEquals("EQIQ", new BinaryToTextEncoding.Base64Encoding().encode(new byte[]{17, 2, 16}, ByteOrder.BIG_ENDIAN));
         assertEquals("EQIQ", new BinaryToTextEncoding.Base64Encoding().encode(new byte[]{16, 2, 17}, ByteOrder.LITTLE_ENDIAN));
         assertNotEquals(new BinaryToTextEncoding.Base64Encoding().encode(new byte[]{1, 2, 3}, ByteOrder.LITTLE_ENDIAN), new BinaryToTextEncoding.Base64Encoding().encode(new byte[]{1, 2, 3}, ByteOrder.BIG_ENDIAN));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void decodeInvalidBase64() throws Exception {
+        new BinaryToTextEncoding.Base64Encoding().decode("(&´´");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void decodeHalfInvalidBase64() throws Exception {
+        new BinaryToTextEncoding.Base64Encoding().decode("EAI`");
     }
 }
