@@ -185,6 +185,7 @@ For **appending** byte arrays or primitive integer types to current instances.
 Bytes result = Bytes.wrap(array1).append(array2);
 Bytes result = Bytes.wrap(array1).append(1341);
 Bytes result = Bytes.wrap(array1).append((byte) 3);
+Bytes result = Bytes.wrap(array1).append("some string");
 ```
 
 **Bitwise operations**: XOR, OR, AND, NOT as well as left and right shifts and switching bits:

@@ -594,6 +594,17 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Creates a new instance with the current array appended to the provided utf-8 encoded representation of this string
+     *
+     * @param string string used to get utf-8 bytes from
+     * @return appended instance
+     */
+    public Bytes append(CharSequence string) {
+        Objects.requireNonNull(string);
+        return transform(new BytesTransformer.ConcatTransformer(string.toString().getBytes(StandardCharsets.UTF_8)));
+    }
+
+    /**
      * Bitwise XOR operation on the whole internal byte array.
      * See the considerations about possible in-place operation in {@link #transform(BytesTransformer)}.
      *

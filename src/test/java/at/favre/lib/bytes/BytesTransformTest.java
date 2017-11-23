@@ -56,6 +56,14 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
+    public void appendString() throws Exception {
+        assertArrayEquals(new byte[]{0, 0, 48}, Bytes.from(new byte[2]).append("0").array());
+        assertArrayEquals(new byte[]{48}, Bytes.from(new byte[0]).append("0").array());
+        assertArrayEquals(new byte[]{71, 117, 116}, Bytes.from(new byte[0]).append("Gut").array());
+        assertArrayEquals(new byte[]{71, -30, -99, -92}, Bytes.from(new byte[0]).append("G❤").array());
+    }
+
+    @Test
     public void appendMulti() throws Exception {
         Bytes b = Bytes.random(2);
         for (int i = 0; i < 100; i++) {

@@ -1,5 +1,9 @@
 # Releases
 
+## v0.4.6
+
+* add appending with strings
+
 ## v0.4.5
 
 * add nullSafe wrapper
