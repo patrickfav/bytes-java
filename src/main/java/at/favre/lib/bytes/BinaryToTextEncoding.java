@@ -155,12 +155,23 @@ public interface BinaryToTextEncoding {
 
         @Override
         public String encode(byte[] array, ByteOrder byteOrder) {
+            System.out.println("max length " + maxLength(array, radix));
             return new BigInteger(1, (byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.from(array).reverse().array()).toString(radix);
         }
 
         @Override
         public byte[] decode(String encoded) {
-            return new BigInteger(encoded, radix).toByteArray();
+            byte[] array = new BigInteger(encoded, radix).toByteArray();
+            if (array[0] == 0) {
+                byte[] tmp = new byte[array.length - 1];
+                System.arraycopy(array, 1, tmp, 0, tmp.length);
+                array = tmp;
+            }
+            return array;
+        }
+
+        private int maxLength(byte[] data, int radix) {
+            return BigInteger.valueOf(2).pow(BigInteger.valueOf(data.length).multiply(BigInteger.valueOf(8)).intValue()).toString(radix).length();
         }
     }
 }

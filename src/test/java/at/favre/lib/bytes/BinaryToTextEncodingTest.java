@@ -26,8 +26,7 @@ import org.junit.Test;
 
 import java.nio.ByteOrder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 public class BinaryToTextEncodingTest {
     @Test
@@ -50,7 +49,6 @@ public class BinaryToTextEncodingTest {
     }
 
     @Test
-    @Ignore
     public void encodeDecodeRadix() throws Exception {
         for (int i = 0; i < 32; i++) {
             Bytes rnd = Bytes.random(i);
@@ -62,8 +60,23 @@ public class BinaryToTextEncodingTest {
                 System.out.println("radix" + j + ":\t" + encodedBigEndian);
                 System.out.println("orig   :\t" + rnd.encodeHex());
                 System.out.println("enc    :\t" + Bytes.wrap(decoded).encodeHex());
+                assertArrayEquals(rnd.array(), decoded);
             }
         }
+    }
+
+    @Test
+    @Ignore("should fix")
+    public void encodeDecodeRadixZeros() throws Exception {
+        Bytes bytes = Bytes.wrap(new byte[]{0, 0, 0, 0});
+        BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.BaseRadix(36);
+        String encodedBigEndian = encoding.encode(bytes.array(), ByteOrder.BIG_ENDIAN);
+        byte[] decoded = encoding.decode(encodedBigEndian);
+
+        System.out.println("radix36:\t" + encodedBigEndian);
+        System.out.println("orig   :\t" + bytes.encodeHex());
+        System.out.println("enc    :\t" + Bytes.wrap(decoded).encodeHex());
+        assertArrayEquals(bytes.array(), decoded);
     }
 
     @Test
