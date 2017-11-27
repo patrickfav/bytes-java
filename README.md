@@ -36,6 +36,7 @@ It's main features include:
 * **Validators** with the ability to arbitrarily combine multiple ones with logical expressions
 * **Parsing and Encoding** in most common binary-to-text-encodings: [hex](https://en.wikipedia.org/wiki/Hexadecimal), [base36](https://en.wikipedia.org/wiki/Base36), [base64](https://en.wikipedia.org/wiki/Base64), ...
 * **Immutable, Mutable and Read-Only** versions
+* **Handling Strings** with encoding and normalizing strings for arbitrary charset
 * **Utility Features** like `indexOf`, `count`, `isEmpty`, `bitAt`, `contains` ...
 * **Flexibility** provide your own Transformers, Validators and Encoders
 
@@ -299,6 +300,37 @@ Bytes.from(array).encodeBinary(); //1110110110101111
 Bytes.from(array).encodeDec(); //20992966904426477
 Bytes.from(array).encodeOctal(); //1124517677707527755
 Bytes.from(array).encodeBase36(); //5qpdvuwjvu5
+```
+
+### Handling Strings
+
+You can easily get the **UTF-8 encoded version** of a string with
+
+```java
+String s = "...";
+Bytes.from(s);
+```
+
+or get the **[normalized version](https://en.wikipedia.org/wiki/Unicode_equivalence)**,
+which is the recommended way to convert e.g. user passwords
+
+```java
+String pwd = "ℌH";
+Bytes.from(pwd, Normalizer.Form.NFKD); //would be "HH" normalized
+```
+
+or get as any other **[character encodings](https://en.wikipedia.org/wiki/Character_encoding)**
+
+```java
+String asciiString = "ascii";
+Bytes.from(asciiString, StandardCharsets.US_ASCII);
+```
+
+To easily append a string to an byte array you can do
+
+```java
+String userPwd = ...;
+Bytes.from(salt).append(userPwd).hashSha256();
 ```
 
 ### Utility Methods

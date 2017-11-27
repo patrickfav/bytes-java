@@ -395,6 +395,8 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(CharSequence string, Charset charset) {
+        Objects.requireNonNull(string, "provided string must not be null");
+        Objects.requireNonNull(charset, "provided charset must not be null");
         return wrap(string.toString().getBytes(charset));
     }
 
