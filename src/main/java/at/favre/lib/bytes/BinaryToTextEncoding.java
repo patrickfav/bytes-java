@@ -62,9 +62,15 @@ public interface BinaryToTextEncoding {
     }
 
     /**
+     * Unifies both interfaces {@link Encoder} and {@link Decoder}
+     */
+    interface EncoderDecoder extends Encoder, Decoder {
+    }
+
+    /**
      * Hex or Base16
      */
-    class Hex implements Encoder, Decoder {
+    class Hex implements EncoderDecoder {
         private final boolean upperCase;
 
         public Hex() {
@@ -125,7 +131,7 @@ public interface BinaryToTextEncoding {
     /**
      * Simple Base64 encoder
      */
-    class Base64Encoding implements Encoder, Decoder {
+    class Base64Encoding implements EncoderDecoder {
         @Override
         public String encode(byte[] array, ByteOrder byteOrder) {
             return Base64.encode((byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.from(array).reverse().array());
@@ -140,7 +146,7 @@ public interface BinaryToTextEncoding {
     /**
      * Simple radix encoder which internally uses {@link BigInteger#toString(int)}
      */
-    class BaseRadix implements Encoder, Decoder {
+    class BaseRadix implements EncoderDecoder {
         private final int radix;
 
         BaseRadix(int radix) {

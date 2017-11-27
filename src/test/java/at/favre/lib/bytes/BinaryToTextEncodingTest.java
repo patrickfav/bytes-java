@@ -21,6 +21,7 @@
 
 package at.favre.lib.bytes;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.ByteOrder;
@@ -48,8 +49,47 @@ public class BinaryToTextEncodingTest {
         assertNotEquals(new BinaryToTextEncoding.BaseRadix(2).encode(new byte[]{1, 2, 3}, ByteOrder.LITTLE_ENDIAN), new BinaryToTextEncoding.BaseRadix(2).encode(new byte[]{1, 2, 3}, ByteOrder.BIG_ENDIAN));
     }
 
+    @Test
+    @Ignore
+    public void encodeDecodeRadix() throws Exception {
+        for (int i = 0; i < 32; i++) {
+            Bytes rnd = Bytes.random(i);
+            System.out.println("\n\nNEW TEST: " + i + " bytes\n");
+            for (int j = 16; j < 36; j++) {
+                BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.BaseRadix(j);
+                String encodedBigEndian = encoding.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
+                byte[] decoded = encoding.decode(encodedBigEndian);
+                System.out.println("radix" + j + ":\t" + encodedBigEndian);
+                System.out.println("orig   :\t" + rnd.encodeHex());
+                System.out.println("enc    :\t" + Bytes.wrap(decoded).encodeHex());
+            }
+        }
+    }
+
+    @Test
+    public void encodeDecodeBase64() throws Exception {
+        for (int i = 4; i < 32; i += 4) {
+            Bytes rnd = Bytes.random(i);
+            BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.Base64Encoding();
+            String encodedBigEndian = encoding.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
+            byte[] decoded = encoding.decode(encodedBigEndian);
+            assertEquals(rnd, Bytes.wrap(decoded));
+        }
+    }
+
+    @Test
+    public void encodeDecodeHex() throws Exception {
+        for (int i = 4; i < 32; i += 4) {
+            Bytes rnd = Bytes.random(i);
+            BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.Hex();
+            String encodedBigEndian = encoding.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
+            byte[] decoded = encoding.decode(encodedBigEndian);
+            assertEquals(rnd, Bytes.wrap(decoded));
+        }
+    }
+
     @Test(expected = IllegalArgumentException.class)
-    public void decodeInvalidRadix116() throws Exception {
+    public void decodeInvalidRadix16() throws Exception {
         new BinaryToTextEncoding.BaseRadix(16).decode("AAI=");
     }
 
