@@ -314,6 +314,26 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Creates a new instance from given 4 byte floating point number (float).
+     *
+     * @param float4byte to create from
+     * @return new instance
+     */
+    public static Bytes from(float float4byte) {
+        return wrap(ByteBuffer.allocate(4).putFloat(float4byte).array());
+    }
+
+    /**
+     * Creates a new instance from given 8 byte floating point number (double).
+     *
+     * @param double8Byte to create from
+     * @return new instance
+     */
+    public static Bytes from(double double8Byte) {
+        return wrap(ByteBuffer.allocate(8).putDouble(double8Byte).array());
+    }
+
+    /**
      * Creates a new instance from given ByteBuffer.
      * Will use the same backing byte array and honour the buffer's byte order.
      *
@@ -1488,7 +1508,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     /**
      * If the underlying byte array is exactly 8 byte / 64 bit long, return the
-     * representation for a Java float value. The output is dependent on the set {@link #byteOrder()}.
+     * representation for a Java double value. The output is dependent on the set {@link #byteOrder()}.
      *
      * @return the double representation
      * @throws IllegalStateException if byte array has length not equal to 8
