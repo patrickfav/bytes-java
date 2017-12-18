@@ -239,6 +239,19 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Creates a new instance from given boolean.
+     * This will create a new single array element array instance using the convention that false is zero.
+     * E.g. Creates array <code>new byte[] {1}</code> if booleanValue is true and <code>new byte[] {0}</code> if
+     * booleanValue is false.
+     *
+     * @param booleanValue to convert (false is zero, true is one)
+     * @return new instance
+     */
+    public static Bytes from(boolean booleanValue) {
+        return wrap(new byte[]{booleanValue ? (byte) 1 : 0});
+    }
+
+    /**
      * Creates a new instance from given unsigned 2 byte char.
      *
      * @param char2Byte to create from

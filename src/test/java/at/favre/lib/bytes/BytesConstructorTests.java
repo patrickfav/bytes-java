@@ -129,6 +129,12 @@ public class BytesConstructorTests extends ABytesTest {
     }
 
     @Test
+    public void fromBoolean() throws Exception {
+        assertArrayEquals(new byte[]{(byte) 1}, Bytes.from(true).array());
+        assertArrayEquals(new byte[]{(byte) 0}, Bytes.from(false).array());
+    }
+
+    @Test
     public void fromByte() throws Exception {
         byte test = 0x4E;
         assertArrayEquals(new byte[]{test}, Bytes.from(test).array());
