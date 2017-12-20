@@ -242,6 +242,15 @@ public class BytesConstructorTests extends ABytesTest {
     }
 
     @Test
+    public void fromCharArray() {
+        checkCharArray("");
+        checkCharArray(" ");
+        checkCharArray("\t");
+        checkCharArray("a");
+        checkCharArray("12345678abcdefjkl");
+    }
+
+    @Test
     public void fromMultipleBytes() {
         assertArrayEquals(new byte[]{0x01, 0x02, 0x03}, Bytes.from(Bytes.from((byte) 0x01), Bytes.from((byte) 0x02), Bytes.from((byte) 0x03)).array());
     }
@@ -259,6 +268,11 @@ public class BytesConstructorTests extends ABytesTest {
             Bytes bNormalized = Bytes.from(string, Normalizer.Form.NFKD);
             assertArrayEquals(Normalizer.normalize(string, Normalizer.Form.NFKD).getBytes(charset), bNormalized.array());
         }
+    }
+
+    private void checkCharArray(String s) {
+        Bytes b = Bytes.from(s.toCharArray());
+        assertArrayEquals(String.valueOf(s.toCharArray()).getBytes(StandardCharsets.UTF_8), b.array());
     }
 
     @Test

@@ -25,6 +25,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.CharBuffer;
 import java.nio.ReadOnlyBufferException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -431,6 +432,16 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
         Objects.requireNonNull(string, "provided string must not be null");
         Objects.requireNonNull(charset, "provided charset must not be null");
         return wrap(string.toString().getBytes(charset));
+    }
+
+    /**
+     * Creates a new instance from given char array using utf-8 encoding
+     *
+     * @param charArray to get the internal byte array from
+     * @return new instance
+     */
+    public static Bytes from(char[] charArray) {
+        return from(CharBuffer.wrap(charArray).toString(), StandardCharsets.UTF_8);
     }
 
     /**
