@@ -4,6 +4,7 @@
 
 * add appending with strings
 * add boolean, float, double and char array constructor
+* try to fix radix encoder missing prefixing 0 byte
 
 ## v0.4.5
 
