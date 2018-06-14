@@ -2,6 +2,7 @@
 
 ## v0.5.0
  * better resource handling for compression
+ * add nullSafe from() constructor
 
 ## v0.4.6
 

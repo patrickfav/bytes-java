@@ -113,6 +113,7 @@ For a **null-safe version**, which uses the empty array in case of a null byte a
 
 ```java
 Bytes.wrapNullSafe(null);
+Bytes.fromNullSafe(null);
 ```
 
 **Concatenating** of multiple byte arrays or bytes:

@@ -111,7 +111,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes wrapNullSafe(byte[] array) {
-        return wrap(array != null ? array : new byte[0], ByteOrder.BIG_ENDIAN);
+        return wrap(array != null ? array : new byte[0]);
     }
 
     /**
@@ -154,6 +154,19 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     public static Bytes from(byte[] byteArrayToCopy) {
         Objects.requireNonNull(byteArrayToCopy, "must at least pass a single byte");
         return wrap(Arrays.copyOf(byteArrayToCopy, byteArrayToCopy.length));
+    }
+
+    /**
+     * Creates a new instance from given collections of single bytes.
+     * This will create a copy of given bytes and will not directly use given bytes or byte array.
+     * <p>
+     * If given array is null, a zero length byte array will be created and used instead.
+     *
+     * @param byteArrayToCopy will not be used directly, but a copy; may be null
+     * @return new instance
+     */
+    public static Bytes fromNullSafe(byte[] byteArrayToCopy) {
+        return from(byteArrayToCopy != null ? byteArrayToCopy : new byte[0]);
     }
 
     /**

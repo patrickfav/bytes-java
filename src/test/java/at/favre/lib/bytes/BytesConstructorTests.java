@@ -347,6 +347,10 @@ public class BytesConstructorTests extends ABytesTest {
         assertArrayEquals(new byte[]{1, 2, 3}, Bytes.from((byte) 1, (byte) 2, (byte) 3).array());
         assertArrayEquals(new byte[2], Bytes.from((byte) 0, (byte) 0).array());
         assertArrayNotEquals(new byte[2], Bytes.from((byte) 1, (byte) 0).array());
+
+        assertArrayEquals(new byte[0], Bytes.fromNullSafe(null).array());
+        assertArrayEquals(example_bytes_two, Bytes.fromNullSafe(example_bytes_two).array());
+        assertArrayEquals(example_bytes_sixteen, Bytes.fromNullSafe(example_bytes_sixteen).array());
     }
 
     @Test
