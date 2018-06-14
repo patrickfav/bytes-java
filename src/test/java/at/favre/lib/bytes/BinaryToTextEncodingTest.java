@@ -30,26 +30,26 @@ import static org.junit.Assert.*;
 
 public class BinaryToTextEncodingTest {
     @Test
-    public void encodeHex() throws Exception {
+    public void encodeHex() {
         assertEquals("010203", new BinaryToTextEncoding.Hex(false).encode(new byte[]{1, 2, 3}, ByteOrder.BIG_ENDIAN));
         assertEquals("030201", new BinaryToTextEncoding.Hex(false).encode(new byte[]{1, 2, 3}, ByteOrder.LITTLE_ENDIAN));
         assertNotEquals(new BinaryToTextEncoding.Hex(false).encode(new byte[]{1, 2, 3}, ByteOrder.LITTLE_ENDIAN), new BinaryToTextEncoding.Hex(false).encode(new byte[]{1, 2, 3}, ByteOrder.BIG_ENDIAN));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void decodeHexShouldFail() throws Exception {
+    public void decodeHexShouldFail() {
         new BinaryToTextEncoding.Hex(false).decode("AAI=");
     }
 
     @Test
-    public void encodeBaseRadix() throws Exception {
+    public void encodeBaseRadix() {
         assertEquals("100211", new BinaryToTextEncoding.BaseRadix(16).encode(new byte[]{16, 2, 17}, ByteOrder.BIG_ENDIAN));
         assertEquals("110210", new BinaryToTextEncoding.BaseRadix(16).encode(new byte[]{16, 2, 17}, ByteOrder.LITTLE_ENDIAN));
         assertNotEquals(new BinaryToTextEncoding.BaseRadix(2).encode(new byte[]{1, 2, 3}, ByteOrder.LITTLE_ENDIAN), new BinaryToTextEncoding.BaseRadix(2).encode(new byte[]{1, 2, 3}, ByteOrder.BIG_ENDIAN));
     }
 
     @Test
-    public void encodeDecodeRadix() throws Exception {
+    public void encodeDecodeRadix() {
         for (int i = 0; i < 32; i++) {
             Bytes rnd = Bytes.random(i);
             System.out.println("\n\nNEW TEST: " + i + " bytes\n");
@@ -67,7 +67,7 @@ public class BinaryToTextEncodingTest {
 
     @Test
     @Ignore("should fix")
-    public void encodeDecodeRadixZeros() throws Exception {
+    public void encodeDecodeRadixZeros() {
         Bytes bytes = Bytes.wrap(new byte[]{0, 0, 0, 0});
         BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.BaseRadix(36);
         String encodedBigEndian = encoding.encode(bytes.array(), ByteOrder.BIG_ENDIAN);
@@ -80,7 +80,7 @@ public class BinaryToTextEncodingTest {
     }
 
     @Test
-    public void encodeDecodeBase64() throws Exception {
+    public void encodeDecodeBase64() {
         for (int i = 4; i < 32; i += 4) {
             Bytes rnd = Bytes.random(i);
             BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.Base64Encoding();
@@ -91,7 +91,7 @@ public class BinaryToTextEncodingTest {
     }
 
     @Test
-    public void encodeDecodeHex() throws Exception {
+    public void encodeDecodeHex() {
         for (int i = 4; i < 32; i += 4) {
             Bytes rnd = Bytes.random(i);
             BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.Hex();
@@ -102,17 +102,17 @@ public class BinaryToTextEncodingTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void decodeInvalidRadix16() throws Exception {
+    public void decodeInvalidRadix16() {
         new BinaryToTextEncoding.BaseRadix(16).decode("AAI=");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void decodeInvalidRadix36() throws Exception {
+    public void decodeInvalidRadix36() {
         new BinaryToTextEncoding.BaseRadix(36).decode("AAI=");
     }
 
     @Test
-    public void encodeBase64() throws Exception {
+    public void encodeBase64() {
         assertEquals("EAIR", new BinaryToTextEncoding.Base64Encoding().encode(new byte[]{16, 2, 17}, ByteOrder.BIG_ENDIAN));
         assertEquals("EQIQ", new BinaryToTextEncoding.Base64Encoding().encode(new byte[]{17, 2, 16}, ByteOrder.BIG_ENDIAN));
         assertEquals("EQIQ", new BinaryToTextEncoding.Base64Encoding().encode(new byte[]{16, 2, 17}, ByteOrder.LITTLE_ENDIAN));
@@ -120,12 +120,12 @@ public class BinaryToTextEncodingTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void decodeInvalidBase64() throws Exception {
+    public void decodeInvalidBase64() {
         new BinaryToTextEncoding.Base64Encoding().decode("(&´´");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void decodeHalfInvalidBase64() throws Exception {
+    public void decodeHalfInvalidBase64() {
         new BinaryToTextEncoding.Base64Encoding().decode("EAI`");
     }
 }

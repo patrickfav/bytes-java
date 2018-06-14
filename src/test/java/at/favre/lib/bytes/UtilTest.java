@@ -71,10 +71,7 @@ public class UtilTest {
                 ARRAY234, new byte[]{(byte) 3, (byte) 4}));
         assertEquals(1, Util.indexOf(ARRAY234, new byte[]{(byte) 3}));
         assertEquals(2, Util.indexOf(ARRAY234, new byte[]{(byte) 4}));
-        assertEquals(1, Util.indexOf(new byte[]{(byte) 2, (byte) 3,
-                        (byte) 3, (byte) 3, (byte) 3},
-                new byte[]{(byte) 3}
-        ));
+        assertEquals(1, Util.indexOf(new byte[]{(byte) 2, (byte) 3, (byte) 3, (byte) 3, (byte) 3}, new byte[]{(byte) 3}));
         assertEquals(2, Util.indexOf(
                 new byte[]{(byte) 2, (byte) 3, (byte) 2,
                         (byte) 3, (byte) 4, (byte) 2, (byte) 3},
@@ -187,12 +184,12 @@ public class UtilTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void readFromStream() throws Exception {
+    public void readFromStream() {
         Util.readFromStream(null);
     }
 
     @Test
-    public void concatVararg() throws Exception {
+    public void concatVararg() {
         assertArrayEquals(new byte[]{1}, Util.concatVararg((byte) 1, null));
     }
 
@@ -253,7 +250,6 @@ public class UtilTest {
         for (int i = 0; i < 1000; i++) {
             int shift = 1;
             Bytes rnd = Bytes.random(4 + new Random().nextInt(14));
-
 
             byte[] expected = Bytes.from(new BigInteger(rnd.array()).shiftLeft(shift).toByteArray()).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
             byte[] actual = Bytes.from(Util.shiftLeft(rnd.copy().array(), shift)).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();

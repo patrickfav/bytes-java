@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Comparator;
 import java.util.zip.Adler32;
@@ -37,7 +38,7 @@ import static org.junit.Assert.*;
 public class BytesTransformTest extends ABytesTest {
 
     @Test
-    public void append() throws Exception {
+    public void append() {
         assertArrayEquals(new byte[0], Bytes.from(new byte[0]).append(new byte[0]).array());
         assertArrayEquals(new byte[1], Bytes.from(new byte[0]).append(new byte[1]).array());
         assertArrayEquals(Util.concat(example_bytes_seven, example_bytes_one), Bytes.from(example_bytes_seven).append(example_bytes_one).array());
@@ -47,7 +48,18 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void appendPrimitives() throws Exception {
+    public void appendNullSafe() {
+        assertArrayEquals(new byte[0], Bytes.from(new byte[0]).appendNullSafe(new byte[0]).array());
+        assertArrayEquals(new byte[1], Bytes.from(new byte[0]).appendNullSafe(new byte[1]).array());
+        assertArrayEquals(Util.concat(example_bytes_seven, example_bytes_one), Bytes.from(example_bytes_seven).appendNullSafe(example_bytes_one).array());
+        assertArrayEquals(Util.concat(example_bytes_seven, example_bytes_two), Bytes.from(example_bytes_seven).appendNullSafe(example_bytes_two).array());
+        assertArrayEquals(new byte[0], Bytes.from(new byte[0]).appendNullSafe(null).array());
+        assertArrayEquals(new byte[1], Bytes.from(new byte[1]).appendNullSafe(null).array());
+        assertArrayEquals(example_bytes_seven, Bytes.from(example_bytes_seven).appendNullSafe(null).array());
+    }
+
+    @Test
+    public void appendPrimitives() {
         assertArrayEquals(Util.concat(example_bytes_eight, new byte[]{1}), Bytes.from(example_bytes_eight).append((byte) 1).array());
         assertArrayEquals(Util.concat(example_bytes_eight, ByteBuffer.allocate(2).putChar((char) 1423).array()), Bytes.from(example_bytes_eight).append((char) 1423).array());
         assertArrayEquals(Util.concat(example_bytes_eight, ByteBuffer.allocate(2).putShort((short) 4129).array()), Bytes.from(example_bytes_eight).append((short) 4129).array());
@@ -56,15 +68,22 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void appendString() throws Exception {
+    public void appendString() {
         assertArrayEquals(new byte[]{0, 0, 48}, Bytes.from(new byte[2]).append("0").array());
         assertArrayEquals(new byte[]{48}, Bytes.from(new byte[0]).append("0").array());
         assertArrayEquals(new byte[]{71, 117, 116}, Bytes.from(new byte[0]).append("Gut").array());
         assertArrayEquals(new byte[]{71, -30, -99, -92}, Bytes.from(new byte[0]).append("G❤").array());
+
+        assertArrayEquals(new byte[]{48}, Bytes.from(new byte[0]).append("0", StandardCharsets.US_ASCII).array());
+        assertArrayEquals(new byte[]{71, 117, 116}, Bytes.from(new byte[0]).append("Gut", StandardCharsets.US_ASCII).array());
+        assertArrayEquals(new byte[]{71, 117, 116}, Bytes.from(new byte[0]).append("Gut", StandardCharsets.UTF_8).array());
+        assertArrayEquals(new byte[]{71, 117, 116}, Bytes.from(new byte[0]).append("Gut", StandardCharsets.ISO_8859_1).array());
+        assertArrayEquals(new byte[]{71, -4, 116}, Bytes.from(new byte[0]).append("Güt", StandardCharsets.ISO_8859_1).array());
+        assertArrayEquals(new byte[]{71, -61, -68, 116}, Bytes.from(new byte[0]).append("Güt", StandardCharsets.UTF_8).array());
     }
 
     @Test
-    public void appendMulti() throws Exception {
+    public void appendMulti() {
         Bytes b = Bytes.random(2);
         for (int i = 0; i < 100; i++) {
             byte[] oldByteArray = b.copy().array();
@@ -75,7 +94,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void resizeGrowLsb() throws Exception {
+    public void resizeGrowLsb() {
         assertArrayEquals(new byte[8], Bytes.from(new byte[0]).resize(8).array());
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).resize(1).array());
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).resize(1).array());
@@ -85,7 +104,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void resizeGrowMsb() throws Exception {
+    public void resizeGrowMsb() {
         assertArrayEquals(new byte[8], Bytes.from(new byte[0]).resize(8, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).resize(1, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).resize(1, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
@@ -95,7 +114,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void resizeShrinkLsb() throws Exception {
+    public void resizeShrinkLsb() {
         assertArrayEquals(new byte[0], Bytes.from(example_bytes_one).resize(0).array());
         assertArrayEquals(new byte[]{example_bytes_two[1]}, Bytes.from(example_bytes_two).resize(1).array());
         assertArrayEquals(new byte[]{example_bytes_four[3]}, Bytes.from(example_bytes_four).resize(1).array());
@@ -112,7 +131,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void resizeShrinkMsb() throws Exception {
+    public void resizeShrinkMsb() {
         assertArrayEquals(new byte[0], Bytes.from(example_bytes_one).resize(0, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
         assertArrayEquals(new byte[]{example_bytes_two[0]}, Bytes.from(example_bytes_two).resize(1, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
         assertArrayEquals(new byte[]{example_bytes_four[0]}, Bytes.from(example_bytes_four).resize(1, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
@@ -126,14 +145,14 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void resizeSameInstance() throws Exception {
+    public void resizeSameInstance() {
         Bytes b = Bytes.from(example_bytes_sixteen);
         Bytes b2 = b.resize(16);
         assertSame(b.array(), b2.array());
     }
 
     @Test
-    public void xor() throws Exception {
+    public void xor() {
         assertArrayEquals(new byte[0], Bytes.from(new byte[0]).xor(new byte[0]).array());
         assertArrayEquals(new byte[1], Bytes.from(new byte[1]).xor(new byte[1]).array());
 
@@ -158,7 +177,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void or() throws Exception {
+    public void or() {
         assertArrayEquals(new byte[0], Bytes.from(new byte[0]).or(new byte[0]).array());
         assertArrayEquals(new byte[1], Bytes.from(new byte[1]).or(new byte[1]).array());
 
@@ -178,7 +197,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void and() throws Exception {
+    public void and() {
         assertArrayEquals(new byte[0], Bytes.from(new byte[0]).and(new byte[0]).array());
         assertArrayEquals(new byte[1], Bytes.from(new byte[1]).and(new byte[1]).array());
 
@@ -198,7 +217,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void negate() throws Exception {
+    public void negate() {
         assertArrayEquals(new byte[0], Bytes.from(new byte[0]).not().array());
         assertArrayEquals(new byte[]{(byte) 0xFF}, Bytes.from(new byte[1]).not().array());
 
@@ -210,7 +229,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void reverse() throws Exception {
+    public void reverse() {
         assertArrayEquals(new byte[0], Bytes.from(new byte[0]).reverse().array());
         assertArrayEquals(new byte[1], Bytes.from(new byte[1]).reverse().array());
 
@@ -222,7 +241,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void copy() throws Exception {
+    public void copy() {
         assertArrayEquals(new byte[0], Bytes.wrap(new byte[0]).copy().array());
 
         assertArrayEquals(example_bytes_one, Bytes.wrap(example_bytes_one).copy().array());
@@ -239,14 +258,14 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void shuffleTest() throws Exception {
+    public void shuffleTest() {
         assertArrayNotEquals(example_bytes_twentyfour, Bytes.from(example_bytes_twentyfour).transform(shuffle()).array());
         assertArrayNotEquals(example_bytes_twentyfour, Bytes.from(example_bytes_twentyfour).transform(shuffle(new SecureRandom())).array());
         assertArrayNotEquals(new byte[24], Bytes.from(example_bytes_twentyfour).transform(shuffle(new SecureRandom())).array());
     }
 
     @Test
-    public void sortTest() throws Exception {
+    public void sortTest() {
         byte[] sorted = new byte[]{0, 1, 2, 3, 4, 5, 6};
         assertArrayEquals(sorted, Bytes.from(sorted).transform(shuffle()).transform(sort()).array());
         assertArrayEquals(sorted, Bytes.from(new byte[]{6, 0, 3, 4, 1, 5, 2}).transform(sort()).array());
@@ -259,7 +278,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void leftShift() throws Exception {
+    public void leftShift() {
         assertArrayEquals(new byte[]{2}, Bytes.from((byte) 1).leftShift(1).array());
         assertArrayEquals(new byte[]{4}, Bytes.from((byte) 1).leftShift(2).array());
         assertArrayEquals(new byte[]{8}, Bytes.from((byte) 1).leftShift(3).array());
@@ -268,7 +287,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void rightShift() throws Exception {
+    public void rightShift() {
         assertArrayEquals(new byte[]{4}, Bytes.from((byte) 8).rightShift(1).array());
         assertArrayEquals(new byte[]{2}, Bytes.from((byte) 8).rightShift(2).array());
         assertArrayEquals(new byte[]{1}, Bytes.from((byte) 8).rightShift(3).array());
@@ -278,7 +297,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void bitSwitch() throws Exception {
+    public void bitSwitch() {
         assertEquals(1, Bytes.from(0).switchBit(0, true).toInt());
 
         for (int i = 0; i < 63; i++) {
@@ -297,12 +316,12 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void bitSwitchOutOfBounds() throws Exception {
+    public void bitSwitchOutOfBounds() {
         Bytes.from(4).switchBit(32, true);
     }
 
     @Test
-    public void hash() throws Exception {
+    public void hash() {
         assertEquals(Bytes.parseHex("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"), Bytes.from("").hashSha256());
         assertEquals(Bytes.parseHex("e362eea626386c93a54c9b82e6b896c0350fbff0ee12f284660253aac0908cfb"), Bytes.from("ö9h%6Ghh1\"").hashSha256());
         assertEquals(Bytes.parseHex("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"), Bytes.from("").hash("SHA-512"));
@@ -312,7 +331,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void checksumTest() throws Exception {
+    public void checksumTest() {
         Checksum crc32Checksum = new CRC32();
         crc32Checksum.update(example2_bytes_seven, 0, example2_bytes_seven.length);
         assertEquals(crc32Checksum.getValue(), Bytes.from(example2_bytes_seven).transform(checksumCrc32()).resize(8).toLong());
@@ -325,17 +344,17 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void checksumTestIllegalByteLengthTooShort() throws Exception {
+    public void checksumTestIllegalByteLengthTooShort() {
         Bytes.from(example2_bytes_seven).transform(checksum(new CRC32(), ChecksumTransformer.Mode.TRANSFORM, 0));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void checksumTestIllegalByteLengthTooLong() throws Exception {
+    public void checksumTestIllegalByteLengthTooLong() {
         Bytes.from(example2_bytes_seven).transform(checksum(new CRC32(), ChecksumTransformer.Mode.TRANSFORM, 9));
     }
 
     @Test
-    public void testCompress() throws Exception {
+    public void testCompress() {
         for (int i = 1; i < 10; i++) {
             testCompressInternal(256 * i);
         }
@@ -351,7 +370,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void transform() throws Exception {
+    public void transform() {
         assertArrayEquals(example_bytes_two, Bytes.from(example_bytes_two).transform(new BytesTransformer() {
             @Override
             public byte[] transform(byte[] currentArray, boolean inPlace) {
@@ -377,7 +396,7 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void transformerInPlaceTest() throws Exception {
+    public void transformerInPlaceTest() {
         assertTrue(new BytesTransformer.BitSwitchTransformer(0, true).supportInPlaceTransformation());
         assertTrue(new BytesTransformer.BitWiseOperatorTransformer(new byte[]{}, BytesTransformer.BitWiseOperatorTransformer.Mode.XOR).supportInPlaceTransformation());
         assertTrue(new BytesTransformer.NegateTransformer().supportInPlaceTransformation());

@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 public class Base64Test {
 
     @Test
-    public void decode() throws Exception {
+    public void decode() {
         assertArrayEquals("".getBytes(), Base64.decode(""));
         assertArrayEquals("f".getBytes(), Base64.decode("Zg=="));
         assertArrayEquals("fo".getBytes(), Base64.decode("Zm8="));
@@ -47,7 +47,7 @@ public class Base64Test {
     }
 
     @Test
-    public void encode() throws Exception {
+    public void encode() {
         assertEquals("", Base64.encode("".getBytes()));
         assertEquals("Zg==", Base64.encode("f".getBytes()));
         assertEquals("Zm8=", Base64.encode("fo".getBytes()));

@@ -53,6 +53,7 @@ public abstract class ABytesTest {
 
     byte[] example_bytes_twentyfour;
     String example_hex_twentyfour;
+
     @Before
     public void setUp() throws Exception {
         example_bytes_empty = new byte[0];

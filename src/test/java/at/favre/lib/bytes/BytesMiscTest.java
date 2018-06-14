@@ -35,7 +35,7 @@ import static org.junit.Assert.*;
 public class BytesMiscTest extends ABytesTest {
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
         testToString(Bytes.wrap(new byte[0]));
         testToString(Bytes.wrap(example_bytes_one));
         testToString(Bytes.wrap(new byte[2]));
@@ -51,7 +51,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void testHashcode() throws Exception {
+    public void testHashcode() {
         assertEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.from(example_bytes_seven).hashCode());
         assertEquals(Bytes.wrap(example2_bytes_seven).hashCode(), Bytes.from(example2_bytes_seven).hashCode());
         assertNotEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.wrap(example2_bytes_seven).hashCode());
@@ -60,7 +60,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void testEquals() throws Exception {
+    public void testEquals() {
         assertTrue(Bytes.wrap(new byte[0]).equals(Bytes.wrap(new byte[0])));
         assertTrue(Bytes.wrap(new byte[16]).equals(Bytes.wrap(new byte[16])));
         assertTrue(Bytes.wrap(example_bytes_seven).equals(Bytes.from(example_bytes_seven)));
@@ -71,14 +71,14 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void testEqualsWithArray() throws Exception {
+    public void testEqualsWithArray() {
         assertTrue(Bytes.allocate(4).equals(new byte[4]));
         assertFalse(Bytes.allocate(4).equals(new byte[3]));
         assertFalse(Bytes.random(16).equals(new byte[16]));
     }
 
     @Test
-    public void testEqualsWithObjectArray() throws Exception {
+    public void testEqualsWithObjectArray() {
         assertFalse(Bytes.allocate(4).equals(new Byte[4]));
         assertTrue(Bytes.allocate(4).equals(new Byte[]{0, 0, 0, 0}));
         assertFalse(Bytes.allocate(4).equals(new Byte[3]));
@@ -86,7 +86,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void testEqualsWithByteBuffer() throws Exception {
+    public void testEqualsWithByteBuffer() {
         assertTrue(Bytes.allocate(4).equals(ByteBuffer.wrap(new byte[4])));
         assertFalse(Bytes.allocate(4).equals(ByteBuffer.wrap(new byte[3])));
         assertFalse(Bytes.random(16).equals(ByteBuffer.wrap(new byte[16])));
@@ -95,7 +95,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void testEqualsContent() throws Exception {
+    public void testEqualsContent() {
         assertTrue(Bytes.wrap(new byte[0]).byteOrder(ByteOrder.BIG_ENDIAN).equalsContent(Bytes.wrap(new byte[0]).byteOrder(ByteOrder.LITTLE_ENDIAN)));
         assertTrue(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.BIG_ENDIAN).equalsContent(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
         assertTrue(Bytes.from(example_bytes_seven).mutable().equalsContent(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
@@ -104,7 +104,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void testCompareTo() throws Exception {
+    public void testCompareTo() {
         byte[] b1 = new byte[]{0x01};
         byte[] b2 = new byte[]{0x01, 0x02};
 
@@ -121,7 +121,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void testLength() throws Exception {
+    public void testLength() {
         assertEquals(0, Bytes.from(new byte[0]).length());
 
         for (int i = 0; i < 128; i++) {
@@ -132,7 +132,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void testIsEmpty() throws Exception {
+    public void testIsEmpty() {
         assertTrue(Bytes.from(new byte[0]).isEmpty());
         assertTrue(Bytes.allocate(0).isEmpty());
         assertFalse(Bytes.from(new byte[1]).isEmpty());
@@ -141,7 +141,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void containsTest() throws Exception {
+    public void containsTest() {
         assertEquals(false, Bytes.allocate(0).contains((byte) 0xFD));
         assertEquals(true, Bytes.allocate(128).contains((byte) 0x00));
         assertEquals(true, Bytes.from(example_bytes_seven).contains((byte) 0xFD));
@@ -150,7 +150,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void indexOfByte() throws Exception {
+    public void indexOfByte() {
         assertEquals(-1, Bytes.allocate(0).indexOf((byte) 0xFD));
         assertEquals(0, Bytes.allocate(128).indexOf((byte) 0x00));
         assertEquals(2, Bytes.from(example_bytes_seven).indexOf((byte) 0xFD));
@@ -159,7 +159,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void indexOfArray() throws Exception {
+    public void indexOfArray() {
         assertEquals(-1, Bytes.allocate(0).indexOf(new byte[]{(byte) 0xFD}));
         assertEquals(0, Bytes.allocate(1).indexOf(new byte[0]));
         assertEquals(2, Bytes.from(example_bytes_seven).indexOf(new byte[]{(byte) 0xFD, (byte) 0xFF}));
@@ -167,7 +167,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void lastIndexOf() throws Exception {
+    public void lastIndexOf() {
         assertEquals(-1, Bytes.allocate(0).lastIndexOf((byte) 0xFD));
         assertEquals(127, Bytes.allocate(128).lastIndexOf((byte) 0x00));
         assertEquals(2, Bytes.from(example_bytes_seven).lastIndexOf((byte) 0xFD));
@@ -176,7 +176,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void bitAt() throws Exception {
+    public void bitAt() {
 
         for (int i = 0; i < 8; i++) {
             assertFalse(Bytes.allocate(1).bitAt(i));
@@ -211,7 +211,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void byteAt() throws Exception {
+    public void byteAt() {
         assertEquals(0, Bytes.allocate(1).byteAt(0));
         assertEquals(0, Bytes.allocate(128).byteAt(127));
         assertEquals(-1, Bytes.from((byte) 0b1111_1111).byteAt(0));
@@ -234,7 +234,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void unsignedByteAt() throws Exception {
+    public void unsignedByteAt() {
         assertEquals(0, Bytes.allocate(1).unsignedByteAt(0));
         assertEquals(0, Bytes.allocate(128).unsignedByteAt(127));
         assertEquals(255, Bytes.from((byte) 0b1111_1111).unsignedByteAt(0));
@@ -253,7 +253,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void charAt() throws Exception {
+    public void charAt() {
         assertEquals(0, Bytes.allocate(2).charAt(0));
         assertEquals(0, Bytes.allocate(128).charAt(0));
         assertEquals(8, Bytes.wrap(new byte[]{0, 0b00001000}).charAt(0));
@@ -275,7 +275,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void shortAt() throws Exception {
+    public void shortAt() {
         assertEquals(0, Bytes.allocate(2).shortAt(0));
         assertEquals(0, Bytes.allocate(128).shortAt(0));
         assertEquals(8, Bytes.wrap(new byte[]{0, 0b00001000}).shortAt(0));
@@ -297,7 +297,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void intAt() throws Exception {
+    public void intAt() {
         assertEquals(0, Bytes.allocate(4).intAt(0));
         assertEquals(0, Bytes.allocate(128).intAt(0));
         assertEquals(8, Bytes.wrap(new byte[]{0, 0, 0, 0b00001000}).intAt(0));
@@ -320,7 +320,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void longAt() throws Exception {
+    public void longAt() {
         assertEquals(0, Bytes.allocate(8).longAt(0));
         assertEquals(0, Bytes.allocate(128).longAt(0));
         assertEquals(8, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0, 0b00001000}).longAt(0));
@@ -343,7 +343,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void primitiveAtLittleEndian() throws Exception {
+    public void primitiveAtLittleEndian() {
         assertEquals(576460752303423488L, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0, 0b00001000}).byteOrder(ByteOrder.LITTLE_ENDIAN).longAt(0)); //2^59
         assertEquals(134217728, Bytes.wrap(new byte[]{0, 0, 0, 0b00001000}).byteOrder(ByteOrder.LITTLE_ENDIAN).intAt(0));
         assertEquals(2048, Bytes.wrap(new byte[]{0, 0b00001000}).byteOrder(ByteOrder.LITTLE_ENDIAN).shortAt(0)); //2^11
@@ -351,7 +351,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void bitAtAgainstRefImpl() throws Exception {
+    public void bitAtAgainstRefImpl() {
         for (int i = 0; i < 1000; i++) {
             Bytes rnd = Bytes.random(4 + new Random().nextInt(8));
             int index = new Random().nextInt(rnd.lengthBit() - 1);
@@ -360,7 +360,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void count() throws Exception {
+    public void count() {
         assertEquals(0, Bytes.allocate(0).count((byte) 0));
         assertEquals(1, Bytes.allocate(1).count((byte) 0));
         assertEquals(128, Bytes.allocate(128).count((byte) 0));
@@ -369,7 +369,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void entropy() throws Exception {
+    public void entropy() {
         assertEquals(0, Bytes.allocate(0).entropy(), 0.1d);
         assertEquals(0, Bytes.allocate(1).entropy(), 0.1d);
         assertEquals(0, Bytes.allocate(256).entropy(), 0.1d);
@@ -380,7 +380,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void readOnlyShouldKeepProperty() throws Exception {
+    public void readOnlyShouldKeepProperty() {
         ReadOnlyBytes b = Bytes.from(example_bytes_seven).readOnly();
         assertSame(b, b.readOnly());
         assertTrue(b.isReadOnly());
@@ -400,7 +400,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void readOnly() throws Exception {
+    public void readOnly() {
         assertFalse(Bytes.from(example_bytes_twentyfour).isReadOnly());
         assertTrue(Bytes.from(example_bytes_twentyfour).readOnly().isReadOnly());
         assertTrue(Bytes.from(example_bytes_twentyfour).readOnly().copy().isReadOnly());
@@ -417,7 +417,7 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
-    public void iteratorTest() throws Exception {
+    public void iteratorTest() {
         Bytes b = Bytes.wrap(example_bytes_seven);
 
         int counter = 0;
@@ -428,12 +428,12 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void iteratorTestRemoveNotPossible() throws Exception {
+    public void iteratorTestRemoveNotPossible() {
         Bytes.wrap(example_bytes_seven).iterator().remove();
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void iteratorNoElement() throws Exception {
+    public void iteratorNoElement() {
         Bytes.allocate(0).iterator().next();
     }
 }

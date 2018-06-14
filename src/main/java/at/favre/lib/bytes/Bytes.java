@@ -653,14 +653,38 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
+     * <p>
+     * If given array is null, the nothing will be appended.
+     *
+     * @param secondArrayNullable to append, may be null
+     * @return appended instance or same if passed array is null
+     */
+    public Bytes appendNullSafe(byte[] secondArrayNullable) {
+        return secondArrayNullable == null ? this : append(secondArrayNullable);
+    }
+
+    /**
      * Creates a new instance with the current array appended to the provided utf-8 encoded representation of this string
      *
-     * @param string string used to get utf-8 bytes from
+     * @param stringUtf8 string used to get utf-8 bytes from
      * @return appended instance
      */
-    public Bytes append(CharSequence string) {
+    public Bytes append(CharSequence stringUtf8) {
+        return append(stringUtf8, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Creates a new instance with the current array appended to the provided string with provided encoding
+     *
+     * @param string  string used to get bytes from
+     * @param charset encoding of provided string
+     * @return appended instance
+     */
+    public Bytes append(CharSequence string, Charset charset) {
+        Objects.requireNonNull(charset);
         Objects.requireNonNull(string);
-        return transform(new BytesTransformer.ConcatTransformer(string.toString().getBytes(StandardCharsets.UTF_8)));
+        return transform(new BytesTransformer.ConcatTransformer(string.toString().getBytes(charset)));
     }
 
     /**
@@ -1393,6 +1417,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     /**
      * @deprecated renamed API, use {@link #toBoxedArray()} instead - will be removed in v1.0+
+     * @return see {@link #toBoxedArray()}
      */
     @Deprecated
     public Byte[] toObjectArray() {

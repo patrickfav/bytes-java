@@ -4,6 +4,7 @@
  * better resource handling for compression
  * add nullSafe from() constructor
  * rename `toObjectArray()` to `toBoxedArray()` (will be removed in 1.0)
+ * add appendNullSafe and append string with encoding
 
 ## v0.4.6
 
