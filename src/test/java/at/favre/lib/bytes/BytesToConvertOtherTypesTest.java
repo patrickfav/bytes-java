@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
 public class BytesToConvertOtherTypesTest extends ABytesTest {
 
     @Test
-    public void toObjectArray() throws Exception {
+    public void toObjectArray() {
         checkArray(example_bytes_empty);
         checkArray(example_bytes_one);
         checkArray(example_bytes_two);
@@ -40,7 +40,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     }
 
     private void checkArray(byte[] array) {
-        Byte[] byteArray = Bytes.from(array).toObjectArray();
+        Byte[] byteArray = Bytes.from(array).toBoxedArray();
         assertEquals(array.length, byteArray.length);
         for (int i = 0; i < array.length; i++) {
             assertEquals(byteArray[i], Byte.valueOf(array[i]));
@@ -48,7 +48,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     }
 
     @Test
-    public void toList() throws Exception {
+    public void toList() {
         checkList(example_bytes_empty);
         checkList(example_bytes_one);
         checkList(example_bytes_two);
@@ -66,7 +66,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     }
 
     @Test
-    public void toBitSet() throws Exception {
+    public void toBitSet() {
         assertArrayEquals(example_bytes_empty, Bytes.from(example_bytes_empty).toBitSet().toByteArray());
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).toBitSet().toByteArray());
         assertArrayEquals(example_bytes_two, Bytes.from(example_bytes_two).toBitSet().toByteArray());
@@ -76,7 +76,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     }
 
     @Test
-    public void toByte() throws Exception {
+    public void toByte() {
         assertEquals(example_bytes_one[0], Bytes.from(example_bytes_one).toByte());
         assertEquals((byte) 0, Bytes.from(new byte[1]).toByte());
         assertEquals(-1, Bytes.from((byte) 0b1111_1111).toByte());
@@ -89,7 +89,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     }
 
     @Test
-    public void toUnsignedByte() throws Exception {
+    public void toUnsignedByte() {
         assertEquals(example_bytes_one[0], Bytes.from(example_bytes_one).toUnsignedByte());
         assertEquals((byte) 0, Bytes.from(new byte[1]).toUnsignedByte());
         assertEquals(255, Bytes.from((byte) 0b1111_1111).toUnsignedByte());
@@ -102,7 +102,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     }
 
     @Test
-    public void toChar() throws Exception {
+    public void toChar() {
         assertEquals(6767, Bytes.from(example_bytes_two).toChar());
         assertEquals(Bytes.from(example_bytes_two).toShort(), Bytes.from(example_bytes_two).toChar());
         assertEquals((char) 0, Bytes.from(new byte[2]).toChar());
@@ -120,7 +120,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     }
 
     @Test
-    public void toShort() throws Exception {
+    public void toShort() {
         assertEquals(6767, Bytes.from(example_bytes_two).toShort());
         assertEquals(Bytes.from(example_bytes_one).toByte(), Bytes.from((byte) 0, example_bytes_one).toShort());
         assertEquals((short) 0, Bytes.from(new byte[2]).toShort());
@@ -138,7 +138,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     }
 
     @Test
-    public void toInt() throws Exception {
+    public void toInt() {
         assertEquals(591065872, Bytes.from(example_bytes_four).toInt());
         assertEquals(Bytes.from(new byte[]{0, 0, 0, 0}, example_bytes_four).toLong(), Bytes.from(example_bytes_four).toInt());
 
@@ -161,7 +161,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     }
 
     @Test
-    public void toLong() throws Exception {
+    public void toLong() {
         assertEquals(-1237929515650418679L, Bytes.from(example_bytes_eight).toLong());
 
         assertEquals(example_bytes_one[0], Bytes.from(new byte[]{0, 0, 0, 0, 0, 0, 0}, example_bytes_one).toLong());
@@ -181,7 +181,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     }
 
     @Test
-    public void toFloat() throws Exception {
+    public void toFloat() {
         assertEquals(1.0134550690550691E-17, Bytes.from(example_bytes_four).toFloat(), 0.001);
 
         assertEquals(5.1E-322, Bytes.from(new byte[]{0, 0, 0}, example_bytes_one).toFloat(), 0.001);
@@ -201,7 +201,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     }
 
     @Test
-    public void toDouble() throws Exception {
+    public void toDouble() {
         assertEquals(-6.659307728279082E225, Bytes.from(example_bytes_eight).toDouble(), 0.001);
 
         assertEquals(5.1E-322, Bytes.from(new byte[]{0, 0, 0, 0, 0, 0, 0}, example_bytes_one).toDouble(), 0.001);

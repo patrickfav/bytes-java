@@ -223,11 +223,11 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     /**
      * Creates a new instance from given object byte array. Will copy and unbox every element.
      *
-     * @param objectArray to create from
+     * @param boxedObjectArray to create from
      * @return new instance
      */
-    public static Bytes from(Byte[] objectArray) {
-        return wrap(Util.toPrimitiveArray(objectArray));
+    public static Bytes from(Byte[] boxedObjectArray) {
+        return wrap(Util.toPrimitiveArray(boxedObjectArray));
     }
 
     /**
@@ -1379,7 +1379,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
         return encoder.encode(internalArray(), byteOrder);
     }
 
-    /* CONSERVATORS WITHOUT REUSING THE INTERNAL ARRAY ****************************************************************/
+    /* CONVERTERS WITHOUT REUSING THE INTERNAL ARRAY ****************************************************************/
 
     /**
      * Returns a copy of the internal byte-array as {@link List} collection type
@@ -1392,13 +1392,21 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * @deprecated renamed API, use {@link #toBoxedArray()} instead - will be removed in v1.0+
+     */
+    @Deprecated
+    public Byte[] toObjectArray() {
+        return toBoxedArray();
+    }
+
+    /**
      * Returns a copy of the internal byte-array as boxed primitive array.
      * This requires a time and space complexity of O(n).
      *
      * @return copy of internal array as object array
      */
-    public Byte[] toObjectArray() {
-        return Util.toObjectArray(internalArray());
+    public Byte[] toBoxedArray() {
+        return Util.toBoxedArray(internalArray());
     }
 
     /**

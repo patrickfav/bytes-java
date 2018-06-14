@@ -168,7 +168,7 @@ final class Util {
      * @param array to convert
      * @return new array
      */
-    static Byte[] toObjectArray(byte[] array) {
+    static Byte[] toBoxedArray(byte[] array) {
         Byte[] objectArray = new Byte[array.length];
         for (int i = 0; i < array.length; i++) {
             objectArray[i] = array[i];
