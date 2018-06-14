@@ -2,6 +2,7 @@ package at.favre.lib.bytes;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.zip.CRC32;
@@ -251,6 +252,18 @@ public final class BytesTransformers {
                 return returnBuffer;
             } catch (Exception e) {
                 throw new IllegalStateException("could not decompress gzip", e);
+            } finally {
+                try {
+                    bos.close();
+                } catch (IOException ignore) {
+                }
+
+                if (gzipInputStream != null) {
+                    try {
+                        gzipInputStream.close();
+                    } catch (IOException ignore) {
+                    }
+                }
             }
         }
 
@@ -267,6 +280,18 @@ public final class BytesTransformers {
                 return returnBuffer;
             } catch (Exception e) {
                 throw new IllegalStateException("could not compress gzip", e);
+            } finally {
+                try {
+                    bos.close();
+                } catch (IOException ignore) {
+                }
+
+                if (gzipOutputStream != null) {
+                    try {
+                        gzipOutputStream.close();
+                    } catch (IOException ignore) {
+                    }
+                }
             }
         }
 
