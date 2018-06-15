@@ -1,11 +1,11 @@
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
 -dontusemixedcaseclassnames
--ignorewarnings
+-dontobfuscate
 -verbose
 
 -keepattributes *Annotation*,EnclosingMethod, InnerClasses, Exceptions, Signature, SourceFile, LineNumberTable, MethodParameters
 -renamesourcefileattribute SourceFile
--optimizationpasses 5
+-optimizationpasses 3
 -overloadaggressively
 
 -keepclasseswithmembernames class * {
@@ -18,9 +18,6 @@
 }
 
 ################################################
-
--dontnote android.**
--dontwarn android.**
 
 -dontnote com.sun.**
 -dontwarn com.sun.**
