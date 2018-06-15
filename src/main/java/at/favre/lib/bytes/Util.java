@@ -202,9 +202,7 @@ final class Util {
         byte[] primitivesArray = new byte[intArray.length * 4];
         for (int i = 0; i < intArray.length; i++) {
             byte[] intBytes = ByteBuffer.allocate(4).putInt(intArray[i]).array();
-            for (int j = 0; j < intBytes.length; j++) {
-                primitivesArray[(i * 4) + j] = intBytes[j];
-            }
+            System.arraycopy(intBytes, 0, primitivesArray, (i * 4), intBytes.length);
         }
         return primitivesArray;
     }
@@ -220,9 +218,7 @@ final class Util {
         byte[] primitivesArray = new byte[longArray.length * 8];
         for (int i = 0; i < longArray.length; i++) {
             byte[] longBytes = ByteBuffer.allocate(8).putLong(longArray[i]).array();
-            for (int j = 0; j < longBytes.length; j++) {
-                primitivesArray[(i * 8) + j] = longBytes[j];
-            }
+            System.arraycopy(longBytes, 0, primitivesArray, (i * 8), longBytes.length);
         }
         return primitivesArray;
     }
