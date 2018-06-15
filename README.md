@@ -53,6 +53,8 @@ Add dependency to your `pom.xml`:
         <version>{latest-version}</version>
     </dependency>
 
+_Note:_ There is a byte-code optimized version (powerd by [ProGuard](https://www.guardsquare.com/en/products/proguard)) which can be used with [classifier](https://maven.apache.org/pom.html#Maven_Coordinates) 'optimized'. This may have issues so use at your own risk.
+
 Some simple examples:
 
 ```java
