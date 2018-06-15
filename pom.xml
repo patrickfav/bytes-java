@@ -142,7 +142,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <skip>false</skip> <!-- set this to true if fail because of missing credentials -->
+                    <skip>true</skip> <!-- set this to true if fail because of missing credentials -->
                     <keystore>keystore.jks</keystore>
                     <alias>pfopensource</alias>
                     <storepass>${env.OPENSOURCE_PROJECTS_KS_PW}</storepass>
@@ -169,6 +169,40 @@
                     <attachChecksums>false</attachChecksums>
                     <quiet>false</quiet>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.0.11</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                        <configuration>
+                            <includeDependency>false</includeDependency>
+                            <attachArtifactClassifier>proguard</attachArtifactClassifier>
+                            <attach>true</attach>
+                            <proguardVersion>6.0.3</proguardVersion>
+                            <obfuscate>true</obfuscate>
+                            <options>
+                                <option>-include ${project.basedir}/proguard-rules.pro</option>
+                            </options>
+                            <libs>
+                                <lib>${java.home}/lib/rt.jar</lib>
+                            </libs>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <version>6.0.3</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
