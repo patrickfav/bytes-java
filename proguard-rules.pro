@@ -3,7 +3,7 @@
 -ignorewarnings
 -verbose
 
--keepattributes *Annotation*,EnclosingMethod, InnerClasses, Exceptions, Signature, SourceFile, LineNumberTable
+-keepattributes *Annotation*,EnclosingMethod, InnerClasses, Exceptions, Signature, SourceFile, LineNumberTable, MethodParameters
 -renamesourcefileattribute SourceFile
 -optimizationpasses 5
 -overloadaggressively
@@ -36,6 +36,5 @@
 
 
 # keep all public classes in main package
--keep class at.favre.lib.bytes.** { public *; }
-
--keep class sun.misc.Unsafe { *; }
+-keep public class at.favre.lib.bytes.** { public *; }
+-keep interface at.favre.lib.bytes.** { <methods>; }
