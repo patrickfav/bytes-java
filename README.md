@@ -1,4 +1,4 @@
-# Bytes
+# Bytes Utility Library for Java
 
 Bytes is a utility library that makes it easy to **create**, **parse**, **transform**,
 **validate** and **convert** byte arrays in Java. It's main class `Bytes` is
