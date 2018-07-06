@@ -1,3 +1,6 @@
+# To let the CI execute the maven wrapper, use this command and push the change:
+#    git update-index --chmod=+x mvnw
+
 sudo: required
 language: java
 install: true
@@ -14,14 +17,14 @@ before_install:
   - tar xvf secrets.tar
 
 script:
-  - mvn clean install -X -Djarsigner.skip=false checkstyle:check
+  - ./mvnw clean install -X -Djarsigner.skip=false checkstyle:check
 
 after_success:
-  - mvn test jacoco:report coveralls:report
+  - ./mvnw test jacoco:report coveralls:report
 
 deploy:
   - provider: script
-    script: mvn -s ci-settings.xml deploy -X
+    script: ./mvnw -s ci-settings.xml deploy -X
     skip_cleanup: true
     on:
       branch: master
