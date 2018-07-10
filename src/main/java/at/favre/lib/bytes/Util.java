@@ -433,6 +433,15 @@ final class Util {
         return true;
     }
 
+    static boolean constantTimeEquals(byte[] obj, byte[] anotherArray) {
+        if (anotherArray == null || obj.length != anotherArray.length) return false;
+        boolean result = true;
+        for (int i = 0; i < obj.length; i++) {
+            result &= obj[i] == anotherArray[i];
+        }
+        return result;
+    }
+
     /*
     =================================================================================================
      Copyright 2011 Twitter, Inc.

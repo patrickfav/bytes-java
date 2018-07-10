@@ -1623,6 +1623,18 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Compares the inner array with given array. The comparison is done in constant time, therefore
+     * will not break on the first mismatch. This method is useful to prevent some side-channel attacks,
+     * but is slower on average.
+     *
+     * @param anotherArray to compare with
+     * @return true if {@link Arrays#equals(byte[], byte[])} returns true on given and internal array
+     */
+    public boolean equalsConstantTime(byte[] anotherArray) {
+        return anotherArray != null && Util.constantTimeEquals(internalArray(), anotherArray);
+    }
+
+    /**
      * Compares the inner array with given array.
      * Note: a <code>null</code> Byte will not be equal to a <code>0</code> byte
      *

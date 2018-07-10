@@ -7,6 +7,7 @@
  * rename `toObjectArray()` to `toBoxedArray()` (will be removed in 1.0)
  * add appendNullSafe and append string with encoding
  * add proguard optimized version (can be used with classifier 'optimized')
+ * add constant time equals
 
 ## v0.4.6
 
