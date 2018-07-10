@@ -433,13 +433,17 @@ final class Util {
         return true;
     }
 
+    /**
+     * See https://codahale.com/a-lesson-in-timing-attacks/
+     */
     static boolean constantTimeEquals(byte[] obj, byte[] anotherArray) {
         if (anotherArray == null || obj.length != anotherArray.length) return false;
-        boolean result = true;
+
+        int result = 0;
         for (int i = 0; i < obj.length; i++) {
-            result &= obj[i] == anotherArray[i];
+            result |= obj[i] ^ anotherArray[i];
         }
-        return result;
+        return result == 0;
     }
 
     /*

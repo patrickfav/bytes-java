@@ -1627,6 +1627,8 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * will not break on the first mismatch. This method is useful to prevent some side-channel attacks,
      * but is slower on average.
      *
+     * This implementation uses the algorithm suggested in https://codahale.com/a-lesson-in-timing-attacks/
+     *
      * @param anotherArray to compare with
      * @return true if {@link Arrays#equals(byte[], byte[])} returns true on given and internal array
      */

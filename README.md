@@ -376,6 +376,8 @@ Bytes.wrap(array).entropy();
 Of course all standard Java Object methods are implemented including:
 `hashCode()`, `equals()`, `toString()` as well as it being
 [`Comparable`](https://docs.oracle.com/javase/7/docs/api/java/lang/Comparable.html).
+In addition there is a constant time `equalsConstantTime()` method, see [here](https://codahale.com/a-lesson-in-timing-attacks/) why this
+might be useful.
 
 The `toString()` methods only shows the length and a preview of maximal 8 bytes:
 
