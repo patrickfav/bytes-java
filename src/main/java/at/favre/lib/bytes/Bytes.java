@@ -21,7 +21,11 @@
 
 package at.favre.lib.bytes;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataInput;
+import java.io.File;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -31,7 +35,13 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.Normalizer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * Bytes is wrapper class for an byte-array that allows a lot of convenience operations on it:
@@ -744,7 +754,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#OR">Bitwise operators: OR</a>
      */
     public Bytes or(Bytes bytes) {
-        return and(bytes.internalArray());
+        return or(bytes.internalArray());
     }
 
     /**

@@ -8,6 +8,7 @@
  * add appendNullSafe and append string with encoding
  * add proguard optimized version (can be used with classifier 'optimized')
  * add constant time equals
+ * fix or() operator using and() internally #2
 
 ## v0.4.6
 
