@@ -744,7 +744,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#OR">Bitwise operators: OR</a>
      */
     public Bytes or(Bytes bytes) {
-        return and(bytes.internalArray());
+        return or(bytes.internalArray());
     }
 
     /**
