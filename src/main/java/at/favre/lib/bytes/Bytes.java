@@ -454,7 +454,21 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(char[] charArray) {
-        return from(CharBuffer.wrap(charArray).toString(), StandardCharsets.UTF_8);
+        return from(charArray, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Creates a new instance from given char array. The array will be handles like an encoded string
+     *
+     * @param charArray to get the internal byte array from
+     * @param charset   charset to be used to decode the char array
+     * @return new instance
+     */
+    public static Bytes from(char[] charArray, Charset charset) {
+        ByteBuffer bb = charset.encode(CharBuffer.wrap(charArray));
+        byte[] bytes = new byte[bb.remaining()];
+        bb.get(bytes);
+        return from(bytes);
     }
 
     /**

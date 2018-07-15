@@ -264,6 +264,12 @@ public class BytesConstructorTests extends ABytesTest {
         checkCharArray("\t");
         checkCharArray("a");
         checkCharArray("12345678abcdefjkl");
+        checkCharArray("é_,,(8áàäöü#+_  ,,mµ");
+
+        String s1 = "oaisdj`ßß__.#äöü_-  *aé";
+        assertArrayEquals(String.valueOf(s1.toCharArray()).getBytes(StandardCharsets.ISO_8859_1), Bytes.from(s1.toCharArray(), StandardCharsets.ISO_8859_1).array());
+        assertArrayEquals(String.valueOf(s1.toCharArray()).getBytes(StandardCharsets.UTF_16), Bytes.from(s1.toCharArray(), StandardCharsets.UTF_16).array());
+        assertArrayEquals(String.valueOf(s1.toCharArray()).getBytes(StandardCharsets.UTF_8), Bytes.from(s1.toCharArray(), StandardCharsets.UTF_8).array());
     }
 
     @Test
@@ -287,8 +293,10 @@ public class BytesConstructorTests extends ABytesTest {
     }
 
     private void checkCharArray(String s) {
-        Bytes b = Bytes.from(s.toCharArray());
-        assertArrayEquals(String.valueOf(s.toCharArray()).getBytes(StandardCharsets.UTF_8), b.array());
+        Bytes b1 = Bytes.from(s.toCharArray());
+        Bytes b2 = Bytes.from(s.toCharArray(), StandardCharsets.UTF_8);
+        assertArrayEquals(String.valueOf(s.toCharArray()).getBytes(StandardCharsets.UTF_8), b1.array());
+        assertArrayEquals(String.valueOf(s.toCharArray()).getBytes(StandardCharsets.UTF_8), b2.array());
     }
 
     @Test
