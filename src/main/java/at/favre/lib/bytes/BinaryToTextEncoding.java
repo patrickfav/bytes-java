@@ -155,7 +155,6 @@ public interface BinaryToTextEncoding {
 
         @Override
         public String encode(byte[] array, ByteOrder byteOrder) {
-            System.out.println("max length " + maxLength(array, radix));
             return new BigInteger(1, (byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.from(array).reverse().array()).toString(radix);
         }
 

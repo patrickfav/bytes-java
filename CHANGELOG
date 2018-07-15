@@ -1,10 +1,19 @@
 # Releases
 
+## v0.6.0
+
+ * add `encodeCharsetToBytes()` feature #7
+ * add new `from(char[] charArray, Charset charset)` constructor with improved logic #8
+
 ## v0.5.0
+
  * better resource handling for compression
  * add nullSafe from() constructor
  * rename `toObjectArray()` to `toBoxedArray()` (will be removed in 1.0)
  * add appendNullSafe and append string with encoding
+ * add proguard optimized version (can be used with classifier 'optimized')
+ * add constant time equals
+ * fix or() operator using and() internally #2
 
 ## v0.4.6
 

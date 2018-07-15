@@ -454,7 +454,21 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(char[] charArray) {
-        return from(CharBuffer.wrap(charArray).toString(), StandardCharsets.UTF_8);
+        return from(charArray, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Creates a new instance from given char array. The array will be handles like an encoded string
+     *
+     * @param charArray to get the internal byte array from
+     * @param charset   charset to be used to decode the char array
+     * @return new instance
+     */
+    public static Bytes from(char[] charArray, Charset charset) {
+        ByteBuffer bb = charset.encode(CharBuffer.wrap(charArray));
+        byte[] bytes = new byte[bb.remaining()];
+        bb.get(bytes);
+        return from(bytes);
     }
 
     /**
@@ -744,7 +758,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#OR">Bitwise operators: OR</a>
      */
     public Bytes or(Bytes bytes) {
-        return and(bytes.internalArray());
+        return or(bytes.internalArray());
     }
 
     /**
@@ -1394,6 +1408,30 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * UTF-8 representation of this byte array as byte array
+     * <p>
+     * Similar to <code>encodeUtf8().getBytes(StandardCharsets.UTF_8)</code>.
+     *
+     * @return utf-8 encoded byte array
+     * @see <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a>
+     */
+    public byte[] encodeUtf8ToBytes() {
+        return encodeCharsetToBytes(StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Byte array representation with given charset encoding.
+     * <p>
+     * Similar to <code>encodeCharset(charset).getBytes(charset)</code>.
+     *
+     * @param charset the charset the return will be encoded
+     * @return encoded byte array
+     */
+    public byte[] encodeCharsetToBytes(Charset charset) {
+        return encodeCharset(charset).getBytes(charset);
+    }
+
+    /**
      * Encode the internal byte-array with given encoder.
      *
      * @param encoder the encoder implementation
@@ -1416,8 +1454,8 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * @deprecated renamed API, use {@link #toBoxedArray()} instead - will be removed in v1.0+
      * @return see {@link #toBoxedArray()}
+     * @deprecated renamed API, use {@link #toBoxedArray()} instead - will be removed in v1.0+
      */
     @Deprecated
     public Byte[] toObjectArray() {
@@ -1620,6 +1658,20 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public boolean equals(byte[] anotherArray) {
         return anotherArray != null && Arrays.equals(internalArray(), anotherArray);
+    }
+
+    /**
+     * Compares the inner array with given array. The comparison is done in constant time, therefore
+     * will not break on the first mismatch. This method is useful to prevent some side-channel attacks,
+     * but is slower on average.
+     * <p>
+     * This implementation uses the algorithm suggested in https://codahale.com/a-lesson-in-timing-attacks/
+     *
+     * @param anotherArray to compare with
+     * @return true if {@link Arrays#equals(byte[], byte[])} returns true on given and internal array
+     */
+    public boolean equalsConstantTime(byte[] anotherArray) {
+        return anotherArray != null && Util.constantTimeEquals(internalArray(), anotherArray);
     }
 
     /**

@@ -78,6 +78,13 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
+    public void testEqualsWithConstantTime() {
+        assertTrue(Bytes.allocate(4).equalsConstantTime(new byte[4]));
+        assertFalse(Bytes.allocate(4).equalsConstantTime(new byte[3]));
+        assertFalse(Bytes.random(16).equalsConstantTime(new byte[16]));
+    }
+
+    @Test
     public void testEqualsWithObjectArray() {
         assertFalse(Bytes.allocate(4).equals(new Byte[4]));
         assertTrue(Bytes.allocate(4).equals(new Byte[]{0, 0, 0, 0}));

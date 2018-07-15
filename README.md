@@ -1,4 +1,4 @@
-# Bytes
+# Bytes Utility Library for Java
 
 Bytes is a utility library that makes it easy to **create**, **parse**, **transform**,
 **validate** and **convert** byte arrays in Java. It's main class `Bytes` is
@@ -52,6 +52,8 @@ Add dependency to your `pom.xml` ([check latest release](https://github.com/patr
         <artifactId>bytes</artifactId>
         <version>{latest-version}</version>
     </dependency>
+
+_Note:_ There is a byte-code optimized version (powerd by [ProGuard](https://www.guardsquare.com/en/products/proguard)) which can be used with [classifier](https://maven.apache.org/pom.html#Maven_Coordinates) 'optimized'. This may have issues so use at your own risk.
 
 Some simple examples:
 
@@ -374,6 +376,8 @@ Bytes.wrap(array).entropy();
 Of course all standard Java Object methods are implemented including:
 `hashCode()`, `equals()`, `toString()` as well as it being
 [`Comparable`](https://docs.oracle.com/javase/7/docs/api/java/lang/Comparable.html).
+In addition there is a constant time `equalsConstantTime()` method, see [here](https://codahale.com/a-lesson-in-timing-attacks/) why this
+might be useful.
 
 The `toString()` methods only shows the length and a preview of maximal 8 bytes:
 

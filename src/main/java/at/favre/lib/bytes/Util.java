@@ -433,6 +433,19 @@ final class Util {
         return true;
     }
 
+    /**
+     * See https://codahale.com/a-lesson-in-timing-attacks/
+     */
+    static boolean constantTimeEquals(byte[] obj, byte[] anotherArray) {
+        if (anotherArray == null || obj.length != anotherArray.length) return false;
+
+        int result = 0;
+        for (int i = 0; i < obj.length; i++) {
+            result |= obj[i] ^ anotherArray[i];
+        }
+        return result == 0;
+    }
+
     /*
     =================================================================================================
      Copyright 2011 Twitter, Inc.

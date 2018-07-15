@@ -179,7 +179,12 @@ public class BytesTransformTest extends ABytesTest {
     @Test
     public void or() {
         assertArrayEquals(new byte[0], Bytes.from(new byte[0]).or(new byte[0]).array());
+        assertArrayEquals(new byte[]{1}, Bytes.from(new byte[]{1}).or(new byte[]{0}).array());
         assertArrayEquals(new byte[1], Bytes.from(new byte[1]).or(new byte[1]).array());
+
+        assertArrayEquals(new byte[0], Bytes.from(new byte[0]).or(Bytes.wrap(new byte[0])).array());
+        assertArrayEquals(new byte[]{1}, Bytes.from(new byte[]{1}).or(Bytes.wrap(new byte[]{0})).array());
+        assertArrayEquals(new byte[1], Bytes.from(new byte[1]).or(Bytes.wrap(new byte[1])).array());
 
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).or(new byte[1]).array());
         assertArrayEquals(example_bytes_two, Bytes.from(example_bytes_two).or(new byte[2]).array());
