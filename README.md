@@ -40,12 +40,12 @@ It's main features include:
 * **Utility Features** like `indexOf`, `count`, `isEmpty`, `bitAt`, `contains` ...
 * **Flexibility** provide your own Transformers, Validators and Encoders
 
-It is written in [Java 7](https://en.wikipedia.org/wiki/Java_version_history#Java_SE_7) to keep backwards compatibility with *Android* and older *Java* applications.
+The code is compiled with target [Java 7](https://en.wikipedia.org/wiki/Java_version_history#Java_SE_7) to keep backwards compatibility with *Android* and older *Java* applications.
 It is lightweight as it does not require any additional dependencies.
 
 ## Quickstart
 
-Add dependency to your `pom.xml`:
+Add dependency to your `pom.xml` ([check latest release](https://github.com/patrickfav/bytes-java/releases)):
 
     <dependency>
         <groupId>at.favre.lib</groupId>
