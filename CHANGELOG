@@ -3,6 +3,7 @@
 ## v0.6.0
 
  * add `encodeCharsetToBytes()` feature #7
+ * add new `from(char[] charArray, Charset charset)` constructor with improved logic #8
 
 ## v0.5.0
 
