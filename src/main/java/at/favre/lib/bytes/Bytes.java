@@ -21,11 +21,7 @@
 
 package at.favre.lib.bytes;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInput;
-import java.io.File;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -35,13 +31,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.Normalizer;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Bytes is wrapper class for an byte-array that allows a lot of convenience operations on it:
@@ -1404,6 +1394,30 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * UTF-8 representation of this byte array as byte array
+     * <p>
+     * Similar to <code>encodeUtf8().getBytes(StandardCharsets.UTF_8)</code>.
+     *
+     * @return utf-8 encoded byte array
+     * @see <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a>
+     */
+    public byte[] encodeUtf8ToBytes() {
+        return encodeCharsetToBytes(StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Byte array representation with given charset encoding.
+     * <p>
+     * Similar to <code>encodeCharset(charset).getBytes(charset)</code>.
+     *
+     * @param charset the charset the return will be encoded
+     * @return encoded byte array
+     */
+    public byte[] encodeCharsetToBytes(Charset charset) {
+        return encodeCharset(charset).getBytes(charset);
+    }
+
+    /**
      * Encode the internal byte-array with given encoder.
      *
      * @param encoder the encoder implementation
@@ -1426,8 +1440,8 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * @deprecated renamed API, use {@link #toBoxedArray()} instead - will be removed in v1.0+
      * @return see {@link #toBoxedArray()}
+     * @deprecated renamed API, use {@link #toBoxedArray()} instead - will be removed in v1.0+
      */
     @Deprecated
     public Byte[] toObjectArray() {
@@ -1636,7 +1650,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * Compares the inner array with given array. The comparison is done in constant time, therefore
      * will not break on the first mismatch. This method is useful to prevent some side-channel attacks,
      * but is slower on average.
-     *
+     * <p>
      * This implementation uses the algorithm suggested in https://codahale.com/a-lesson-in-timing-attacks/
      *
      * @param anotherArray to compare with

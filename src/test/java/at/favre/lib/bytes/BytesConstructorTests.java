@@ -242,6 +242,22 @@ public class BytesConstructorTests extends ABytesTest {
     }
 
     @Test
+    public void encodeCharsetToBytes() {
+        byte[][] testVectors = new byte[][]{example_bytes_seven, example_bytes_one, example_bytes_two, example2_bytes_seven, example_bytes_twentyfour};
+
+        for (byte[] testVector : testVectors) {
+            System.out.println(new String(testVector, StandardCharsets.ISO_8859_1));
+            System.out.println(new String(Bytes.wrap(testVector).encodeCharsetToBytes(StandardCharsets.ISO_8859_1), StandardCharsets.ISO_8859_1));
+            System.out.println(new String(testVector, StandardCharsets.UTF_8));
+            System.out.println(new String(Bytes.wrap(testVector).encodeCharsetToBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8));
+
+            assertArrayEquals(new String(testVector, StandardCharsets.ISO_8859_1).getBytes(StandardCharsets.ISO_8859_1), Bytes.wrap(testVector).encodeCharsetToBytes(StandardCharsets.ISO_8859_1));
+            assertArrayEquals(new String(testVector, StandardCharsets.UTF_8).getBytes(StandardCharsets.UTF_8), Bytes.wrap(testVector).encodeCharsetToBytes(StandardCharsets.UTF_8));
+            assertArrayEquals(new String(testVector, StandardCharsets.UTF_8).getBytes(StandardCharsets.UTF_8), Bytes.wrap(testVector).encodeUtf8ToBytes());
+        }
+    }
+
+    @Test
     public void fromCharArray() {
         checkCharArray("");
         checkCharArray(" ");
