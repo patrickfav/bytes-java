@@ -139,6 +139,7 @@ Initializing **empty arrays** of arbitrary length:
 ```java
 Bytes.allocate(16);
 Bytes.allocate(4, (byte) 1); //fill with 0x01
+Bytes.empty(); //creates zero length byte array
 ```
 
 Creating **random** byte arrays for e.g. testing:

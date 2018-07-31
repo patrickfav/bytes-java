@@ -92,10 +92,19 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public static Bytes allocate(int length, byte defaultValue) {
         byte[] array = new byte[length];
-        if (defaultValue != 0) {
+        if (defaultValue != 0 && length > 0) {
             Arrays.fill(array, defaultValue);
         }
         return wrap(array);
+    }
+
+    /**
+     * Creates an Byte instance with an internal empty byte array. Same as calling {@link #allocate(int)} with 0.
+     *
+     * @return new instance
+     */
+    public static Bytes empty() {
+        return allocate(0);
     }
 
     /**

@@ -77,6 +77,13 @@ public class BytesConstructorTests extends ABytesTest {
     }
 
     @Test
+    public void empty() {
+        assertEquals(0, Bytes.empty().length());
+        assertEquals(Bytes.allocate(0), Bytes.empty());
+        assertArrayEquals(new byte[0], Bytes.empty().array());
+    }
+
+    @Test
     public void allocate() {
         assertEquals(0, Bytes.allocate(0).length());
         assertEquals(2, Bytes.allocate(2).length());

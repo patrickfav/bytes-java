@@ -5,6 +5,7 @@
  * add `encodeCharsetToBytes()` feature #7
  * add new `from(char[] charArray, Charset charset)` constructor with improved logic #8
  * add constructor/converter from/to UUID #9
+ * add `empty()` constructor, creating empty byte array
 
 ## v0.5.0
 
