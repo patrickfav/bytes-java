@@ -486,14 +486,20 @@ To other collections
 
 ```java
 Bytes.wrap(array).toList(); // of type List<Byte>
-Bytes.wrap(array).toObjectArray(); // of type Byte[]
+Bytes.wrap(array).toBoxedArray(); // of type Byte[]
 Bytes.wrap(array).toBitSet(); //of type java.util.BitSet
 ```
 
-and to [`BigInteger`](https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html) of course:
+to [`BigInteger`](https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html) of course
 
 ```java
 Bytes.wrap(array).toBigInteger();
+```
+
+and others
+
+```java
+Bytes.wrap(array).toUUID(); // convert 16 byte to UUID
 ```
 
 ### Mutable and Read-Only
