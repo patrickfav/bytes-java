@@ -38,6 +38,7 @@ import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.LinkedList;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -422,5 +423,24 @@ public class BytesConstructorTests extends ABytesTest {
         Byte[] objectArray = new Byte[]{0x01, 0x02, 0x03, 0x04};
         Bytes b = Bytes.from(objectArray);
         assertArrayEquals(new byte[]{0x01, 0x02, 0x03, 0x04}, b.array());
+    }
+
+    @Test
+    public void fromUUID() {
+        testUUID(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+        testUUID(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"));
+        testUUID(UUID.fromString("e8e3db08-dc39-48ea-a3db-08dc3958eafb"));
+        testUUID(UUID.randomUUID());
+    }
+
+    private void testUUID(UUID uuid) {
+        Bytes b = Bytes.from(uuid);
+        assertEquals(16, b.length());
+        assertEquals(uuid, b.toUUID());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void fromUUIDNullArgument() {
+        Bytes.from((UUID) null);
     }
 }
