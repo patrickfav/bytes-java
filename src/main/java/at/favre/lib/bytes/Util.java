@@ -21,10 +21,23 @@
 
 package at.favre.lib.bytes;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInput;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Common Util methods to convert or modify byte arrays
@@ -444,6 +457,20 @@ final class Util {
             result |= obj[i] ^ anotherArray[i];
         }
         return result == 0;
+    }
+
+    /**
+     * Convert UUID to a newly generated 16 byte long array representation. Puts the 8 byte most significant bits and
+     * 8 byte least significant bits into an byte array.
+     *
+     * @param uuid to convert to array
+     * @return buffer containing the 16 bytes
+     */
+    static ByteBuffer getBytesFromUUID(UUID uuid) {
+        ByteBuffer bb = ByteBuffer.allocate(16);
+        bb.putLong(uuid.getMostSignificantBits());
+        bb.putLong(uuid.getLeastSignificantBits());
+        return bb;
     }
 
     /*

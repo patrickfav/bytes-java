@@ -21,7 +21,11 @@
 
 package at.favre.lib.bytes;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataInput;
+import java.io.File;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -31,7 +35,14 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.Normalizer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Bytes is wrapper class for an byte-array that allows a lot of convenience operations on it:
@@ -469,6 +480,18 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
         byte[] bytes = new byte[bb.remaining()];
         bb.get(bytes);
         return from(bytes);
+    }
+
+    /**
+     * Convert UUID to a newly generated 16 byte long array representation. Puts the 8 byte most significant bits and
+     * 8 byte least significant bits into an byte array.
+     *
+     * @param uuid to convert to array
+     * @return new instance
+     */
+    public static Bytes from(UUID uuid) {
+        Objects.requireNonNull(uuid);
+        return wrap(Util.getBytesFromUUID(uuid).array());
     }
 
     /**
@@ -1496,6 +1519,21 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
         } else {
             return new BigInteger(internalArray());
         }
+    }
+
+    /**
+     * Creates a {@link UUID} instance of the internal byte array. This requires the internal array to be exactly 16 bytes. Takes the first
+     * 8 byte as mostSigBits and the last 8 byte as leastSigBits. There is no validation of version/type, just passes the raw bytes
+     * to a {@link UUID} constructor.
+     *
+     * @return newly created UUID
+     */
+    public UUID toUUID() {
+        if (length() != 16) {
+            throw new IllegalStateException("creating UUID requires internal array to be exactly 16 bytes, was " + length());
+        }
+        ByteBuffer byteBuffer = buffer();
+        return new UUID(byteBuffer.getLong(), byteBuffer.getLong());
     }
 
     /**

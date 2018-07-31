@@ -219,4 +219,19 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         } catch (IllegalStateException ignored) {
         }
     }
+
+    @Test(expected = IllegalStateException.class)
+    public void testToUUIDToLong() {
+        Bytes.random(17).toUUID();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testToUUIDToShort() {
+        Bytes.random(15).toUUID();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testToUUIDEmpty() {
+        Bytes.allocate(0).toUUID();
+    }
 }

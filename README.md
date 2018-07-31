@@ -32,7 +32,7 @@ to blindly paste code snippets from
 
 It's main features include:
 
-* **Creation** from a wide variety of sources: multiple arrays, integers, [streams](https://docs.oracle.com/javase/7/docs/api/java/io/InputStream.html), random, strings, files, ...
+* **Creation** from a wide variety of sources: multiple arrays, integers, [streams](https://docs.oracle.com/javase/7/docs/api/java/io/InputStream.html), random, strings, files, uuid, ...
 * **Transformation** with many built-in: append, [xor](https://en.wikipedia.org/wiki/Exclusive_or), [and](https://en.wikipedia.org/wiki/Logical_conjunction), [hash](https://en.wikipedia.org/wiki/Cryptographic_hash_function), [shifts](https://en.wikipedia.org/wiki/Bitwise_operation#Bit_shifts), shuffle, reverse, [checksum](https://en.wikipedia.org/wiki/Checksum), ...
 * **Validators** with the ability to arbitrarily combine multiple ones with logical expressions
 * **Parsing and Encoding** in most common binary-to-text-encodings: [hex](https://en.wikipedia.org/wiki/Hexadecimal), [base36](https://en.wikipedia.org/wiki/Base36), [base64](https://en.wikipedia.org/wiki/Base64), ...
@@ -164,6 +164,7 @@ Bytes.from(myBitSet); //java.util.BitSet myBitSet = ...
 Bytes.from(bigInteger); //java.math.BigInteger
 Bytes.from(file); //reads bytes from any java.io.File
 Bytes.from(dataInput, 16); //reads bytes from any java.io.DataInput
+Bytes.from(UUID.randomUUID()); //read 16 bytes from UUID
 ```
 
 For parsing binary-text-encoded strings, see below.
