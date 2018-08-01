@@ -1,5 +1,7 @@
 # Releases
 
+## v0.7.0
+
 ## v0.6.0
 
  * add `encodeCharsetToBytes()` feature #7
