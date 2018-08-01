@@ -431,7 +431,7 @@ final class Util {
 
     static void checkExactLength(int length, int expectedLength, String type) {
         if (length != expectedLength) {
-            throw new IllegalStateException("cannot convert to " + type + " if length != " + expectedLength + " bytes");
+            throw new IllegalStateException("cannot convert to " + type + " if length != " + expectedLength + " bytes (was " + length + ")");
         }
     }
 
