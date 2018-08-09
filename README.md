@@ -224,7 +224,9 @@ Bytes resized = Bytes.wrap(array).resize(3); //from {3, 9, 2, 1} to {9, 2, 1}
 
 ```java
 Bytes hash = Bytes.wrap(array).hashSha256();
-Bytes hash = Bytes.wrap(array).hash("MD5");
+Bytes hash = Bytes.wrap(array).hashSha1();
+Bytes hash = Bytes.wrap(array).hashMd5();
+Bytes hash = Bytes.wrap(array).hash("SHA-512");
 ```
 
 **Reversing** of the byte order in the array
@@ -335,7 +337,7 @@ Bytes.from(asciiString, StandardCharsets.US_ASCII);
 To easily append a string to an byte array you can do
 
 ```java
-String userPwd = ...;
+String userPwdHash = ...;
 Bytes.from(salt).append(userPwd).hashSha256();
 ```
 

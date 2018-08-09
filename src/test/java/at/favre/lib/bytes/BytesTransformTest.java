@@ -172,7 +172,7 @@ public class BytesTransformTest extends ABytesTest {
         try {
             Bytes.from(example_bytes_seven).xor(example_bytes_eight);
             fail();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -326,13 +326,34 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void hash() {
+    public void hashSha1() {
+        assertEquals(Bytes.parseHex("da39a3ee5e6b4b0d3255bfef95601890afd80709"), Bytes.from("").hashSha1());
+        assertEquals(Bytes.parseHex("2628013771c4ffda4336231805f9d6c42e40ef86"), Bytes.from("ö9h%6Ghh1\"").hashSha1());
+        assertEquals(Bytes.parseHex("15d418a940d699df0cde6304829b2cce5ed4a9ad"), Bytes.from("897SHALkjdn ,n--   kasdjöa").hashSha1());
+    }
+
+    @Test
+    public void hashMd5() {
+        assertEquals(Bytes.parseHex("d41d8cd98f00b204e9800998ecf8427e"), Bytes.from("").hashMd5());
+        assertEquals(Bytes.parseHex("ff38205f1cb22f588d8bc9ae21f22092"), Bytes.from("ö9h%6Ghh1\"").hashMd5());
+        assertEquals(Bytes.parseHex("9DFF192C3CE8554DBB1ADCC7721B4B78"), Bytes.from("897SHALkjdn ,n--   kasdjöa").hashMd5());
+    }
+
+    @Test
+    public void hash256() {
         assertEquals(Bytes.parseHex("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"), Bytes.from("").hashSha256());
         assertEquals(Bytes.parseHex("e362eea626386c93a54c9b82e6b896c0350fbff0ee12f284660253aac0908cfb"), Bytes.from("ö9h%6Ghh1\"").hashSha256());
+        assertEquals(Bytes.parseHex("48D6BE81CB2EF8488BA2E3BF4050EE21BF9D33D85DB0E556E4AE5992243B8F35"), Bytes.from("897SHALkjdn ,n--   kasdjöa").hashSha256());
+    }
+
+    @Test
+    public void hashCustom() {
         assertEquals(Bytes.parseHex("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"), Bytes.from("").hash("SHA-512"));
         assertEquals(Bytes.parseHex("106747C3DDC117091BEF8D21AEBAA8D314656D3AE1135AB36F4C0B07A264127CF625FE616751BEC66B43032B904E2D3B6C21BF14E078F6BB775A72503F48111D"), Bytes.from("ö9h%6Ghh1\"").hash("SHA-512"));
         assertEquals(Bytes.parseHex("d41d8cd98f00b204e9800998ecf8427e"), Bytes.from("").hash("MD5"));
         assertEquals(Bytes.parseHex("ff38205f1cb22f588d8bc9ae21f22092"), Bytes.from("ö9h%6Ghh1\"").hash("MD5"));
+        assertEquals(Bytes.parseHex("38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b"), Bytes.from("").hash("SHA-384"));
+        assertEquals(Bytes.parseHex("ec89d0d6b067f7f2e240ea7587933d92347fce4bdab68784bd2373dc1cccaa0238c0556b045acb1632080fac788d429d"), Bytes.from("ö9h%6Ghh1\"").hash("SHA-384"));
     }
 
     @Test

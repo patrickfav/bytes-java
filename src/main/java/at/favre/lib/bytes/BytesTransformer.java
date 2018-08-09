@@ -326,6 +326,8 @@ public interface BytesTransformer {
      * Converts to hash
      */
     class MessageDigestTransformer implements BytesTransformer {
+        static final String ALGORITHM_MD5 = "MD5";
+        static final String ALGORITHM_SHA_1 = "SHA-1";
         static final String ALGORITHM_SHA_256 = "SHA-256";
 
         private final MessageDigest messageDigest;

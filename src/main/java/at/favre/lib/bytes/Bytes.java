@@ -938,6 +938,36 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Calculates md5 on the underlying byte array and returns a byte instance containing the hash.
+     * This hash algorithm SHOULD be supported by every JVM implementation (see
+     * <a href="https://docs.oracle.com/javase/7/docs/api/java/security/MessageDigest.html">Javadoc for MessageDigest</a>)
+     *
+     * <strong>Do not use this algorithm in security relevant applications.</strong>
+     *
+     * @return md5 (16 bytes) hash of internal byte array
+     * @throws IllegalArgumentException if the message digest algorithm can not be found in the security providers
+     * @see <a href="https://en.wikipedia.org/wiki/MD5">MD5</a>
+     */
+    public Bytes hashMd5() {
+        return hash(BytesTransformer.MessageDigestTransformer.ALGORITHM_MD5);
+    }
+
+    /**
+     * Calculates sha1 on the underlying byte array and returns a byte instance containing the hash.
+     * This hash algorithm SHOULD be supported by every JVM implementation (see
+     * <a href="https://docs.oracle.com/javase/7/docs/api/java/security/MessageDigest.html">Javadoc for MessageDigest</a>)
+     *
+     * <strong>Do not use this algorithm in security relevant applications.</strong>
+     *
+     * @return sha1 (20 bytes) hash of internal byte array
+     * @throws IllegalArgumentException if the message digest algorithm can not be found in the security providers
+     * @see <a href="https://en.wikipedia.org/wiki/SHA-1">Secure Hash Algorithm 1</a>
+     */
+    public Bytes hashSha1() {
+        return hash(BytesTransformer.MessageDigestTransformer.ALGORITHM_SHA_1);
+    }
+
+    /**
      * Calculates sha256 on the underlying byte array and returns a byte instance containing the hash.
      *
      * @return sha256 (32 bytes) hash of internal byte array

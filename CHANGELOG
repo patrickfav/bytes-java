@@ -3,6 +3,7 @@
 ## v0.7.0
 
  * add `count` method for counting byte arrays (like pattern matching)
+ * add dedicated `md5` and `sha1` transformer methods
 
 ## v0.6.0
 
