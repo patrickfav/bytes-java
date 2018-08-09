@@ -24,7 +24,8 @@ package at.favre.lib.bytes;
 import java.nio.charset.StandardCharsets;
 
 /**
- * From: https://github.com/square/okio/blob/master/okio/src/main/java/okio/Base64.java
+ * From https://github.com/square/okio/blob/okio-parent-1.15.0/okio/src/main/java/okio/Base64.java
+ * under Apache 2 license.
  *
  * @author Alexander Y. Kleymenov
  */
