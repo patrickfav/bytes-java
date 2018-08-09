@@ -21,23 +21,10 @@
 
 package at.favre.lib.bytes;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInput;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Common Util methods to convert or modify byte arrays
@@ -70,24 +57,6 @@ final class Util {
     }
 
     /**
-     * Returns the index of the first appearance of the value {@code target} in
-     * {@code array}.
-     *
-     * @param array  an array of {@code byte} values, possibly empty
-     * @param target a primitive {@code byte} value
-     * @return the least index {@code i} for which {@code array[i] == target}, or
-     * {@code -1} if no such index exists.
-     */
-    static int indexOf(byte[] array, byte target, int start, int end) {
-        for (int i = start; i < end; i++) {
-            if (array[i] == target) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    /**
      * Returns the start position of the first occurrence of the specified {@code
      * target} within {@code array}, or {@code -1} if there is no such occurrence.
      * <p>
@@ -98,15 +67,15 @@ final class Util {
      * @param array  the array to search for the sequence {@code target}
      * @param target the array to search for as a sub-sequence of {@code array}
      */
-    public static int indexOf(byte[] array, byte[] target) {
+    static int indexOf(byte[] array, byte[] target, int start) {
         Objects.requireNonNull(array, "array must not be null");
         Objects.requireNonNull(target, "target must not be null");
         if (target.length == 0) {
-            return 0;
+            return -1;
         }
 
         outer:
-        for (int i = 0; i < array.length - target.length + 1; i++) {
+        for (int i = start; i < array.length - target.length + 1; i++) {
             for (int j = 0; j < target.length; j++) {
                 if (array[i + j] != target[j]) {
                     continue outer;

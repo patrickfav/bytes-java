@@ -53,39 +53,39 @@ public class UtilTest {
     }
 
     private int indexOf(byte[] empty, byte b) {
-        return Util.indexOf(empty, b, 0, empty.length);
+        return Util.indexOf(empty, new byte[]{b}, 0);
     }
 
     @Test
     public void testIndexOf_arrayTarget() {
-        assertEquals(0, Util.indexOf(EMPTY, EMPTY));
-        assertEquals(0, Util.indexOf(ARRAY234, EMPTY));
-        assertEquals(-1, Util.indexOf(EMPTY, ARRAY234));
-        assertEquals(-1, Util.indexOf(ARRAY234, ARRAY1));
-        assertEquals(-1, Util.indexOf(ARRAY1, ARRAY234));
-        assertEquals(0, Util.indexOf(ARRAY1, ARRAY1));
-        assertEquals(0, Util.indexOf(ARRAY234, ARRAY234));
+        assertEquals(-1, Util.indexOf(EMPTY, EMPTY, 0));
+        assertEquals(-1, Util.indexOf(ARRAY234, EMPTY, 0));
+        assertEquals(-1, Util.indexOf(EMPTY, ARRAY234, 0));
+        assertEquals(-1, Util.indexOf(ARRAY234, ARRAY1, 0));
+        assertEquals(-1, Util.indexOf(ARRAY1, ARRAY234, 0));
+        assertEquals(0, Util.indexOf(ARRAY1, ARRAY1, 0));
+        assertEquals(0, Util.indexOf(ARRAY234, ARRAY234, 0));
         assertEquals(0, Util.indexOf(
-                ARRAY234, new byte[]{(byte) 2, (byte) 3}));
+                ARRAY234, new byte[]{(byte) 2, (byte) 3}, 0));
         assertEquals(1, Util.indexOf(
-                ARRAY234, new byte[]{(byte) 3, (byte) 4}));
-        assertEquals(1, Util.indexOf(ARRAY234, new byte[]{(byte) 3}));
-        assertEquals(2, Util.indexOf(ARRAY234, new byte[]{(byte) 4}));
-        assertEquals(1, Util.indexOf(new byte[]{(byte) 2, (byte) 3, (byte) 3, (byte) 3, (byte) 3}, new byte[]{(byte) 3}));
+                ARRAY234, new byte[]{(byte) 3, (byte) 4}, 0));
+        assertEquals(1, Util.indexOf(ARRAY234, new byte[]{(byte) 3}, 0));
+        assertEquals(2, Util.indexOf(ARRAY234, new byte[]{(byte) 4}, 0));
+        assertEquals(1, Util.indexOf(new byte[]{(byte) 2, (byte) 3, (byte) 3, (byte) 3, (byte) 3}, new byte[]{(byte) 3}, 0));
         assertEquals(2, Util.indexOf(
                 new byte[]{(byte) 2, (byte) 3, (byte) 2,
                         (byte) 3, (byte) 4, (byte) 2, (byte) 3},
                 new byte[]{(byte) 2, (byte) 3, (byte) 4}
-        ));
+                , 0));
         assertEquals(1, Util.indexOf(
                 new byte[]{(byte) 2, (byte) 2, (byte) 3,
                         (byte) 4, (byte) 2, (byte) 3, (byte) 4},
                 new byte[]{(byte) 2, (byte) 3, (byte) 4}
-        ));
+                , 0));
         assertEquals(-1, Util.indexOf(
                 new byte[]{(byte) 4, (byte) 3, (byte) 2},
                 new byte[]{(byte) 2, (byte) 3, (byte) 4}
-        ));
+                , 0));
     }
 
     @Test

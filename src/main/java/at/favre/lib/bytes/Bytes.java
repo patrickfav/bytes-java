@@ -1118,7 +1118,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * {@code -1} if no such index exists or fromIndex is gt target length.
      */
     public int indexOf(byte target, int fromIndex) {
-        return Util.indexOf(internalArray(), target, fromIndex, length());
+        return Util.indexOf(internalArray(), new byte[]{target}, fromIndex);
     }
 
     /**
@@ -1134,7 +1134,25 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * {@code -1} if no such index exists.
      */
     public int indexOf(byte[] subArray) {
-        return Util.indexOf(internalArray(), subArray);
+        return Util.indexOf(internalArray(), subArray, 0);
+    }
+
+    /**
+     * Returns the start position of the first occurrence of the specified {@code
+     * target} within {@code array} from given start index 'fromIndex', or {@code -1}
+     * if there is no such occurrence.
+     * <p>
+     * More formally, returns the lowest index {@code i} such that {@code
+     * java.util.Arrays.copyOfRange(array, i, i + target.length)} contains exactly
+     * the same elements as {@code target}.
+     *
+     * @param subArray  the array to search for as a sub-sequence of {@code array}
+     * @param fromIndex search from this index
+     * @return the least index {@code i} for which {@code array[i] == target}, or
+     * {@code -1} if no such index exists.
+     */
+    public int indexOf(byte[] subArray, int fromIndex) {
+        return Util.indexOf(internalArray(), subArray, fromIndex);
     }
 
     /**
