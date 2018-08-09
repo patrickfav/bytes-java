@@ -376,6 +376,30 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
+    public void countByteArray() {
+        assertEquals(0, Bytes.allocate(0).count(new byte[0]));
+        assertEquals(0, Bytes.allocate(1).count(new byte[0]));
+        assertEquals(0, Bytes.allocate(128).count(new byte[0]));
+        assertEquals(128, Bytes.allocate(128).count(new byte[]{0}));
+        assertEquals(3, Bytes.from(example_bytes_twentyfour).count(new byte[]{(byte) 0xFD}));
+        assertEquals(3, Bytes.from(example_bytes_twentyfour).count(new byte[]{(byte) 0xD1}));
+        assertEquals(0, Bytes.from(example_bytes_twentyfour).count(new byte[]{(byte) 0x22}));
+        assertEquals(1, Bytes.from(example_bytes_eight).count(new byte[]{(byte) 0xAF}));
+        assertEquals(0, Bytes.from(example_bytes_eight).count(new byte[]{(byte) 0xAF, 0x00}));
+        assertEquals(0, Bytes.from(example_bytes_eight).count(new byte[]{(byte) 0xED}));
+        assertEquals(0, Bytes.from(example_bytes_eight).count(new byte[]{(byte) 0x22}));
+        assertEquals(2, Bytes.from(new byte[]{0, 1, 2, 3, 0, 1, 0}).count(new byte[]{0, 1}));
+        assertEquals(1, Bytes.from(new byte[]{0, 1, 2, 3, 0, 1, 0}).count(new byte[]{0, 1, 2}));
+        assertEquals(1, Bytes.from(new byte[]{0, 1, 2, 3, 0, 1, 0}).count(new byte[]{0, 1, 2, 3}));
+        assertEquals(0, Bytes.from(new byte[]{0, 1, 2, 3, 0, 1, 0}).count(new byte[]{0, 1, 2, 0}));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void countByteArrayShouldCheckArgument() {
+        Bytes.allocate(1).count(null);
+    }
+
+    @Test
     public void entropy() {
         assertEquals(0, Bytes.allocate(0).entropy(), 0.1d);
         assertEquals(0, Bytes.allocate(1).entropy(), 0.1d);

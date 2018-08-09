@@ -136,6 +136,48 @@ final class Util {
     }
 
     /**
+     * Counts the occurrence of target in the the in the subject array
+     *
+     * @param array  to count in
+     * @param target to count
+     * @return number of times target is in subject
+     */
+    static int countByte(byte[] array, byte target) {
+        int count = 0;
+        for (byte b : array) {
+            if (b == target) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Counts the times given pattern (ie. an array) can be found in given array
+     *
+     * @param array   to count in
+     * @param pattern to match in array
+     * @return number of times pattern is in subject
+     */
+    static int countByteArray(byte[] array, byte[] pattern) {
+        Objects.requireNonNull(pattern, "pattern must not be null");
+        if (pattern.length == 0 || array.length == 0) {
+            return 0;
+        }
+        int count = 0;
+        outer:
+        for (int i = 0; i < array.length - pattern.length + 1; i++) {
+            for (int j = 0; j < pattern.length; j++) {
+                if (array[i + j] != pattern[j]) {
+                    continue outer;
+                }
+            }
+            count++;
+        }
+        return count;
+    }
+
+    /**
      * Copies a collection of {@code Byte} instances into a new array of
      * primitive {@code byte} values.
      * <p>

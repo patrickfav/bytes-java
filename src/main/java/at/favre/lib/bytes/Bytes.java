@@ -1206,13 +1206,25 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return the count of given target in the byte array
      */
     public int count(byte target) {
-        int count = 0;
-        for (byte b : internalArray()) {
-            if (b == target) {
-                count++;
-            }
-        }
-        return count;
+        return Util.countByte(internalArray(), target);
+    }
+
+    /**
+     * Traverses the internal byte array counts the occurrences of given pattern array.
+     * This has a time complexity of O(n).
+     * <p>
+     * Example:
+     * <ul>
+     * <li>Internal Array: [0, 1, 2, 0, 1, 0]</li>
+     * <li>Pattern Array: [0, 1]</li>
+     * <li>Count: 2</li>
+     * </ul>
+     *
+     * @param pattern byte array to count
+     * @return the count of given target in the byte array
+     */
+    public int count(byte[] pattern) {
+        return Util.countByteArray(internalArray(), pattern);
     }
 
     /**
