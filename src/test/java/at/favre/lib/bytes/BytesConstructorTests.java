@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.ByteArrayInputStream;
+import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -316,10 +317,24 @@ public class BytesConstructorTests extends ABytesTest {
         checkInputStream(example_bytes_eight);
         checkInputStream(example_bytes_sixteen);
         checkInputStream(Bytes.random(32 * 987).array());
+        checkInputStream(Bytes.random(1020 * 1104).array());
     }
 
     private void checkInputStream(byte[] array) {
         assertArrayEquals(array, Bytes.from(new ByteArrayInputStream(array)).array());
+    }
+
+    @Test
+    public void fromInputStreamLimited() {
+        Bytes data = Bytes.random(1090 * 1003);
+        assertArrayEquals(data.resize(5123, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array(), Bytes.from(new ByteArrayInputStream(data.array()), 5123).array());
+
+        assertArrayEquals(new byte[0], Bytes.from(new ByteArrayInputStream(example_bytes_sixteen), 0).array());
+        assertArrayEquals(new byte[]{0x7E}, Bytes.from(new ByteArrayInputStream(example_bytes_sixteen), 1).array());
+        assertArrayEquals(new byte[]{0x7E, (byte) 0xD1}, Bytes.from(new ByteArrayInputStream(example_bytes_sixteen), 2).array());
+        assertArrayEquals(new byte[]{0x7E, (byte) 0xD1, (byte) 0xFD}, Bytes.from(new ByteArrayInputStream(example_bytes_sixteen), 3).array());
+        assertArrayEquals(new byte[]{0x7E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA}, Bytes.from(new ByteArrayInputStream(example_bytes_sixteen), 4).array());
+        assertArrayEquals(example_bytes_sixteen, Bytes.from(new ByteArrayInputStream(example_bytes_sixteen), 128).array());
     }
 
     @Test
@@ -334,12 +349,12 @@ public class BytesConstructorTests extends ABytesTest {
     }
 
     private void checkDataInput(byte[] array) {
-        assertArrayEquals(array, Bytes.from(new DataInputStream(new ByteArrayInputStream(array)), array.length).array());
+        assertArrayEquals(array, Bytes.from((DataInput) new DataInputStream(new ByteArrayInputStream(array)), array.length).array());
     }
 
     @Test(expected = IllegalStateException.class)
     public void fromDataInputShouldThrowException() {
-        Bytes.from(new DataInputStream(new ByteArrayInputStream(example_bytes_one)), 2);
+        Bytes.from((DataInput) new DataInputStream(new ByteArrayInputStream(example_bytes_one)), 2);
     }
 
     @Test

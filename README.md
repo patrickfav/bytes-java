@@ -159,7 +159,8 @@ Bytes.from(asciiString, StandardCharset.US_ASCII) //any charset
 And other types:
 
 ```java
-Bytes.from(byteInputStream); //any java.io.InputStream
+Bytes.from(byteInputStream); //read whole java.io.InputStream
+Bytes.from(byteInputStream, 16); //read java.io.InputStream with length limitation
 Bytes.from(byteList); //List<Byte> byteList = ...
 Bytes.from(myBitSet); //java.util.BitSet myBitSet = ...
 Bytes.from(bigInteger); //java.math.BigInteger

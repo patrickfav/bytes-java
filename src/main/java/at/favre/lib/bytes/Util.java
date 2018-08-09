@@ -316,20 +316,25 @@ final class Util {
     private static final int BUF_SIZE = 0x1000; // 4K
 
     /**
-     * Read all bytes, buffered, from given input stream
+     * Read bytes, buffered, from given input stream. Pass -1 to read the whole stream or limit with length
+     * parameter.
      *
-     * @param inputStream to read from
-     * @return all bytes from the stream
+     * @param inputStream     to read from
+     * @param maxLengthToRead how many bytes to read from input stream; pass -1 to read whole stream
+     * @return all bytes from the stream (possibly limited by maxLengthToRead); output length is never longer than stream size
      */
-    static byte[] readFromStream(InputStream inputStream) {
+    static byte[] readFromStream(InputStream inputStream, final int maxLengthToRead) {
+        final boolean readWholeStream = maxLengthToRead == -1;
+        int remaining = maxLengthToRead;
         try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            byte[] buf = new byte[BUF_SIZE];
-            while (true) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream(readWholeStream ? 32 : maxLengthToRead);
+            while (readWholeStream || remaining > 0) {
+                byte[] buf = new byte[Math.min(BUF_SIZE, readWholeStream ? BUF_SIZE : remaining)];
                 int r = inputStream.read(buf);
                 if (r == -1) {
                     break;
                 }
+                remaining -= r;
                 out.write(buf, 0, r);
             }
             return out.toByteArray();
@@ -345,7 +350,7 @@ final class Util {
      * @return all bytes from the dataInput
      */
     static byte[] readFromDataInput(DataInput dataInput, int length) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ByteArrayOutputStream out = new ByteArrayOutputStream(length);
         try {
             byte[] buf;
             int remaining = length;

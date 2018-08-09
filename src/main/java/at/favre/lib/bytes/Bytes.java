@@ -400,13 +400,25 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Reads given input stream and creates a new instance from read data
+     * Reads given whole input stream and creates a new instance from read data
      *
      * @param stream to read from
      * @return new instance
      */
     public static Bytes from(InputStream stream) {
-        return wrap(Util.readFromStream(stream));
+        return wrap(Util.readFromStream(stream, -1));
+    }
+
+    /**
+     * Reads given input stream up to maxLength and creates a new instance from read data.
+     * Read maxLength is never longer than stream size (ie. maxLength is only limiting, not assuring maxLength)
+     *
+     * @param stream    to read from
+     * @param maxLength read to this maxLength or end of stream
+     * @return new instance
+     */
+    public static Bytes from(InputStream stream, int maxLength) {
+        return wrap(Util.readFromStream(stream, maxLength));
     }
 
     /**

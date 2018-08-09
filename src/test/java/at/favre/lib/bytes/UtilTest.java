@@ -185,7 +185,7 @@ public class UtilTest {
 
     @Test(expected = IllegalStateException.class)
     public void readFromStream() {
-        Util.readFromStream(null);
+        Util.readFromStream(null, -1);
     }
 
     @Test
