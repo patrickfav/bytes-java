@@ -300,6 +300,7 @@ This lib has it's own build in **Base64** encoder:
 Bytes.parseBase64("SpT9/x6v7Q==");
 
 Bytes.from(array).encodeBase64(); //"SpT9/x6v7Q=="
+Bytes.from(array).encodeBase64Url(); //"SpT9_x6v7Q=="
  ```
 
 Additionally the following encodings are supported:
