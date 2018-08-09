@@ -60,7 +60,7 @@ import java.util.*;
 @SuppressWarnings("WeakerAccess")
 public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
-    private final static Bytes EMPTY = Bytes.wrap(new byte[0]);
+    private static final Bytes EMPTY = Bytes.wrap(new byte[0]);
 
     /* FACTORY ***************************************************************************************************/
 
