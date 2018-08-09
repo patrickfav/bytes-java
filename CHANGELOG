@@ -7,6 +7,7 @@
  * add `from(Inputstream stream, int maxlength)` limiting stream reading constructor #13
  * add indexOf() with `fromIndex` parameter #14
  * add support for base64 url safe encoding #15
+ * use EMPTY constant instance for empty byte array to safe memory #16
 
 ## v0.6.0
 

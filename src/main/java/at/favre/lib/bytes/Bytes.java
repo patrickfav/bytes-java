@@ -60,6 +60,8 @@ import java.util.*;
 @SuppressWarnings("WeakerAccess")
 public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
+    private final static Bytes EMPTY = Bytes.wrap(new byte[0]);
+
     /* FACTORY ***************************************************************************************************/
 
     /**
@@ -90,10 +92,10 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     /**
      * Creates an Byte instance with an internal empty byte array. Same as calling {@link #allocate(int)} with 0.
      *
-     * @return new instance
+     * @return the empty instance (always the same reference
      */
     public static Bytes empty() {
-        return allocate(0);
+        return EMPTY;
     }
 
     /**
@@ -120,7 +122,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes wrapNullSafe(byte[] array) {
-        return wrap(array != null ? array : new byte[0]);
+        return array != null ? wrap(array) : empty();
     }
 
     /**
@@ -175,7 +177,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes fromNullSafe(byte[] byteArrayToCopy) {
-        return from(byteArrayToCopy != null ? byteArrayToCopy : new byte[0]);
+        return byteArrayToCopy != null ? from(byteArrayToCopy) : empty();
     }
 
     /**

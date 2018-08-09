@@ -26,13 +26,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
@@ -82,6 +79,11 @@ public class BytesConstructorTests extends ABytesTest {
         assertEquals(0, Bytes.empty().length());
         assertEquals(Bytes.allocate(0), Bytes.empty());
         assertArrayEquals(new byte[0], Bytes.empty().array());
+        assertSame(Bytes.empty(), Bytes.empty());
+
+        Bytes empty = Bytes.empty();
+        empty = empty.byteOrder(ByteOrder.LITTLE_ENDIAN);
+        assertNotSame(Bytes.empty(), empty);
     }
 
     @Test
