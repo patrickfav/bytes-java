@@ -81,12 +81,23 @@ public class BinaryToTextEncodingTest {
 
     @Test
     public void encodeDecodeBase64() {
-        for (int i = 4; i < 32; i += 4) {
+        BinaryToTextEncoding.EncoderDecoder encoderPad = new BinaryToTextEncoding.Base64Encoding(false, true);
+        BinaryToTextEncoding.EncoderDecoder encoderUrlPad = new BinaryToTextEncoding.Base64Encoding(true, true);
+        BinaryToTextEncoding.EncoderDecoder encoderNoPad = new BinaryToTextEncoding.Base64Encoding(false, false);
+
+        for (int i = 0; i < 32; i += 4) {
             Bytes rnd = Bytes.random(i);
-            BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.Base64Encoding();
-            String encodedBigEndian = encoding.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
-            byte[] decoded = encoding.decode(encodedBigEndian);
+            String encodedBigEndian = encoderPad.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
+            byte[] decoded = encoderPad.decode(encodedBigEndian);
             assertEquals(rnd, Bytes.wrap(decoded));
+
+            String encodedBigEndianUrlPad = encoderUrlPad.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
+            byte[] decodedUrlPad = encoderPad.decode(encodedBigEndianUrlPad);
+            assertEquals(rnd, Bytes.wrap(decodedUrlPad));
+
+            String encodedBigEndianNoPad = encoderNoPad.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
+            byte[] decodedNoPad = encoderPad.decode(encodedBigEndianNoPad);
+            assertEquals(rnd, Bytes.wrap(decodedNoPad));
         }
     }
 

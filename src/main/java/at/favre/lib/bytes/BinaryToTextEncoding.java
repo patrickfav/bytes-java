@@ -132,9 +132,21 @@ public interface BinaryToTextEncoding {
      * Simple Base64 encoder
      */
     class Base64Encoding implements EncoderDecoder {
+        private final boolean urlSafe;
+        private final boolean padding;
+
+        Base64Encoding() {
+            this(false, true);
+        }
+
+        Base64Encoding(boolean urlSafe, boolean padding) {
+            this.urlSafe = urlSafe;
+            this.padding = padding;
+        }
+
         @Override
         public String encode(byte[] array, ByteOrder byteOrder) {
-            return Base64.encode((byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.from(array).reverse().array());
+            return Base64.encode((byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.from(array).reverse().array(), urlSafe, padding);
         }
 
         @Override

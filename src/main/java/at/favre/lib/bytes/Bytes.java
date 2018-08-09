@@ -21,11 +21,7 @@
 
 package at.favre.lib.bytes;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInput;
-import java.io.File;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -35,14 +31,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.Normalizer;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Bytes is wrapper class for an byte-array that allows a lot of convenience operations on it:
@@ -567,7 +556,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Parsing of base64 encoded byte arrays.
+     * Parsing of base64 encoded byte arrays. Supporting RFC 3548 normal and url safe encoding.
      *
      * @param base64String the encoded string
      * @return decoded instance
@@ -1482,7 +1471,20 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://en.wikipedia.org/wiki/Base64">Base64</a>
      */
     public String encodeBase64() {
-        return encode(new BinaryToTextEncoding.Base64Encoding());
+        return encode(new BinaryToTextEncoding.Base64Encoding(false, true));
+    }
+
+    /**
+     * Base64 representation with padding. This is the url safe variation subsitution '+' and '/' with '-' and '_'
+     * respectively. This encoding has a space efficiency of 75%.
+     * <p>
+     * Example: <code>SpT9_x6v7Q==</code>
+     *
+     * @return base64 url safe string
+     * @see <a href="https://en.wikipedia.org/wiki/Base64">Base64</a>
+     */
+    public String encodeBase64Url() {
+        return encode(new BinaryToTextEncoding.Base64Encoding(true, true));
     }
 
     /**

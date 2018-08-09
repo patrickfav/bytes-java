@@ -31,12 +31,12 @@ public class BytesParseAndEncodingTest extends ABytesTest {
     private byte[] encodingExample;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         encodingExample = new byte[]{0x4A, (byte) 0x94, (byte) 0xFD, (byte) 0xFF, 0x1E, (byte) 0xAF, (byte) 0xED};
     }
 
     @Test
-    public void parseHex() throws Exception {
+    public void parseHex() {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1};
         assertArrayEquals(defaultArray, Bytes.parseHex("0xA0E1").array());
         assertArrayEquals(defaultArray, Bytes.parseHex("A0E1").array());
@@ -45,12 +45,12 @@ public class BytesParseAndEncodingTest extends ABytesTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void parseHexInvalid() throws Exception {
+    public void parseHexInvalid() {
         Bytes.parseHex("A0E");
     }
 
     @Test
-    public void encodeHex() throws Exception {
+    public void encodeHex() {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1};
         assertEquals("a0e1", Bytes.from(defaultArray).encodeHex());
         assertEquals("A0E1", Bytes.from(defaultArray).encodeHex(true));
@@ -59,58 +59,68 @@ public class BytesParseAndEncodingTest extends ABytesTest {
     }
 
     @Test
-    public void parseBase64() throws Exception {
+    public void parseBase64() {
         assertArrayEquals(encodingExample, Bytes.parseBase64("SpT9/x6v7Q==").array());
+        assertArrayEquals(encodingExample, Bytes.parseBase64("SpT9_x6v7Q==").array());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void parseBase64Invalid() throws Exception {
+    public void parseBase64Invalid() {
         Bytes.parseBase64("☕");
     }
 
     @Test
-    public void encodeBase64() throws Exception {
+    public void encodeBase64() {
+        assertEquals("", Bytes.from(new byte[0]).encodeBase64());
+        assertEquals("AA==", Bytes.from(new byte[1]).encodeBase64());
         assertEquals("SpT9/x6v7Q==", Bytes.from(encodingExample).encodeBase64());
     }
 
     @Test
-    public void encodeBinary() throws Exception {
+    public void encodeBase64Url() {
+        assertEquals("", Bytes.from(new byte[0]).encodeBase64Url());
+        assertEquals("AA==", Bytes.from(new byte[1]).encodeBase64Url());
+        assertEquals("SpT9_x6v7Q==", Bytes.from(encodingExample).encodeBase64Url());
+    }
+
+    @Test
+    public void encodeBinary() {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1};
         assertEquals("1010000011100001", Bytes.from(defaultArray).encodeBinary());
         assertEquals("1001010100101001111110111111111000111101010111111101101", Bytes.from(encodingExample).encodeBinary());
     }
 
     @Test
-    public void parseOctal() throws Exception {
+    public void parseOctal() {
         assertArrayEquals(encodingExample, Bytes.parseOctal("1124517677707527755").array());
     }
 
     @Test
-    public void encodeOctal() throws Exception {
+    public void encodeOctal() {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1};
         assertEquals("120341", Bytes.from(defaultArray).encodeOctal());
         assertEquals("1124517677707527755", Bytes.from(encodingExample).encodeOctal());
     }
 
     @Test
-    public void parseDec() throws Exception {
+    public void parseDec() {
         assertArrayEquals(encodingExample, Bytes.parseDec("20992966904426477").array());
     }
 
     @Test
-    public void encodeDec() throws Exception {
+    public void encodeDec() {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1};
         assertEquals("41185", Bytes.from(defaultArray).encodeDec());
         assertEquals("20992966904426477", Bytes.from(encodingExample).encodeDec());
     }
 
     @Test
-    public void parseBase36() throws Exception {
+    public void parseBase36() {
         assertArrayEquals(encodingExample, Bytes.parseBase36("5qpdvuwjvu5").array());
     }
 
     @Test
-    public void encodeBase36() throws Exception {
+    public void encodeBase36() {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1, (byte) 0x13};
         assertEquals("69zbn", Bytes.from(defaultArray).encodeBase36());
         assertEquals("5qpdvuwjvu5", Bytes.from(encodingExample).encodeBase36());

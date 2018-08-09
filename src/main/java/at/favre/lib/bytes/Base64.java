@@ -33,7 +33,21 @@ final class Base64 {
     private Base64() {
     }
 
-    public static byte[] decode(String in) {
+    private static final byte[] MAP = new byte[]{
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+            'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+            'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4',
+            '5', '6', '7', '8', '9', '+', '/'
+    };
+
+    private static final byte[] URL_MAP = new byte[]{
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+            'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+            'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4',
+            '5', '6', '7', '8', '9', '-', '_'
+    };
+
+    static byte[] decode(String in) {
         // Ignore trailing '=' padding and whitespace from the input.
         int limit = in.length();
         for (; limit > 0; limit--) {
@@ -114,19 +128,16 @@ final class Base64 {
         return prefix;
     }
 
-    private static final byte[] MAP = new byte[]{
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-            'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-            'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4',
-            '5', '6', '7', '8', '9', '+', '/'
-    };
-
-    public static String encode(byte[] in) {
-        return encode(in, MAP);
+    static String encode(byte[] in) {
+        return encode(in, false, true);
     }
 
-    private static String encode(byte[] in, byte[] map) {
-        int length = (in.length + 2) / 3 * 4;
+    static String encode(byte[] in, boolean urlSafe, boolean usePadding) {
+        return encode(in, urlSafe ? URL_MAP : MAP, usePadding);
+    }
+
+    private static String encode(byte[] in, byte[] map, boolean usePadding) {
+        int length = outLength(in.length, usePadding);
         byte[] out = new byte[length];
         int index = 0, end = in.length - in.length % 3;
         for (int i = 0; i < end; i += 3) {
@@ -139,16 +150,32 @@ final class Base64 {
             case 1:
                 out[index++] = map[(in[end] & 0xff) >> 2];
                 out[index++] = map[(in[end] & 0x03) << 4];
-                out[index++] = '=';
-                out[index++] = '=';
+                if (usePadding) {
+                    out[index++] = '=';
+                    out[index] = '=';
+                }
                 break;
             case 2:
                 out[index++] = map[(in[end] & 0xff) >> 2];
                 out[index++] = map[((in[end] & 0x03) << 4) | ((in[end + 1] & 0xff) >> 4)];
                 out[index++] = map[((in[end + 1] & 0x0f) << 2)];
-                out[index++] = '=';
+
+                if (usePadding) {
+                    out[index] = '=';
+                }
                 break;
         }
         return new String(out, StandardCharsets.US_ASCII);
+    }
+
+    private static int outLength(int srclen, boolean doPadding) {
+        int len;
+        if (doPadding) {
+            len = 4 * ((srclen + 2) / 3);
+        } else {
+            int n = srclen % 3;
+            len = 4 * (srclen / 3) + (n == 0 ? 0 : n + 1);
+        }
+        return len;
     }
 }
