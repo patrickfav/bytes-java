@@ -375,6 +375,7 @@ And others:
 
 ```java
 Bytes.wrap(array).count(0x01); //occurrences of 0x01
+Bytes.wrap(array).count(new byte[] {0x01, 0xEF}); //occurrences of pattern [0x01, 0xEF]
 Bytes.wrap(array).entropy();
 ```
 
