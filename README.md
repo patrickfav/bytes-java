@@ -352,8 +352,11 @@ Finding occurrence of specific bytes:
 ```java
 Bytes.wrap(array).contains((byte) 0xE1);
 Bytes.wrap(array).indexOf((byte) 0xFD);
+Bytes.wrap(array).indexOf(new byte[] {(byte) 0xFD, 0x23});
 Bytes.wrap(array).indexOf((byte) 0xFD, 5); //search fromIndex 5
 Bytes.wrap(array).lastIndexOf((byte) 0xAE);
+Bytes.wrap(array).startsWith(new byte[] {(byte) 0xAE, 0x32});
+Bytes.wrap(array).endsWidth(new byte[] {(byte) 0xAE, 0x23});
 ```
 
 Length checks:

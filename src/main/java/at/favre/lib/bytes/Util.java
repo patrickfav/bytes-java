@@ -67,15 +67,15 @@ final class Util {
      * @param array  the array to search for the sequence {@code target}
      * @param target the array to search for as a sub-sequence of {@code array}
      */
-    static int indexOf(byte[] array, byte[] target, int start) {
+    static int indexOf(byte[] array, byte[] target, int start, int end) {
         Objects.requireNonNull(array, "array must not be null");
         Objects.requireNonNull(target, "target must not be null");
-        if (target.length == 0) {
+        if (target.length == 0 || start < 0) {
             return -1;
         }
 
         outer:
-        for (int i = start; i < array.length - target.length + 1; i++) {
+        for (int i = start; i < Math.min(end, array.length - target.length + 1); i++) {
             for (int j = 0; j < target.length; j++) {
                 if (array[i + j] != target[j]) {
                     continue outer;

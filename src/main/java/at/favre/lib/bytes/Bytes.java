@@ -1120,7 +1120,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * {@code -1} if no such index exists or fromIndex is gt target length.
      */
     public int indexOf(byte target, int fromIndex) {
-        return Util.indexOf(internalArray(), new byte[]{target}, fromIndex);
+        return indexOf(new byte[]{target}, fromIndex);
     }
 
     /**
@@ -1136,7 +1136,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * {@code -1} if no such index exists.
      */
     public int indexOf(byte[] subArray) {
-        return Util.indexOf(internalArray(), subArray, 0);
+        return indexOf(subArray, 0);
     }
 
     /**
@@ -1154,7 +1154,18 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * {@code -1} if no such index exists.
      */
     public int indexOf(byte[] subArray, int fromIndex) {
-        return Util.indexOf(internalArray(), subArray, fromIndex);
+        return Util.indexOf(internalArray(), subArray, fromIndex, length());
+    }
+
+    /**
+     * Checks if the given sub array is equal to the start of given array. That is, sub array must be gt or eq
+     * to the length of the internal array and <code>internal[i] == subArray[i]</code> for i=0..subArray.length-1
+     *
+     * @param subArray to check against the start of the internal array
+     * @return true if the start of the internal array is eq to given sub array
+     */
+    public boolean startsWith(byte[] subArray) {
+        return Util.indexOf(internalArray(), subArray, 0, 1) == 0;
     }
 
     /**
@@ -1167,6 +1178,18 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public int lastIndexOf(byte target) {
         return Util.lastIndexOf(internalArray(), target, 0, length());
+    }
+
+    /**
+     * Checks if the given sub array is equal to the end of given array. That is, sub array must be gt or eq
+     * to the length of the internal array and <code>internal[i] == subArray[i]</code> for i=subArray.length...internal.length
+     *
+     * @param subArray to check against the end of the internal array
+     * @return true if the end of the internal array is eq to given sub array
+     */
+    public boolean endsWith(byte[] subArray) {
+        int startIndex = length() - subArray.length;
+        return startIndex >= 0 && Util.indexOf(internalArray(), subArray, startIndex, startIndex + 1) == startIndex;
     }
 
     /**

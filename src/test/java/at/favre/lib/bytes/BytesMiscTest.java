@@ -191,6 +191,32 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
+    public void startsWidth() {
+        assertFalse(Bytes.allocate(0).startsWith(new byte[1]));
+        assertTrue(Bytes.allocate(1).startsWith(new byte[1]));
+        assertTrue(Bytes.allocate(128).startsWith(new byte[1]));
+        assertTrue(Bytes.allocate(128).startsWith(new byte[128]));
+        assertTrue(Bytes.from(example_bytes_seven).startsWith(new byte[]{0x4A}));
+        assertTrue(Bytes.from(example_bytes_seven).startsWith(new byte[]{0x4A, (byte) 0x94}));
+        assertTrue(Bytes.from(example_bytes_seven).startsWith(new byte[]{0x4A, (byte) 0x94, (byte) 0xFD}));
+        assertFalse(Bytes.from(example_bytes_seven).startsWith(new byte[]{0x4A, (byte) 0x94, (byte) 0x1D}));
+        assertTrue(Bytes.from(example_bytes_seven).startsWith(Bytes.from(example_bytes_seven).array()));
+        assertFalse(Bytes.from(example_bytes_seven).startsWith(Bytes.from(example_bytes_seven).append(0x30).array()));
+    }
+
+    @Test
+    public void endsWith() {
+        assertTrue(Bytes.from(example_bytes_seven).endsWith(new byte[]{(byte) 0xFF, 0x1E, (byte) 0xAF, (byte) 0xED}));
+        assertTrue(Bytes.from(example_bytes_seven).endsWith(new byte[]{0x1E, (byte) 0xAF, (byte) 0xED}));
+        assertTrue(Bytes.from(example_bytes_seven).endsWith(new byte[]{(byte) 0xAF, (byte) 0xED}));
+        assertTrue(Bytes.from(example_bytes_seven).endsWith(new byte[]{(byte) 0xED}));
+        assertFalse(Bytes.allocate(0).endsWith(new byte[1]));
+        assertTrue(Bytes.allocate(1).endsWith(new byte[1]));
+        assertTrue(Bytes.allocate(128).endsWith(new byte[1]));
+        assertTrue(Bytes.allocate(128).endsWith(new byte[128]));
+    }
+
+    @Test
     public void lastIndexOf() {
         assertEquals(-1, Bytes.allocate(0).lastIndexOf((byte) 0xFD));
         assertEquals(127, Bytes.allocate(128).lastIndexOf((byte) 0x00));
