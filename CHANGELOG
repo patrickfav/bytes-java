@@ -5,6 +5,7 @@
  * add `count` method for counting byte arrays (like pattern matching)
  * add dedicated `md5` and `sha1` transformer methods
  * add `from(Inputstream stream, int maxlength)` limiting stream reading constructor #13
+ * add indexOf() with `fromIndex` parameter #14
 
 ## v0.6.0
 

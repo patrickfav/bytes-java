@@ -1109,14 +1109,27 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     /**
      * Returns the index of the first appearance of the value {@code target} in
-     * {@code array}.
+     * {@code array}. Same as calling {@link #indexOf(byte, int)} with fromIndex '0'.
      *
      * @param target a primitive {@code byte} value
      * @return the least index {@code i} for which {@code array[i] == target}, or
      * {@code -1} if no such index exists.
      */
     public int indexOf(byte target) {
-        return Util.indexOf(internalArray(), target, 0, length());
+        return indexOf(target, 0);
+    }
+
+    /**
+     * Returns the index of the first appearance of the value {@code target} in
+     * {@code array} from given start index 'fromIndex'.
+     *
+     * @param target    a primitive {@code byte} value
+     * @param fromIndex search from this index
+     * @return the least index {@code i} for which {@code array[i] == target}, or
+     * {@code -1} if no such index exists or fromIndex is gt target length.
+     */
+    public int indexOf(byte target, int fromIndex) {
+        return Util.indexOf(internalArray(), target, fromIndex, length());
     }
 
     /**

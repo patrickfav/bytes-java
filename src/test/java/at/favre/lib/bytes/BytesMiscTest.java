@@ -166,6 +166,16 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
+    public void indexOfByteFromIndex() {
+        assertEquals(-1, Bytes.allocate(0).indexOf((byte) 0xFD, 0));
+        assertEquals(-1, Bytes.allocate(0).indexOf((byte) 0xFD, 100));
+        assertEquals(5, Bytes.allocate(128).indexOf((byte) 0x00, 5));
+        assertEquals(2, Bytes.from(example_bytes_sixteen).indexOf((byte) 0xFD, 0));
+        assertEquals(10, Bytes.from(example_bytes_sixteen).indexOf((byte) 0xFD, 5));
+    }
+
+
+    @Test
     public void indexOfArray() {
         assertEquals(-1, Bytes.allocate(0).indexOf(new byte[]{(byte) 0xFD}));
         assertEquals(0, Bytes.allocate(1).indexOf(new byte[0]));
