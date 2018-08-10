@@ -4,7 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.Random;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 import java.util.zip.GZIPInputStream;
@@ -138,7 +141,7 @@ public final class BytesTransformers {
      * Sorts the internal byte array with given {@link java.util.Comparator}
      */
     public static final class SortTransformer implements BytesTransformer {
-        private final Comparator<Byte> comparator;
+        private final Comparator comparator;
 
         SortTransformer() {
             this(null);
@@ -156,9 +159,9 @@ public final class BytesTransformers {
                 return out;
             } else {
                 //no in-place implementation with comparator
-                List<Byte> list = Bytes.wrap(currentArray).toList();
-                Collections.sort(list, comparator);
-                return Bytes.from(list).array();
+                Byte[] boxedArray = Bytes.wrap(currentArray).toBoxedArray();
+                Arrays.sort(boxedArray, comparator);
+                return Bytes.from(boxedArray).array();
             }
         }
 
