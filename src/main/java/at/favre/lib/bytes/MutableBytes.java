@@ -131,6 +131,11 @@ public final class MutableBytes extends Bytes {
         return Util.hashCode(internalArray(), byteOrder());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
     /**
      * Factory creating mutable byte types
      */
