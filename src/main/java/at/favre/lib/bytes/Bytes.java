@@ -1880,8 +1880,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     @Override
     public int hashCode() {
         if (hashCodeCache == 0) {
-            hashCodeCache = Arrays.hashCode(byteArray);
-            hashCodeCache = 31 * hashCodeCache + (byteOrder != null ? byteOrder.hashCode() : 0);
+            hashCodeCache = Util.hashCode(internalArray(), byteOrder());
         }
         return hashCodeCache;
     }

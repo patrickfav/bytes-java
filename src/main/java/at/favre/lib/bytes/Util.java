@@ -21,10 +21,25 @@
 
 package at.favre.lib.bytes;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInput;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Common Util methods to convert or modify byte arrays
@@ -487,6 +502,19 @@ final class Util {
         bb.putLong(uuid.getMostSignificantBits());
         bb.putLong(uuid.getLeastSignificantBits());
         return bb;
+    }
+
+    /**
+     * Hashcode implementation for a byte array and given byte order
+     *
+     * @param byteArray
+     * @param byteOrder
+     * @return hashCode
+     */
+    static int hashCode(byte[] byteArray, ByteOrder byteOrder) {
+        int result = Arrays.hashCode(byteArray);
+        result = 31 * result + (byteOrder != null ? byteOrder.hashCode() : 0);
+        return result;
     }
 
     /*
