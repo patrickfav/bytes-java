@@ -7,7 +7,7 @@ as well as **immutable** and **mutable** access, so the caller may decide to fav
 performance. This can be seen as combination of the features provided by
 [`BigInteger`](https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html),
 [`ByteBuffer`](https://docs.oracle.com/javase/7/docs/api/java/nio/ByteBuffer.html) but
-providing a lot of additional features. The main goal is to minimize the need
+providing a lot of additional features (similar to Okio's [ByteString](https://github.com/square/okio)). The main goal is to minimize the need
 to blindly paste code snippets from
 [s](https://stackoverflow.com/questions/140131/convert-a-string-representation-of-a-hex-dump-to-a-byte-array-using-java)
 [t](https://stackoverflow.com/questions/12893758/how-to-reverse-the-byte-array-in-java)
