@@ -1,5 +1,7 @@
 package at.favre.lib.bytes;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -111,6 +113,37 @@ public final class BytesTransformers {
      */
     public static BytesTransformer decompressGzip() {
         return new GzipCompressor(false);
+    }
+
+    /**
+     * Create a {@link BytesTransformer} which returns the HMAC-SHA1 with given key, of the target byte array
+     *
+     * @param key to use for HMAC
+     * @return hmac
+     */
+    public static BytesTransformer hmacSha1(byte[] key) {
+        return new HmacTransformer(key, HmacTransformer.HMAC_SHA1);
+    }
+
+    /**
+     * Create a {@link BytesTransformer} which returns the HMAC-SHA256 with given key, of the target byte array
+     *
+     * @param key to use for HMAC
+     * @return hmac
+     */
+    public static BytesTransformer hmacSha256(byte[] key) {
+        return new HmacTransformer(key, HmacTransformer.HMAC_SHA256);
+    }
+
+    /**
+     * Create a {@link BytesTransformer} which returns the HMAC with given key, algorithm of the target byte array
+     *
+     * @param key           to use for HMAC
+     * @param algorithmName e.g. 'HmacSHA256' - check if the algorithm is supported on your JVM/runtime
+     * @return hmac (length depends on algorithm)
+     */
+    public static BytesTransformer hmac(byte[] key, String algorithmName) {
+        return new HmacTransformer(key, algorithmName);
     }
 
     /**
@@ -295,6 +328,38 @@ public final class BytesTransformers {
                     } catch (IOException ignore) {
                     }
                 }
+            }
+        }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return false;
+        }
+    }
+
+    /**
+     * HMAC transformer
+     */
+    public static final class HmacTransformer implements BytesTransformer {
+        static final String HMAC_SHA1 = "HmacSHA1";
+        static final String HMAC_SHA256 = "HmacSHA256";
+
+        private final byte[] secretKey;
+        private final String macAlgorithmName;
+
+        public HmacTransformer(byte[] secretKey, String macAlgorithmName) {
+            this.macAlgorithmName = macAlgorithmName;
+            this.secretKey = secretKey;
+        }
+
+        @Override
+        public byte[] transform(byte[] currentArray, boolean inPlace) {
+            try {
+                Mac mac = Mac.getInstance(macAlgorithmName);
+                mac.init(new SecretKeySpec(secretKey, macAlgorithmName));
+                return mac.doFinal(currentArray);
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e);
             }
         }
 

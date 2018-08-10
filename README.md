@@ -245,6 +245,14 @@ can be statically imported for a less verbose syntax:
 import static at.favre.lib.bytes.BytesTransformers.*;
 ```
 
+**HMAC** used to calculate [keyed-hash message authentication code](https://en.wikipedia.org/wiki/HMAC):
+
+```java
+Bytes.wrap(array).transform(hmacSha256(macKey32Byte));
+Bytes.wrap(array).transform(hmacSha1(macKey20Byte));
+Bytes.wrap(array).transform(hmac(macKey20Byte,"HmacMd5"));
+```
+
 **Checksum** can be calculated or automatically appended:
 
 ```java

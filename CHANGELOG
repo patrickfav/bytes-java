@@ -10,6 +10,7 @@
  * use EMPTY constant instance for empty byte array to safe memory #16
  * add `startsWith()` and `endsWidth()` methods #12
  * add cache for calculating the hashCode
+ * add HMAC byte transformer #11
 
 ## v0.6.0
 

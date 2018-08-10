@@ -445,4 +445,21 @@ public class BytesTransformTest extends ABytesTest {
         }).supportInPlaceTransformation());
         assertTrue(new BytesTransformers.ShuffleTransformer(new SecureRandom()).supportInPlaceTransformation());
     }
+
+    @Test
+    public void transformHmac() {
+        System.out.println(Bytes.parseHex("d8b6239569b184eb7991").transform(new HmacTransformer(Bytes.parseHex("671536819982").array(), "HmacSHA256")).encodeHex());
+
+        assertEquals(Bytes.parseHex("d8f0eda7a00192091ad8fefa501753ae"), Bytes.allocate(16).transform(new HmacTransformer(new byte[16], "HmacMd5")));
+        assertEquals(Bytes.parseHex("c69c13e005ae8ec628ec1869f334ca056bb38958"), Bytes.allocate(16).transform(new HmacTransformer(new byte[20], "HmacSHA1")));
+        assertEquals(Bytes.parseHex("c69c13e005ae8ec628ec1869f334ca056bb38958"), Bytes.allocate(16).transform(BytesTransformers.hmacSha1(new byte[20])));
+        assertEquals(Bytes.parseHex("853c7403937d8b6239569b184eb7993fc5f751aefcea28f2c863858e2d29c50b"), Bytes.allocate(16).transform(new HmacTransformer(new byte[32], "HmacSHA256")));
+        assertEquals(Bytes.parseHex("9aff87db4fd8df58c9081d8386ccc71c9a0f5fe9491235b7bb17e1be20bbe82b"), Bytes.parseHex("d8b6239569b184eb7991").transform(new HmacTransformer(Bytes.parseHex("671536819982").array(), "HmacSHA256")));
+        assertEquals(Bytes.parseHex("9aff87db4fd8df58c9081d8386ccc71c9a0f5fe9491235b7bb17e1be20bbe82b"), Bytes.parseHex("d8b6239569b184eb7991").transform(BytesTransformers.hmacSha256(Bytes.parseHex("671536819982").array())));
+        assertEquals(Bytes.parseHex("9aff87db4fd8df58c9081d8386ccc71c9a0f5fe9491235b7bb17e1be20bbe82b"), Bytes.parseHex("d8b6239569b184eb7991").transform(BytesTransformers.hmac(Bytes.parseHex("671536819982").array(), "HmacSHA256")));
+
+        //reference test vectors - see https://tools.ietf.org/html/rfc2104
+        assertEquals(Bytes.parseHex("9294727a3638bb1c13f48ef8158bfc9d"), Bytes.from("Hi There").transform(new HmacTransformer(Bytes.parseHex("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b").array(), "HmacMd5")));
+        assertEquals(Bytes.parseHex("56be34521d144c88dbb8c733f0e8b3f6"), Bytes.parseHex("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD").transform(new HmacTransformer(Bytes.parseHex("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").array(), "HmacMd5")));
+    }
 }
