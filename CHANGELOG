@@ -9,6 +9,7 @@
  * add support for base64 url safe encoding #15
  * use EMPTY constant instance for empty byte array to safe memory #16
  * add `startsWith()` and `endsWidth()` methods #12
+ * add cache for calculating the hashCode
 
 ## v0.6.0
 

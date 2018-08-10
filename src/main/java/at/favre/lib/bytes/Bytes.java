@@ -21,7 +21,11 @@
 
 package at.favre.lib.bytes;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataInput;
+import java.io.File;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -31,7 +35,14 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.Normalizer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Bytes is wrapper class for an byte-array that allows a lot of convenience operations on it:
@@ -52,7 +63,7 @@ import java.util.*;
  * <p>
  * <strong>Example:</strong>
  * <pre>
- *     Bytes b = Bytes.from(array);
+ *     Bytes b = Bytes.from(array).mutable();
  *     b.not();
  *     System.out.println(b.encodeHex());
  * </pre>
@@ -609,6 +620,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     private final byte[] byteArray;
     private final ByteOrder byteOrder;
     private final BytesFactory factory;
+    private transient int hashCodeCache;
 
     Bytes(byte[] byteArray, ByteOrder byteOrder) {
         this(byteArray, byteOrder, new Factory());
@@ -1867,13 +1879,15 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     @Override
     public int hashCode() {
-        int result = Arrays.hashCode(byteArray);
-        result = 31 * result + (byteOrder != null ? byteOrder.hashCode() : 0);
-        return result;
+        if (hashCodeCache == 0) {
+            hashCodeCache = Arrays.hashCode(byteArray);
+            hashCodeCache = 31 * hashCodeCache + (byteOrder != null ? byteOrder.hashCode() : 0);
+        }
+        return hashCodeCache;
     }
 
     /**
-     * A memory safe toString implementation, which only shows the byte length and at most 8 bytes preview in hex
+     * A constant length output toString() implementation, which only shows the byte length and at most 8 bytes preview in hex
      * representation.
      *
      * @return string representation

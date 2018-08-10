@@ -52,6 +52,9 @@ public class BytesMiscTest extends ABytesTest {
 
     @Test
     public void testHashcode() {
+        Bytes instance = Bytes.wrap(example_bytes_seven);
+        assertEquals(instance.hashCode(), instance.hashCode());
+        assertNotEquals(0, instance.hashCode());
         assertEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.from(example_bytes_seven).hashCode());
         assertEquals(Bytes.wrap(example2_bytes_seven).hashCode(), Bytes.from(example2_bytes_seven).hashCode());
         assertNotEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.wrap(example2_bytes_seven).hashCode());
