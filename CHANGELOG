@@ -12,6 +12,7 @@
  * add cache for calculating the hashCode
  * add HMAC byte transformer #11
  * add unsigned sort transformer #17
+ * add `.immutable()` converter in MutableBytes #18
 
 ## v0.6.0
 

@@ -126,6 +126,17 @@ public final class MutableBytes extends Bytes {
         return this;
     }
 
+    /**
+     * Convert this instance to an immutable version with the same reference of the internal array and byte-order.
+     * If the mutable instance is kept, it can be used to alter the internal array of the just created instance, so be
+     * aware.
+     *
+     * @return immutable version of this instance
+     */
+    public Bytes immutable() {
+        return Bytes.wrap(internalArray(), byteOrder());
+    }
+
     @Override
     public int hashCode() {
         return Util.hashCode(internalArray(), byteOrder());

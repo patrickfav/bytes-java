@@ -28,30 +28,30 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class MutableBytesABytesTest extends ABytesTest {
+public class MutableBytesTest extends ABytesTest {
     @Test
-    public void overwriteWithEmptyArray() throws Exception {
+    public void overwriteWithEmptyArray() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         assertSame(b, b.overwrite(new byte[example_bytes_seven.length]));
         assertArrayEquals(new byte[example_bytes_seven.length], b.array());
     }
 
     @Test
-    public void overwriteOtherArray() throws Exception {
+    public void overwriteOtherArray() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         assertSame(b, b.overwrite(Arrays.copyOf(example2_bytes_seven, example2_bytes_seven.length)));
         assertArrayEquals(example2_bytes_seven, b.array());
     }
 
     @Test
-    public void overwritePartialArray() throws Exception {
+    public void overwritePartialArray() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         assertSame(b, b.overwrite(new byte[]{(byte) 0xAA}, 0));
         assertArrayEquals(Bytes.from((byte) 0xAA).append(Bytes.wrap(example_bytes_seven).copy(1, example_bytes_seven.length - 1)).array(), b.array());
     }
 
     @Test
-    public void overwritePartialArray2() throws Exception {
+    public void overwritePartialArray2() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         assertSame(b, b.overwrite(new byte[]{(byte) 0xAA}, 1));
         assertArrayEquals(
@@ -62,14 +62,44 @@ public class MutableBytesABytesTest extends ABytesTest {
     }
 
     @Test
-    public void fill() throws Exception {
+    public void fill() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         assertSame(b, b.fill((byte) 0));
         assertArrayEquals(new byte[example_bytes_seven.length], b.array());
     }
 
     @Test
-    public void setByteAtTest() throws Exception {
+    public void testConvertImmutable() {
+        Bytes b = Bytes.from(example_bytes_seven);
+        MutableBytes m = b.copy().mutable();
+        assertNotEquals(b, m);
+        assertTrue(b.equalsContent(m));
+        assertEquals(b.byteOrder(), m.byteOrder());
+
+        Bytes m2b = m.immutable();
+        assertNotEquals(m2b, m);
+        assertEquals(m2b, b);
+        assertNotSame(m2b, b);
+        assertTrue(m2b.equalsContent(m));
+        assertEquals(m2b.byteOrder(), m.byteOrder());
+
+        assertEquals(m.length(), m2b.length());
+        assertEquals(m.length(), b.length());
+
+        assertNotEquals(example_bytes_seven[0], 0);
+        assertEquals(example_bytes_seven[0], b.byteAt(0));
+        assertEquals(example_bytes_seven[0], m.byteAt(0));
+        assertEquals(example_bytes_seven[0], m2b.byteAt(0));
+
+        m.fill((byte) 0);
+
+        assertEquals(example_bytes_seven[0], b.byteAt(0));
+        assertEquals(0, m.byteAt(0));
+        assertEquals(0, m2b.byteAt(0));
+    }
+
+    @Test
+    public void setByteAtTest() {
         MutableBytes b = fromAndTest(example_bytes_sixteen).mutable();
 
         for (int i = 0; i < b.length(); i++) {
@@ -82,14 +112,14 @@ public class MutableBytesABytesTest extends ABytesTest {
     }
 
     @Test
-    public void wipe() throws Exception {
+    public void wipe() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         assertSame(b, b.wipe());
         assertArrayEquals(new byte[example_bytes_seven.length], b.array());
     }
 
     @Test
-    public void secureWipe() throws Exception {
+    public void secureWipe() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         int hashcode = b.hashCode();
         assertSame(b, b.secureWipe());
@@ -99,7 +129,7 @@ public class MutableBytesABytesTest extends ABytesTest {
     }
 
     @Test
-    public void secureWipeWithSecureRandom() throws Exception {
+    public void secureWipeWithSecureRandom() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         int hashcode = b.hashCode();
         assertSame(b, b.secureWipe(new SecureRandom()));
@@ -109,18 +139,18 @@ public class MutableBytesABytesTest extends ABytesTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void secureWipeShouldThrowException() throws Exception {
+    public void secureWipeShouldThrowException() {
         Bytes.wrap(new byte[0]).mutable().secureWipe(null);
     }
 
     @Test
-    public void testIfGetSameInstance() throws Exception {
+    public void testIfGetSameInstance() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         assertSame(b, b.mutable());
     }
 
     @Test
-    public void testTransformerShouldBeMutable() throws Exception {
+    public void testTransformerShouldBeMutable() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         assertTrue(b.isMutable());
         assertTrue(b.copy().isMutable());

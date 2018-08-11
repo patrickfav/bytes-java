@@ -549,6 +549,12 @@ b.wipe() //fills with zeros
 b.secureWipe() //fills with random data
 ```
 
+Create a immutable version again with:
+
+```java
+Bytes b2 = b.immutable();
+```
+
 *Note:* a copy will inherit mutability/read-only properties:
 
 ```java
