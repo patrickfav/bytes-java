@@ -621,8 +621,9 @@ Use the Maven wrapper to create a jar including all dependencies
 
 # Credits
 
-* Byte util methods derived from primitives.Bytes from [Google Guava](https://github.com/google/guava)
-* Entropy class derived from [Twitter Commons](https://github.com/twitter/commons)
+* Byte util methods derived from `primitives.Bytes` from [Google Guava](https://github.com/google/guava) (Apache v2)
+* Entropy class derived from [Twitter Commons](https://github.com/twitter/commons) (Apache v2)
+* Base64 implementation and some util methods from [Okio](https://github.com/square/okio) (Apache v2)
 
 # License
 
