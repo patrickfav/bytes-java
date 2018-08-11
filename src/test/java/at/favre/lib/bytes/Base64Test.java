@@ -23,7 +23,8 @@ package at.favre.lib.bytes;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Test cases from rfc4648
@@ -48,16 +49,15 @@ public class Base64Test {
 
     @Test
     public void encode() {
-        assertEquals("", Base64.encode("".getBytes()));
-        assertEquals("Zg==", Base64.encode("f".getBytes()));
-        assertEquals("Zm8=", Base64.encode("fo".getBytes()));
-        assertEquals("Zm9v", Base64.encode("foo".getBytes()));
-        assertEquals("Zm9vYg==", Base64.encode("foob".getBytes()));
-        assertEquals("Zm9vYmE=", Base64.encode("fooba".getBytes()));
-        assertEquals("Zm9vYmFy", Base64.encode("foobar".getBytes()));
-        assertEquals("aQo=", Base64.encode("i\n".getBytes()));
-        assertEquals("aSA=", Base64.encode("i ".getBytes()));
-
+        assertArrayEquals(Bytes.from("").array(), Base64.encode("".getBytes()));
+        assertArrayEquals(Bytes.from("Zg==").array(), Base64.encode("f".getBytes()));
+        assertArrayEquals(Bytes.from("Zm8=").array(), Base64.encode("fo".getBytes()));
+        assertArrayEquals(Bytes.from("Zm9v").array(), Base64.encode("foo".getBytes()));
+        assertArrayEquals(Bytes.from("Zm9vYg==").array(), Base64.encode("foob".getBytes()));
+        assertArrayEquals(Bytes.from("Zm9vYmE=").array(), Base64.encode("fooba".getBytes()));
+        assertArrayEquals(Bytes.from("Zm9vYmFy").array(), Base64.encode("foobar".getBytes()));
+        assertArrayEquals(Bytes.from("aQo=").array(), Base64.encode("i\n".getBytes()));
+        assertArrayEquals(Bytes.from("aSA=").array(), Base64.encode("i ".getBytes()));
     }
 
 }
