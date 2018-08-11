@@ -1,6 +1,6 @@
 # Releases
 
-## v0.8.0
+## v0.7.1
 
 * sign AFTER ProGuard so optimized version has correct jar signature
 
