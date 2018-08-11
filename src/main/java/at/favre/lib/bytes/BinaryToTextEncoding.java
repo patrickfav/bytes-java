@@ -181,8 +181,8 @@ public interface BinaryToTextEncoding {
             return array;
         }
 
-        private int maxLength(byte[] data, int radix) {
-            return BigInteger.valueOf(2).pow(BigInteger.valueOf(data.length).multiply(BigInteger.valueOf(8)).intValue()).toString(radix).length();
-        }
+//        private int maxLength(byte[] data, int radix) {
+//            return BigInteger.valueOf(2).pow(BigInteger.valueOf(data.length).multiply(BigInteger.valueOf(8)).intValue()).toString(radix).length();
+//        }
     }
 }
