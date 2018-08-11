@@ -6,7 +6,7 @@
 
     <groupId>at.favre.lib</groupId>
     <artifactId>bytes</artifactId>
-    <version>0.7.1</version>
+    <version>0.8.0</version>
     <packaging>jar</packaging>
 
     <name>Bytes Utility Library</name>
