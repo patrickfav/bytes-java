@@ -347,7 +347,13 @@ public final class BytesTransformers {
         private final byte[] secretKey;
         private final String macAlgorithmName;
 
-        public HmacTransformer(byte[] secretKey, String macAlgorithmName) {
+        /**
+         * Create a new hmac transformer
+         *
+         * @param secretKey        to use as key
+         * @param macAlgorithmName hash algorithm e.g. 'HmacSHA256'
+         */
+        HmacTransformer(byte[] secretKey, String macAlgorithmName) {
             this.macAlgorithmName = macAlgorithmName;
             this.secretKey = secretKey;
         }
