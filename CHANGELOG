@@ -2,6 +2,8 @@
 
 ## v0.8.0
 
+* sign AFTER ProGuard so optimized version has correct jar signature
+
 ## v0.7.0
 
  * add `count` method for counting byte arrays (like pattern matching)
