@@ -23,6 +23,7 @@ package at.favre.lib.bytes;
 
 import java.math.BigInteger;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
@@ -146,7 +147,7 @@ public interface BinaryToTextEncoding {
 
         @Override
         public String encode(byte[] array, ByteOrder byteOrder) {
-            return Base64.encode((byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.from(array).reverse().array(), urlSafe, padding);
+            return new String(Base64.encode((byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.from(array).reverse().array(), urlSafe, padding), StandardCharsets.US_ASCII);
         }
 
         @Override

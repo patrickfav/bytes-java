@@ -21,8 +21,6 @@
 
 package at.favre.lib.bytes;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * From https://github.com/square/okio/blob/okio-parent-1.15.0/okio/src/main/java/okio/Base64.java
  * under Apache 2 license.
@@ -128,15 +126,15 @@ final class Base64 {
         return prefix;
     }
 
-    static String encode(byte[] in) {
+    static byte[] encode(byte[] in) {
         return encode(in, false, true);
     }
 
-    static String encode(byte[] in, boolean urlSafe, boolean usePadding) {
+    static byte[] encode(byte[] in, boolean urlSafe, boolean usePadding) {
         return encode(in, urlSafe ? URL_MAP : MAP, usePadding);
     }
 
-    private static String encode(byte[] in, byte[] map, boolean usePadding) {
+    private static byte[] encode(byte[] in, byte[] map, boolean usePadding) {
         int length = outLength(in.length, usePadding);
         byte[] out = new byte[length];
         int index = 0, end = in.length - in.length % 3;
@@ -165,7 +163,7 @@ final class Base64 {
                 }
                 break;
         }
-        return new String(out, StandardCharsets.US_ASCII);
+        return out;
     }
 
     private static int outLength(int srclen, boolean doPadding) {
