@@ -271,7 +271,8 @@ Bytes decompressed = compressed.transform(decompressGzip());
 **Sorting** of individual bytes with either [`Comparator`](https://docs.oracle.com/javase/7/docs/api/java/util/Comparator.html) or natural order:
 
 ```java
-Bytes.wrap(array).transform(sort());
+Bytes.wrap(array).transform(sort()); // 0x00 sorts after 0xff
+Bytes.wrap(array).transform(sortUnsigned()); // 0xff sorts after 0x00
 Bytes.wrap(array).transform(sort(byteComparator));
 ```
 

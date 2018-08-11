@@ -44,7 +44,8 @@ public final class BytesTransformers {
     }
 
     /**
-     * Create a {@link BytesTransformer} which sorts the internal byte array with it's natural ordering.
+     * Create a {@link BytesTransformer} which sorts the internal byte array with it's natural ordering treating
+     * each byte as signed byte (-128...127). Using inplace sorting, this can be reasonable fast.
      *
      * @return transformer
      */
@@ -53,7 +54,23 @@ public final class BytesTransformers {
     }
 
     /**
+     * Create a {@link BytesTransformer} which sorts the internal byte array with it's natural ordering treating
+     * each byte as unsigned byte (0...255). That is, the byte string {@code ff} sorts after {@code 00}.
+     *
+     * <strong>Note:</strong> this requires 2 copies of the internal array and a lot of unboxing due to
+     * the fact that no primitives are not allowed as generic type arguments - so only use on small arrays.
+     *
+     * @return transformer
+     */
+    public static BytesTransformer sortUnsigned() {
+        return new SortTransformer(new SortTransformer.UnsignedByteComparator());
+    }
+
+    /**
      * Create a {@link BytesTransformer} which sorts the internal byte array according to given comparator.
+     *
+     * <strong>Note:</strong> this requires 2 copies of the internal array and a lot of unboxing due to
+     * the fact that no primitives are not allowed as generic type arguments - so only use on small arrays.
      *
      * @param comparator to sort the bytes
      * @return transformer
@@ -168,6 +185,7 @@ public final class BytesTransformers {
         public boolean supportInPlaceTransformation() {
             return true;
         }
+
     }
 
     /**
@@ -202,26 +220,26 @@ public final class BytesTransformers {
         public boolean supportInPlaceTransformation() {
             return comparator == null;
         }
+
+        /**
+         * Converting each byte into unsinged version and comparing it (0...255) vs (-128..127)
+         */
+        static final class UnsignedByteComparator implements Comparator<Byte> {
+            @Override
+            public int compare(Byte o1, Byte o2) {
+                int byteA = o1 & 0xff;
+                int byteB = o2 & 0xff;
+                if (byteA == byteB) return 0;
+                return byteA < byteB ? -1 : 1;
+            }
+        }
+
     }
 
     /**
      * Adds or converts to arbitrary checksum
      */
     public static final class ChecksumTransformer implements BytesTransformer {
-        /**
-         * Definitions of the mode
-         */
-        public enum Mode {
-            /**
-             * Appends checksum to given byte array
-             */
-            APPEND,
-            /**
-             * Transforms byte array and returns only checksum
-             */
-            TRANSFORM
-        }
-
         private final Checksum checksum;
         private final Mode mode;
         private final int checksumLengthByte;
@@ -251,6 +269,20 @@ public final class BytesTransformers {
         @Override
         public boolean supportInPlaceTransformation() {
             return false;
+        }
+
+        /**
+         * Definitions of the mode
+         */
+        public enum Mode {
+            /**
+             * Appends checksum to given byte array
+             */
+            APPEND,
+            /**
+             * Transforms byte array and returns only checksum
+             */
+            TRANSFORM
         }
     }
 

@@ -270,16 +270,26 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
-    public void sortTest() {
-        byte[] sorted = new byte[]{0, 1, 2, 3, 4, 5, 6};
+    public void sortSignedTest() {
+        byte[] sorted = new byte[]{-2, -1, 0, 1, 2, 3, 4, 5, 6};
         assertArrayEquals(sorted, Bytes.from(sorted).transform(shuffle()).transform(sort()).array());
-        assertArrayEquals(sorted, Bytes.from(new byte[]{6, 0, 3, 4, 1, 5, 2}).transform(sort()).array());
-        assertArrayEquals(Bytes.from(sorted).reverse().array(), Bytes.from(new byte[]{6, 0, 3, 4, 1, 5, 2}).transform(sort(new Comparator<Byte>() {
+        assertArrayEquals(sorted, Bytes.from(new byte[]{6, 0, 3, -2, -1, 4, 1, 5, 2}).transform(sort()).array());
+        assertArrayEquals(Bytes.from(sorted).reverse().array(), Bytes.from(new byte[]{6, -2, -1, 0, 3, 4, 1, 5, 2}).transform(sort(new Comparator<Byte>() {
             @Override
             public int compare(Byte o1, Byte o2) {
                 return o2.compareTo(o1);
             }
         })).array());
+
+        byte[] checkSignedSorted = new byte[]{(byte) 0x80, (byte) 0xFE, (byte) 0xFF, 0x00, 0x01};
+        assertArrayEquals(checkSignedSorted, Bytes.from(checkSignedSorted).transform(shuffle()).transform(sort()).array());
+    }
+
+    @Test
+    public void sortUnsignedTest() {
+        byte[] sorted = new byte[]{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, (byte) 0x80, (byte) 0xAE, (byte) 0xFF};
+        assertArrayEquals(sorted, Bytes.from(sorted).transform(shuffle()).transform(sortUnsigned()).array());
+        assertArrayEquals(sorted, Bytes.from(new byte[]{(byte) 0x80, (byte) 0xAE, (byte) 0xFF, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06}).transform(sortUnsigned()).array());
     }
 
     @Test

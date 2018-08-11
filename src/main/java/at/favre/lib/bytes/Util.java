@@ -497,8 +497,8 @@ final class Util {
     /**
      * Hashcode implementation for a byte array and given byte order
      *
-     * @param byteArray
-     * @param byteOrder
+     * @param byteArray to calculate hashCode of
+     * @param byteOrder to calculate hashCode of
      * @return hashCode
      */
     static int hashCode(byte[] byteArray, ByteOrder byteOrder) {

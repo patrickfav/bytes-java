@@ -21,11 +21,7 @@
 
 package at.favre.lib.bytes;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInput;
-import java.io.File;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -35,14 +31,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.Normalizer;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Bytes is wrapper class for an byte-array that allows a lot of convenience operations on it:
@@ -67,6 +56,10 @@ import java.util.UUID;
  *     b.not();
  *     System.out.println(b.encodeHex());
  * </pre>
+ *
+ * <h3>Comparable</h3>
+ * The implemented comparator treats the bytes as signed bytes. If you want to sort, treating each byte as unsigned,
+ * use {@link BytesTransformers#sortUnsigned()}.
  */
 @SuppressWarnings("WeakerAccess")
 public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {

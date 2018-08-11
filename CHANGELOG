@@ -11,6 +11,7 @@
  * add `startsWith()` and `endsWidth()` methods #12
  * add cache for calculating the hashCode
  * add HMAC byte transformer #11
+ * add unsigned sort transformer #17
 
 ## v0.6.0
 
