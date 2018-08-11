@@ -21,30 +21,18 @@
 
 package at.favre.lib.bytes;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInput;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Common Util methods to convert or modify byte arrays
  */
 final class Util {
+    private static final int BUF_SIZE = 0x1000; // 4K
+
     private Util() {
     }
 
@@ -297,8 +285,6 @@ final class Util {
         }
     }
 
-    private static final int BUF_SIZE = 0x1000; // 4K
-
     /**
      * Read bytes, buffered, from given input stream. Pass -1 to read the whole stream or limit with length
      * parameter.
@@ -312,8 +298,12 @@ final class Util {
         int remaining = maxLengthToRead;
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream(readWholeStream ? 32 : maxLengthToRead);
+            byte[] buf = new byte[0];
             while (readWholeStream || remaining > 0) {
-                byte[] buf = new byte[Math.min(BUF_SIZE, readWholeStream ? BUF_SIZE : remaining)];
+                int bufSize = Math.min(BUF_SIZE, readWholeStream ? BUF_SIZE : remaining);
+                if (buf.length != bufSize) {
+                    buf = new byte[bufSize];
+                }
                 int r = inputStream.read(buf);
                 if (r == -1) {
                     break;
@@ -544,10 +534,6 @@ final class Util {
         private final Map<T, Integer> map = new HashMap<>();
         private int total = 0;
 
-        private double Log2(double n) {
-            return Math.log(n) / Math.log(2);
-        }
-
         public Entropy(Iterable<T> elements) {
             for (T element : elements) {
                 if (!map.containsKey(element)) {
@@ -556,6 +542,10 @@ final class Util {
                 map.put(element, map.get(element) + 1);
                 total++;
             }
+        }
+
+        private double Log2(double n) {
+            return Math.log(n) / Math.log(2);
         }
 
         public double entropy() {
