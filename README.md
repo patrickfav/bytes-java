@@ -319,7 +319,7 @@ Bytes.parseBase32("MZXQ====");
 Bytes.from(array).encodeBase32();
  ```
 
-Additionally the following radixe encodings are supported:
+Additionally the following radix encodings are supported:
 
 ```java
 Bytes.from(array).encodeBinary(); //1110110110101111
