@@ -84,6 +84,16 @@ public class BytesParseAndEncodingTest extends ABytesTest {
     }
 
     @Test
+    public void parseBase32() {
+        assertArrayEquals(encodingExample, Bytes.parseBase32("JKKP37Y6V7WQ====").array());
+    }
+
+    @Test
+    public void encodeBase32() {
+        assertEquals("JKKP37Y6V7WQ====", Bytes.from(encodingExample).encodeBase32());
+    }
+
+    @Test
     public void encodeBinary() {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1};
         assertEquals("1010000011100001", Bytes.from(defaultArray).encodeBinary());

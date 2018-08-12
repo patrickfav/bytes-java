@@ -35,7 +35,7 @@ It's main features include:
 * **Creation** from a wide variety of sources: multiple arrays, integers, [streams](https://docs.oracle.com/javase/7/docs/api/java/io/InputStream.html), random, strings, files, uuid, ...
 * **Transformation** with many built-in: append, [xor](https://en.wikipedia.org/wiki/Exclusive_or), [and](https://en.wikipedia.org/wiki/Logical_conjunction), [hash](https://en.wikipedia.org/wiki/Cryptographic_hash_function), [shifts](https://en.wikipedia.org/wiki/Bitwise_operation#Bit_shifts), shuffle, reverse, [checksum](https://en.wikipedia.org/wiki/Checksum), ...
 * **Validators** with the ability to arbitrarily combine multiple ones with logical expressions
-* **Parsing and Encoding** in most common binary-to-text-encodings: [hex](https://en.wikipedia.org/wiki/Hexadecimal), [base36](https://en.wikipedia.org/wiki/Base36), [base64](https://en.wikipedia.org/wiki/Base64), ...
+* **Parsing and Encoding** in most common binary-to-text-encodings: [hex](https://en.wikipedia.org/wiki/Hexadecimal), [base32](https://en.wikipedia.org/wiki/Base32), [base64](https://en.wikipedia.org/wiki/Base64), ...
 * **Immutable, Mutable and Read-Only** versions
 * **Handling Strings** with encoding and normalizing strings for arbitrary charset
 * **Utility Features** like `indexOf`, `count`, `isEmpty`, `bitAt`, `contains` ...
@@ -312,7 +312,14 @@ Bytes.from(array).encodeBase64(); //"SpT9/x6v7Q=="
 Bytes.from(array).encodeBase64Url(); //"SpT9_x6v7Q=="
  ```
 
-Additionally the following encodings are supported:
+also a **Base32** encoder (using the RFC4648 non-hex alphabet):
+
+```java
+Bytes.parseBase32("MZXQ====");
+Bytes.from(array).encodeBase32();
+ ```
+
+Additionally the following radixe encodings are supported:
 
 ```java
 Bytes.from(array).encodeBinary(); //1110110110101111
