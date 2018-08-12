@@ -518,7 +518,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return decoded instance
      */
     public static Bytes parseBinary(String binaryString) {
-        return parse(binaryString, new BinaryToTextEncoding.BaseRadix(2));
+        return parseRadix(binaryString, 2);
     }
 
     /**
@@ -528,7 +528,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return decoded instance
      */
     public static Bytes parseOctal(String octalString) {
-        return parse(octalString, new BinaryToTextEncoding.BaseRadix(8));
+        return parseRadix(octalString, 8);
     }
 
     /**
@@ -538,7 +538,22 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return decoded instance
      */
     public static Bytes parseDec(String decString) {
-        return parse(decString, new BinaryToTextEncoding.BaseRadix(10));
+        return parseRadix(decString, 10);
+    }
+
+    /**
+     * Encodes with given radix string representation (e.g. radix 16 would be hex).
+     * See also {@link BigInteger#toString(int)}.
+     * <p>
+     * This is usually a number encoding, not a data encoding (ie. leading zeros are not preserved), but this implementation
+     * tries to preserve the leading zeros, to keep the in/output byte length size the same, but use at your own risk!
+     *
+     * @param radixNumberString the encoded string
+     * @param radix             radix of the String representation (supported are 2-36)
+     * @return decoded instance
+     */
+    public static Bytes parseRadix(String radixNumberString, int radix) {
+        return parse(radixNumberString, new BinaryToTextEncoding.BaseRadixNumber(radix));
     }
 
     /**
@@ -554,12 +569,17 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     /**
      * Parsing of base36 encoded byte arrays.
+     * <p>
+     * This is usually a number encoding, not a data encoding (ie. leading zeros are not preserved), but this implementation
+     * tries to preserve the leading zeros, to keep the in/output byte length size the same.
      *
      * @param base36String the encoded string
      * @return decoded instance
+     * @deprecated use {@link #parseRadix(String, int)} with 36 instead; will be removed in v1.0+
      */
+    @Deprecated
     public static Bytes parseBase36(String base36String) {
-        return parse(base36String, new BinaryToTextEncoding.BaseRadix(36));
+        return parse(base36String, new BinaryToTextEncoding.BaseRadixNumber(36));
     }
 
     /**
@@ -1447,7 +1467,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://en.wikipedia.org/wiki/Binary_number">Binary number</a>
      */
     public String encodeBinary() {
-        return encode(new BinaryToTextEncoding.BaseRadix(2));
+        return encodeRadix(2);
     }
 
     /**
@@ -1459,7 +1479,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://en.wikipedia.org/wiki/Octal">Octal</a>
      */
     public String encodeOctal() {
-        return encode(new BinaryToTextEncoding.BaseRadix(8));
+        return encodeRadix(8);
     }
 
     /**
@@ -1471,7 +1491,27 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://en.wikipedia.org/wiki/Decimal">Decimal</a>
      */
     public String encodeDec() {
-        return encode(new BinaryToTextEncoding.BaseRadix(10));
+        return encodeRadix(10);
+    }
+
+    /**
+     * Encodes the internal array in given radix representation (e.g. 2 = binary, 10 = decimal, 16 = hex).
+     * <p>
+     * This is usually a number encoding, not a data encoding (ie. leading zeros are not preserved), but this implementation
+     * tries to preserve the leading zeros, to keep the in/output byte length size the same. To preserve the length padding
+     * would be required, but is not supported in this implementation.
+     * <p>
+     * But still full disclaimer:
+     *
+     * <strong>This is NOT recommended for data encoding, only for number encoding</strong>
+     * <p>
+     * See <a href="https://en.wikipedia.org/wiki/Radix_economy">Radix Economy</a> and {@link BigInteger#toString(int)}.
+     *
+     * @param radix of the String representation (supported are 2-36)
+     * @return string in given radix representation
+     */
+    public String encodeRadix(int radix) {
+        return encode(new BinaryToTextEncoding.BaseRadixNumber(radix));
     }
 
     /**
@@ -1499,6 +1539,8 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * DO NOT USE AS DATA ENCODING, ONLY FOR NUMBERS!
+     * <p>
      * Base36 (aka Hexatrigesimal) representation. The choice of 36 is convenient in that the digits can be
      * represented using the Arabic numerals 0–9 and the Latin letters A–Z. This encoding has a space efficiency of 64.6%.
      * <p>
@@ -1506,9 +1548,11 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      *
      * @return base36 string
      * @see <a href="https://en.wikipedia.org/wiki/Base36">Base36</a>
+     * @deprecated use {@link #encodeRadix(int)} instead; will be removed in v1.0+
      */
+    @Deprecated
     public String encodeBase36() {
-        return encode(new BinaryToTextEncoding.BaseRadix(36));
+        return encodeRadix(36);
     }
 
     /**

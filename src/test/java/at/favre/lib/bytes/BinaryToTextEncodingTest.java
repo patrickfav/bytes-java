@@ -21,7 +21,6 @@
 
 package at.favre.lib.bytes;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.ByteOrder;
@@ -43,40 +42,50 @@ public class BinaryToTextEncodingTest {
 
     @Test
     public void encodeBaseRadix() {
-        assertEquals("100211", new BinaryToTextEncoding.BaseRadix(16).encode(new byte[]{16, 2, 17}, ByteOrder.BIG_ENDIAN));
-        assertEquals("110210", new BinaryToTextEncoding.BaseRadix(16).encode(new byte[]{16, 2, 17}, ByteOrder.LITTLE_ENDIAN));
-        assertNotEquals(new BinaryToTextEncoding.BaseRadix(2).encode(new byte[]{1, 2, 3}, ByteOrder.LITTLE_ENDIAN), new BinaryToTextEncoding.BaseRadix(2).encode(new byte[]{1, 2, 3}, ByteOrder.BIG_ENDIAN));
+        assertEquals("100211", new BinaryToTextEncoding.BaseRadixNumber(16).encode(new byte[]{16, 2, 17}, ByteOrder.BIG_ENDIAN));
+        assertEquals("110210", new BinaryToTextEncoding.BaseRadixNumber(16).encode(new byte[]{16, 2, 17}, ByteOrder.LITTLE_ENDIAN));
+        assertNotEquals(new BinaryToTextEncoding.BaseRadixNumber(2).encode(new byte[]{1, 2, 3}, ByteOrder.LITTLE_ENDIAN), new BinaryToTextEncoding.BaseRadixNumber(2).encode(new byte[]{1, 2, 3}, ByteOrder.BIG_ENDIAN));
     }
 
     @Test
     public void encodeDecodeRadix() {
-        for (int i = 0; i < 32; i++) {
-            Bytes rnd = Bytes.random(i);
+        int leadingZeroHits = 0;
+        int encodings = 0;
+        for (int i = 0; i < 64; i++) {
+            Bytes rnd = Bytes.random(i % 256);
             System.out.println("\n\nNEW TEST: " + i + " bytes\n");
-            for (int j = 16; j < 36; j++) {
-                BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.BaseRadix(j);
+            for (int j = 2; j <= 36; j++) {
+                encodings++;
+                BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.BaseRadixNumber(j);
                 String encodedBigEndian = encoding.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
                 byte[] decoded = encoding.decode(encodedBigEndian);
                 System.out.println("radix" + j + ":\t" + encodedBigEndian);
                 System.out.println("orig   :\t" + rnd.encodeHex());
                 System.out.println("enc    :\t" + Bytes.wrap(decoded).encodeHex());
-                assertArrayEquals(rnd.array(), decoded);
+
+
+                if (rnd.length() <= 0 || rnd.byteAt(0) != 0) {
+                    assertArrayEquals(rnd.array(), decoded);
+                } else { //since this is a number, we allow different lengths due to leading zero
+                    leadingZeroHits++;
+                    assertArrayEquals(rnd.resize(rnd.length() - 1).array(), decoded);
+                }
             }
         }
+        System.out.println(leadingZeroHits + " leading zero mismatches of " + encodings + " encodings");
     }
 
     @Test
-    @Ignore("should fix")
     public void encodeDecodeRadixZeros() {
         Bytes bytes = Bytes.wrap(new byte[]{0, 0, 0, 0});
-        BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.BaseRadix(36);
+        BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.BaseRadixNumber(36);
         String encodedBigEndian = encoding.encode(bytes.array(), ByteOrder.BIG_ENDIAN);
         byte[] decoded = encoding.decode(encodedBigEndian);
 
         System.out.println("radix36:\t" + encodedBigEndian);
         System.out.println("orig   :\t" + bytes.encodeHex());
         System.out.println("enc    :\t" + Bytes.wrap(decoded).encodeHex());
-        assertArrayEquals(bytes.array(), decoded);
+        assertArrayEquals(new byte[]{}, decoded);
     }
 
     @Test
@@ -114,12 +123,12 @@ public class BinaryToTextEncodingTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void decodeInvalidRadix16() {
-        new BinaryToTextEncoding.BaseRadix(16).decode("AAI=");
+        new BinaryToTextEncoding.BaseRadixNumber(16).decode("AAI=");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void decodeInvalidRadix36() {
-        new BinaryToTextEncoding.BaseRadix(36).decode("AAI=");
+        new BinaryToTextEncoding.BaseRadixNumber(36).decode("AAI=");
     }
 
     @Test
@@ -138,5 +147,25 @@ public class BinaryToTextEncodingTest {
     @Test(expected = IllegalArgumentException.class)
     public void decodeHalfInvalidBase64() {
         new BinaryToTextEncoding.Base64Encoding().decode("EAI`");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void encodeRadixIllegalTooHigh2() {
+        new BinaryToTextEncoding.BaseRadixNumber(38);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void encodeRadixIllegalTooHigh() {
+        new BinaryToTextEncoding.BaseRadixNumber(37);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void encodeRadixIllegalTooLow() {
+        new BinaryToTextEncoding.BaseRadixNumber(1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void encodeRadixIllegalTooLow2() {
+        new BinaryToTextEncoding.BaseRadixNumber(0);
     }
 }

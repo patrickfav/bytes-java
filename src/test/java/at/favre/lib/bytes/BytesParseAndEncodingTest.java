@@ -125,4 +125,42 @@ public class BytesParseAndEncodingTest extends ABytesTest {
         assertEquals("69zbn", Bytes.from(defaultArray).encodeBase36());
         assertEquals("5qpdvuwjvu5", Bytes.from(encodingExample).encodeBase36());
     }
+
+    @Test
+    public void parseRadix() {
+        assertArrayEquals(encodingExample, Bytes.parseRadix("1001010100101001111110111111111000111101010111111101101", 2).array());
+        assertArrayEquals(encodingExample, Bytes.parseRadix("10202221221221000222101012210121012", 3).array());
+        assertArrayEquals(encodingExample, Bytes.parseRadix("1022211033313333013222333231", 4).array());
+        assertArrayEquals(encodingExample, Bytes.parseRadix("134003042232210013121402", 5).array());
+        assertArrayEquals(encodingExample, Bytes.parseRadix("542412151505231515005", 6).array());
+        assertArrayEquals(encodingExample, Bytes.parseRadix("1124517677707527755", 8).array());
+        assertArrayEquals(encodingExample, Bytes.parseRadix("20992966904426477", 10).array());
+        assertArrayEquals(encodingExample, Bytes.parseRadix("4a94fdff1eafed", 16).array());
+        assertArrayEquals(encodingExample, Bytes.parseRadix("5iibpp5dgpgp", 26).array());
+        assertArrayEquals(encodingExample, Bytes.parseRadix("5qpdvuwjvu5", 36).array());
+    }
+
+    @Test
+    public void encodeRadix() {
+        assertEquals("1001010100101001111110111111111000111101010111111101101", Bytes.from(encodingExample).encodeRadix(2));
+        assertEquals("10202221221221000222101012210121012", Bytes.from(encodingExample).encodeRadix(3));
+        assertEquals("1022211033313333013222333231", Bytes.from(encodingExample).encodeRadix(4));
+        assertEquals("134003042232210013121402", Bytes.from(encodingExample).encodeRadix(5));
+        assertEquals("542412151505231515005", Bytes.from(encodingExample).encodeRadix(6));
+        assertEquals("1124517677707527755", Bytes.from(encodingExample).encodeRadix(8));
+        assertEquals("20992966904426477", Bytes.from(encodingExample).encodeRadix(10));
+        assertEquals("4a94fdff1eafed", Bytes.from(encodingExample).encodeRadix(16));
+        assertEquals("5iibpp5dgpgp", Bytes.from(encodingExample).encodeRadix(26));
+        assertEquals("5qpdvuwjvu5", Bytes.from(encodingExample).encodeRadix(36));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void encodeRadixIllegalTooHigh() {
+        Bytes.from(encodingExample).encodeRadix(37);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void encodeRadixIllegalTooLow() {
+        Bytes.from(encodingExample).encodeRadix(1);
+    }
 }

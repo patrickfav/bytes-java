@@ -159,10 +159,13 @@ public interface BinaryToTextEncoding {
     /**
      * Simple radix encoder which internally uses {@link BigInteger#toString(int)}
      */
-    class BaseRadix implements EncoderDecoder {
+    class BaseRadixNumber implements EncoderDecoder {
         private final int radix;
 
-        BaseRadix(int radix) {
+        BaseRadixNumber(int radix) {
+            if (radix < Character.MIN_RADIX || radix > Character.MAX_RADIX) {
+                throw new IllegalArgumentException("supported radix is between " + Character.MIN_RADIX + " and " + Character.MAX_RADIX);
+            }
             this.radix = radix;
         }
 
@@ -181,9 +184,5 @@ public interface BinaryToTextEncoding {
             }
             return array;
         }
-
-//        private int maxLength(byte[] data, int radix) {
-//            return BigInteger.valueOf(2).pow(BigInteger.valueOf(data.length).multiply(BigInteger.valueOf(8)).intValue()).toString(radix).length();
-//        }
     }
 }

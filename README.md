@@ -285,7 +285,7 @@ Bytes.wrap(array).transform(shuffle());
 ### Parser and Encoder for Binary-Text-Encodings
 
 This library can parse and encode a variety of encodings: binary, decimal, [octal](https://en.wikipedia.org/wiki/Octal),
-[hex](https://en.wikipedia.org/wiki/Hexadecimal), [base36](https://en.wikipedia.org/wiki/Base36) and
+[hex](https://en.wikipedia.org/wiki/Hexadecimal) and
 [base64](https://en.wikipedia.org/wiki/Base64). Additionally custom parsers are supported by providing your own
 implementation:
 
@@ -318,7 +318,7 @@ Additionally the following encodings are supported:
 Bytes.from(array).encodeBinary(); //1110110110101111
 Bytes.from(array).encodeDec(); //20992966904426477
 Bytes.from(array).encodeOctal(); //1124517677707527755
-Bytes.from(array).encodeBase36(); //5qpdvuwjvu5
+Bytes.from(array).encodeRadix(36); //5qpdvuwjvu5
 ```
 
 ### Handling Strings
