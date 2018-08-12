@@ -151,7 +151,7 @@ final class BaseEncoding implements BinaryToTextEncoding.EncoderDecoder {
         return bytesWritten;
     }
 
-    private static final class Alphabet {
+    static final class Alphabet {
         // this is meant to be immutable -- don't modify it!
         private final char[] chars;
         final int mask;
