@@ -35,16 +35,22 @@ import java.util.concurrent.TimeUnit;
 # i7 7700K / 24G
 
 Benchmark                               (byteLength)   Mode  Cnt         Score        Error  Units
-EncodingJmhBenchmark.encodeBase64Guava             1  thrpt    4  10361634,745 ± 152739,710  ops/s
-EncodingJmhBenchmark.encodeBase64Guava            16  thrpt    4   4360485,804 ±  44729,417  ops/s
-EncodingJmhBenchmark.encodeBase64Guava           128  thrpt    4    790407,010 ±   8095,476  ops/s
-EncodingJmhBenchmark.encodeBase64Guava           512  thrpt    4    192448,674 ±   2196,035  ops/s
-EncodingJmhBenchmark.encodeBase64Guava       1000000  thrpt    4       102,780 ±      2,949  ops/s
-EncodingJmhBenchmark.encodeBase64Okio              1  thrpt    4  12658987,399 ± 361955,366  ops/s
-EncodingJmhBenchmark.encodeBase64Okio             16  thrpt    4   7059404,777 ± 293665,348  ops/s
-EncodingJmhBenchmark.encodeBase64Okio            128  thrpt    4   1749131,031 ±  85915,325  ops/s
-EncodingJmhBenchmark.encodeBase64Okio            512  thrpt    4    239764,488 ±   6204,540  ops/s
-EncodingJmhBenchmark.encodeBase64Okio        1000000  thrpt    4       107,868 ±      0,569  ops/s
+Benchmark                                (byteLength)   Mode  Cnt         Score         Error  Units
+EncodingJmhBenchmark.encodeBase64Apache             1  thrpt    4   1260664,187 ±  134162,595  ops/s
+EncodingJmhBenchmark.encodeBase64Apache            16  thrpt    4   1018969,264 ±    4008,839  ops/s
+EncodingJmhBenchmark.encodeBase64Apache           128  thrpt    4    470368,001 ±    6377,776  ops/s
+EncodingJmhBenchmark.encodeBase64Apache           512  thrpt    4    170623,614 ±    5243,433  ops/s
+EncodingJmhBenchmark.encodeBase64Apache       1000000  thrpt    4       102,602 ±       2,441  ops/s
+EncodingJmhBenchmark.encodeBase64Guava              1  thrpt    4  10961113,761 ± 2448198,032  ops/s
+EncodingJmhBenchmark.encodeBase64Guava             16  thrpt    4   6223639,376 ±  189028,495  ops/s
+EncodingJmhBenchmark.encodeBase64Guava            128  thrpt    4   1390184,429 ±   35982,746  ops/s
+EncodingJmhBenchmark.encodeBase64Guava            512  thrpt    4    343957,426 ±   10939,429  ops/s
+EncodingJmhBenchmark.encodeBase64Guava        1000000  thrpt    4       229,641 ±       5,811  ops/s
+EncodingJmhBenchmark.encodeBase64Okio               1  thrpt    4  12567622,970 ±  460318,474  ops/s
+EncodingJmhBenchmark.encodeBase64Okio              16  thrpt    4   6552615,163 ± 1382416,859  ops/s
+EncodingJmhBenchmark.encodeBase64Okio             128  thrpt    4   1640526,665 ±  375607,815  ops/s
+EncodingJmhBenchmark.encodeBase64Okio             512  thrpt    4    235282,079 ±    6631,560  ops/s
+EncodingJmhBenchmark.encodeBase64Okio         1000000  thrpt    4       103,728 ±       0,820  ops/s
  */
 
 @State(Scope.Thread)
@@ -61,13 +67,16 @@ public class EncodingJmhBenchmark {
 
     private BinaryToTextEncoding.EncoderDecoder base64Okio;
     private BinaryToTextEncoding.EncoderDecoder base64Guava;
+    private BinaryToTextEncoding.EncoderDecoder base64Apache;
     private Random random;
 
     @Setup(Level.Trial)
     public void setup() {
         random = new Random();
         base64Okio = new BinaryToTextEncoding.Base64Encoding();
-        base64Guava = new BaseEncoding(new BaseEncoding.Alphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray()), BaseEncoding.BASE32_RFC4848_PADDING);
+//        base64Apache = new ApacheCommonCodecBase64();
+//        base64Guava = new GuavaBase64();
+
         rndMap = new HashMap<>();
         int[] lengths = new int[]{1, 16, 128, 512, 1000000};
         for (int length : lengths) {
@@ -84,10 +93,15 @@ public class EncodingJmhBenchmark {
         return encodeDecode(base64Okio);
     }
 
-    @Benchmark
-    public byte[] encodeBase64Guava() {
-        return encodeDecode(base64Guava);
-    }
+//    @Benchmark
+//    public byte[] encodeBase64Apache() {
+//        return encodeDecode(base64Apache);
+//    }
+//
+//    @Benchmark
+//    public byte[] encodeBase64Guava() {
+//        return encodeDecode(base64Guava);
+//    }
 
     private byte[] encodeDecode(BinaryToTextEncoding.EncoderDecoder encoder) {
         Bytes[] bytes = rndMap.get(byteLength);
@@ -96,4 +110,41 @@ public class EncodingJmhBenchmark {
         String encoded = encoder.encode(bytes[rndNum].array(), ByteOrder.BIG_ENDIAN);
         return encoder.decode(encoded);
     }
+
+//        <dependency>
+//            <groupId>commons-codec</groupId>
+//            <artifactId>commons-codec</artifactId>
+//            <version>1.11</version>
+//            <scope>test</scope>
+//        </dependency>
+//        <dependency>
+//            <groupId>com.google.guava</groupId>
+//            <artifactId>guava</artifactId>
+//            <version>26.0-jre</version>
+//            <scope>test</scope>
+//        </dependency>
+//
+//    static final class ApacheCommonCodecBase64 implements BinaryToTextEncoding.EncoderDecoder {
+//        @Override
+//        public String encode(byte[] array, ByteOrder byteOrder) {
+//            return Base64.encodeBase64String(array);
+//        }
+//
+//        @Override
+//        public byte[] decode(String encoded) {
+//            return Base64.decodeBase64(encoded);
+//        }
+//    }
+//
+//    static final class GuavaBase64 implements BinaryToTextEncoding.EncoderDecoder {
+//        @Override
+//        public String encode(byte[] array, ByteOrder byteOrder) {
+//            return com.google.common.io.BaseEncoding.base64().encode(array);
+//        }
+//
+//        @Override
+//        public byte[] decode(String encoded) {
+//            return com.google.common.io.BaseEncoding.base64().decode(encoded);
+//        }
+//    }
 }
