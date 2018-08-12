@@ -21,6 +21,8 @@
 
 package at.favre.lib.bytes;
 
+import java.util.Arrays;
+
 /**
  * From https://github.com/square/okio/blob/okio-parent-1.15.0/okio/src/main/java/okio/Base64.java
  * under Apache 2 license.
@@ -121,9 +123,7 @@ final class Base64 {
         if (outCount == out.length) return out;
 
         // Copy the decoded bytes to a new, right-sized array.
-        byte[] prefix = new byte[outCount];
-        System.arraycopy(out, 0, prefix, 0, outCount);
-        return prefix;
+        return Arrays.copyOfRange(out, 0, outCount);
     }
 
     static byte[] encode(byte[] in) {
