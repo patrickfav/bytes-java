@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
+ * Encoder which supports arbitrary alphabet and padding.
+ *
  * Derived from Google Guava's common/io/ BaseEncoding
  * <p>
  * See: https://github.com/google/guava/blob/v26.0/guava/src/com/google/common/io/BaseEncoding.java
