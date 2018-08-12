@@ -41,6 +41,27 @@ public class BinaryToTextEncodingTest {
     }
 
     @Test
+    public void testBase16Reference() {
+        BinaryToTextEncoding.EncoderDecoder base16Encoding = new BinaryToTextEncoding.Hex(true);
+        // see: https://tools.ietf.org/html/rfc4648
+        assertEquals("", base16Encoding.encode(Bytes.from("").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("66", base16Encoding.encode(Bytes.from("f").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("666F", base16Encoding.encode(Bytes.from("fo").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("666F6F", base16Encoding.encode(Bytes.from("foo").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("666F6F62", base16Encoding.encode(Bytes.from("foob").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("666F6F6261", base16Encoding.encode(Bytes.from("fooba").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("666F6F626172", base16Encoding.encode(Bytes.from("foobar").array(), ByteOrder.BIG_ENDIAN));
+
+        assertArrayEquals(Bytes.from("").array(), base16Encoding.decode(""));
+        assertArrayEquals(Bytes.from("f").array(), base16Encoding.decode("66"));
+        assertArrayEquals(Bytes.from("fo").array(), base16Encoding.decode("666F"));
+        assertArrayEquals(Bytes.from("foo").array(), base16Encoding.decode("666F6F"));
+        assertArrayEquals(Bytes.from("foob").array(), base16Encoding.decode("666F6F62"));
+        assertArrayEquals(Bytes.from("fooba").array(), base16Encoding.decode("666F6F6261"));
+        assertArrayEquals(Bytes.from("foobar").array(), base16Encoding.decode("666F6F626172"));
+    }
+
+    @Test
     public void encodeBaseRadix() {
         assertEquals("100211", new BinaryToTextEncoding.BaseRadixNumber(16).encode(new byte[]{16, 2, 17}, ByteOrder.BIG_ENDIAN));
         assertEquals("110210", new BinaryToTextEncoding.BaseRadixNumber(16).encode(new byte[]{16, 2, 17}, ByteOrder.LITTLE_ENDIAN));
@@ -89,35 +110,44 @@ public class BinaryToTextEncodingTest {
     }
 
     @Test
-    public void encodeDecodeBase64() {
+    public void encodeDecodeBase64Random() {
         BinaryToTextEncoding.EncoderDecoder encoderPad = new BinaryToTextEncoding.Base64Encoding(false, true);
         BinaryToTextEncoding.EncoderDecoder encoderUrlPad = new BinaryToTextEncoding.Base64Encoding(true, true);
         BinaryToTextEncoding.EncoderDecoder encoderNoPad = new BinaryToTextEncoding.Base64Encoding(false, false);
 
         for (int i = 0; i < 32; i += 4) {
-            Bytes rnd = Bytes.random(i);
-            String encodedBigEndian = encoderPad.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
-            byte[] decoded = encoderPad.decode(encodedBigEndian);
-            assertEquals(rnd, Bytes.wrap(decoded));
-
-            String encodedBigEndianUrlPad = encoderUrlPad.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
-            byte[] decodedUrlPad = encoderPad.decode(encodedBigEndianUrlPad);
-            assertEquals(rnd, Bytes.wrap(decodedUrlPad));
-
-            String encodedBigEndianNoPad = encoderNoPad.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
-            byte[] decodedNoPad = encoderPad.decode(encodedBigEndianNoPad);
-            assertEquals(rnd, Bytes.wrap(decodedNoPad));
+            testRndEncodeDecode(encoderPad, i);
+            testRndEncodeDecode(encoderUrlPad, i);
+            testRndEncodeDecode(encoderNoPad, i);
         }
+    }
+
+    @Test
+    public void testBase64Reference() {
+        BinaryToTextEncoding.EncoderDecoder base64Encoding = new BinaryToTextEncoding.Base64Encoding();
+        // see: https://tools.ietf.org/html/rfc4648
+        assertEquals("", base64Encoding.encode(Bytes.from("").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("Zg==", base64Encoding.encode(Bytes.from("f").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("Zm8=", base64Encoding.encode(Bytes.from("fo").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("Zm9v", base64Encoding.encode(Bytes.from("foo").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("Zm9vYg==", base64Encoding.encode(Bytes.from("foob").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("Zm9vYmE=", base64Encoding.encode(Bytes.from("fooba").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("Zm9vYmFy", base64Encoding.encode(Bytes.from("foobar").array(), ByteOrder.BIG_ENDIAN));
+
+        assertArrayEquals(Bytes.from("").array(), base64Encoding.decode(""));
+        assertArrayEquals(Bytes.from("f").array(), base64Encoding.decode("Zg=="));
+        assertArrayEquals(Bytes.from("fo").array(), base64Encoding.decode("Zm8="));
+        assertArrayEquals(Bytes.from("foo").array(), base64Encoding.decode("Zm9v"));
+        assertArrayEquals(Bytes.from("foob").array(), base64Encoding.decode("Zm9vYg=="));
+        assertArrayEquals(Bytes.from("fooba").array(), base64Encoding.decode("Zm9vYmE="));
+        assertArrayEquals(Bytes.from("foobar").array(), base64Encoding.decode("Zm9vYmFy"));
     }
 
     @Test
     public void encodeDecodeHex() {
         for (int i = 4; i < 32; i += 4) {
-            Bytes rnd = Bytes.random(i);
-            BinaryToTextEncoding.EncoderDecoder encoding = new BinaryToTextEncoding.Hex();
-            String encodedBigEndian = encoding.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
-            byte[] decoded = encoding.decode(encodedBigEndian);
-            assertEquals(rnd, Bytes.wrap(decoded));
+            testRndEncodeDecode(new BinaryToTextEncoding.Hex(), i);
+            testRndEncodeDecode(new BinaryToTextEncoding.Hex(true), i);
         }
     }
 
@@ -167,5 +197,58 @@ public class BinaryToTextEncodingTest {
     @Test(expected = IllegalArgumentException.class)
     public void encodeRadixIllegalTooLow2() {
         new BinaryToTextEncoding.BaseRadixNumber(0);
+    }
+
+    @Test
+    public void testEncodeDecodeRndBase32() {
+        BaseEncoding base32Encoding = new BaseEncoding(BaseEncoding.BASE32_RFC4848, BaseEncoding.BASE32_RFC4848_PADDING);
+        for (int i = 0; i < 128; i++) {
+            testRndEncodeDecode(base32Encoding, i);
+        }
+    }
+
+    private byte[] testRndEncodeDecode(BinaryToTextEncoding.EncoderDecoder encoder, int dataLength) {
+        Bytes rnd = Bytes.random(dataLength);
+        String encoded = encoder.encode(rnd.array(), ByteOrder.BIG_ENDIAN);
+        byte[] decoded = encoder.decode(encoded);
+        assertEquals(rnd, Bytes.wrap(decoded));
+        return decoded;
+    }
+
+    @Test
+    public void testBase32Reference() {
+        BinaryToTextEncoding.EncoderDecoder base32Encoding = new BaseEncoding(BaseEncoding.BASE32_RFC4848, BaseEncoding.BASE32_RFC4848_PADDING);
+        // see: https://tools.ietf.org/html/rfc4648
+        assertEquals("", base32Encoding.encode(Bytes.from("").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("MY======", base32Encoding.encode(Bytes.from("f").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("MZXQ====", base32Encoding.encode(Bytes.from("fo").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("MZXW6===", base32Encoding.encode(Bytes.from("foo").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("MZXW6YQ=", base32Encoding.encode(Bytes.from("foob").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("MZXW6YTB", base32Encoding.encode(Bytes.from("fooba").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("MZXW6YTBOI======", base32Encoding.encode(Bytes.from("foobar").array(), ByteOrder.BIG_ENDIAN));
+
+        assertArrayEquals(Bytes.from("").array(), base32Encoding.decode(""));
+        assertArrayEquals(Bytes.from("f").array(), base32Encoding.decode("MY======"));
+        assertArrayEquals(Bytes.from("fo").array(), base32Encoding.decode("MZXQ===="));
+        assertArrayEquals(Bytes.from("foo").array(), base32Encoding.decode("MZXW6==="));
+        assertArrayEquals(Bytes.from("foob").array(), base32Encoding.decode("MZXW6YQ="));
+        assertArrayEquals(Bytes.from("fooba").array(), base32Encoding.decode("MZXW6YTB"));
+        assertArrayEquals(Bytes.from("foobar").array(), base32Encoding.decode("MZXW6YTBOI======"));
+    }
+
+    @Test
+    public void testBase64BigData() {
+        for (int i = 0; i < 5; i++) {
+            byte[] out = testRndEncodeDecode(new BinaryToTextEncoding.Base64Encoding(), 1024 * 1024);
+            System.out.println(out.length);
+        }
+    }
+
+    @Test
+    public void testBase32BigData() {
+        for (int i = 0; i < 5; i++) {
+            byte[] out = testRndEncodeDecode(new BaseEncoding(BaseEncoding.BASE32_RFC4848, BaseEncoding.BASE32_RFC4848_PADDING), 1024 * 1024);
+            System.out.println(out.length);
+        }
     }
 }

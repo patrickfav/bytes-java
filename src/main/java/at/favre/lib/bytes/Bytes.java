@@ -156,8 +156,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes wrap(byte[] array, ByteOrder byteOrder) {
-        Objects.requireNonNull(array, "passed array must not be null");
-        return new Bytes(array, byteOrder);
+        return new Bytes(Objects.requireNonNull(array, "passed array must not be null"), byteOrder);
     }
 
     /**
@@ -168,8 +167,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(byte[] byteArrayToCopy) {
-        Objects.requireNonNull(byteArrayToCopy, "must at least pass a single byte");
-        return wrap(Arrays.copyOf(byteArrayToCopy, byteArrayToCopy.length));
+        return wrap(Arrays.copyOf(Objects.requireNonNull(byteArrayToCopy, "must at least pass a single byte"), byteArrayToCopy.length));
     }
 
     /**
@@ -318,8 +316,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(int... intArray) {
-        Objects.requireNonNull(intArray, "must provide at least a single int");
-        return wrap(Util.toByteArray(intArray));
+        return wrap(Util.toByteArray(Objects.requireNonNull(intArray, "must provide at least a single int")));
     }
 
     /**
@@ -339,8 +336,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(long... longArray) {
-        Objects.requireNonNull(longArray, "must provide at least a single long");
-        return wrap(Util.toByteArray(longArray));
+        return wrap(Util.toByteArray(Objects.requireNonNull(longArray, "must provide at least a single long")));
     }
 
     /**
@@ -470,9 +466,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(CharSequence string, Charset charset) {
-        Objects.requireNonNull(string, "provided string must not be null");
-        Objects.requireNonNull(charset, "provided charset must not be null");
-        return wrap(string.toString().getBytes(charset));
+        return wrap(Objects.requireNonNull(string, "provided string must not be null").toString().getBytes(Objects.requireNonNull(charset, "provided charset must not be null")));
     }
 
     /**
@@ -565,6 +559,18 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public static Bytes parseHex(String hexString) {
         return parse(hexString, new BinaryToTextEncoding.Hex());
+    }
+
+    /**
+     * Parsing of base32/RFC 4648 encoded byte arrays.
+     * <p>
+     * Uses the RFC 4648 non-hex alphabet, see <a href="https://en.wikipedia.org/wiki/Base32#RFC_4648_Base32_alphabet">Base32 alphabet</a>.
+     *
+     * @param base32Rfc4648String the encoded string
+     * @return decoded instance
+     */
+    public static Bytes parseBase32(String base32Rfc4648String) {
+        return parse(base32Rfc4648String, new BaseEncoding(BaseEncoding.BASE32_RFC4848, BaseEncoding.BASE32_RFC4848_PADDING));
     }
 
     /**
@@ -1539,6 +1545,19 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Base32 RFC4648 string representation of the internal byte array (not Base32 hex alphabet extension)
+     * <p>
+     * Example: <code>MZXW6YQ=</code>
+     * <p>
+     * See <a href="https://tools.ietf.org/html/rfc4648">RFC 4648</a>
+     *
+     * @return base32 string
+     */
+    public String encodeBase32() {
+        return encode(new BaseEncoding(BaseEncoding.BASE32_RFC4848, BaseEncoding.BASE32_RFC4848_PADDING));
+    }
+
+    /**
      * DO NOT USE AS DATA ENCODING, ONLY FOR NUMBERS!
      * <p>
      * Base36 (aka Hexatrigesimal) representation. The choice of 36 is convenient in that the digits can be
@@ -1597,8 +1616,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return encoded string
      */
     public String encodeCharset(Charset charset) {
-        Objects.requireNonNull(charset, "given charset must not be null");
-        return new String(internalArray(), charset);
+        return new String(internalArray(), Objects.requireNonNull(charset, "given charset must not be null"));
     }
 
     /**

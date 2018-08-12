@@ -3,6 +3,11 @@
 ## v0.8.0
 
 * add radix encoding/parsing and fix radix tests #6, #20
+* add support for Base32 RFC4648 non-hex alphabet encoding/parsing #21
+
+### Deprecations (will be removed in v1.0+)
+
+* `parseBase36()`/`encodeBase36()` - use `parseRadix(36)`/`encodeRadix(36)` instead
 
 ## v0.7.1
 
@@ -28,6 +33,10 @@
  * add new `from(char[] charArray, Charset charset)` constructor with improved logic #8
  * add constructor/converter from/to UUID #9
  * add `empty()` constructor, creating empty byte array
+
+### Deprecations (will be removed in v1.0+)
+
+* `toObjectArray()` renamed to `toBoxedArray()`
 
 ## v0.5.0
 
