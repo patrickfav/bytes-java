@@ -21,7 +21,11 @@
 
 package at.favre.lib.bytes;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataInput;
+import java.io.File;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -31,7 +35,14 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.Normalizer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Bytes is wrapper class for an byte-array that allows a lot of convenience operations on it:
@@ -501,8 +512,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(UUID uuid) {
-        Objects.requireNonNull(uuid);
-        return wrap(Util.getBytesFromUUID(uuid).array());
+        return wrap(Util.getBytesFromUUID(Objects.requireNonNull(uuid)).array());
     }
 
     /**
@@ -606,10 +616,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return decoded instance
      */
     public static Bytes parse(String encoded, BinaryToTextEncoding.Decoder decoder) {
-        Objects.requireNonNull(encoded, "encoded data must not be null");
-        Objects.requireNonNull(decoder, "passed decoder instance must no be null");
-
-        return wrap(decoder.decode(encoded));
+        return wrap(Objects.requireNonNull(decoder, "passed decoder instance must no be null").decode(Objects.requireNonNull(encoded, "encoded data must not be null")));
     }
 
     /**
@@ -763,9 +770,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return appended instance
      */
     public Bytes append(CharSequence string, Charset charset) {
-        Objects.requireNonNull(charset);
-        Objects.requireNonNull(string);
-        return transform(new BytesTransformer.ConcatTransformer(string.toString().getBytes(charset)));
+        return transform(new BytesTransformer.ConcatTransformer(Objects.requireNonNull(string).toString().getBytes(Objects.requireNonNull(charset))));
     }
 
     /**
@@ -1059,8 +1064,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return true if all validators return true
      */
     public boolean validate(BytesValidator... bytesValidators) {
-        Objects.requireNonNull(bytesValidators);
-        return BytesValidators.and(bytesValidators).validate(internalArray());
+        return BytesValidators.and(Objects.requireNonNull(bytesValidators)).validate(internalArray());
     }
 
     /* ATTRIBUTES ************************************************************************************************/
