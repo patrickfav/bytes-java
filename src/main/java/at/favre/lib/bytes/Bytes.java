@@ -30,6 +30,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
+import java.nio.IntBuffer;
 import java.nio.ReadOnlyBufferException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -371,14 +372,36 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Creates a new instance from given ByteBuffer.
+     * Creates a new instance from given {@link ByteBuffer}.
      * Will use the same backing byte array and honour the buffer's byte order.
      *
-     * @param buffer to get the byte array from
+     * @param buffer to get the byte array from (must not be null)
      * @return new instance
      */
     public static Bytes from(ByteBuffer buffer) {
-        return wrap(buffer.array(), buffer.order());
+        return wrap(Objects.requireNonNull(buffer, "provided byte buffer must not be null").array(), buffer.order());
+    }
+
+    /**
+     * Creates a new instance from given {@link CharBuffer}.
+     * Will ignore buffer's byte order and use {@link ByteOrder#BIG_ENDIAN}
+     *
+     * @param buffer to get the char array from (must not be null)
+     * @return new instance
+     */
+    public static Bytes from(CharBuffer buffer) {
+        return from(Objects.requireNonNull(buffer, "provided char buffer must not be null").array());
+    }
+
+    /**
+     * Creates a new instance from given {@link IntBuffer}.
+     * Will ignore buffer's byte order and use {@link ByteOrder#BIG_ENDIAN}
+     *
+     * @param buffer to get the int array from (must not be null)
+     * @return new instance
+     */
+    public static Bytes from(IntBuffer buffer) {
+        return from(Objects.requireNonNull(buffer, "provided int buffer must not be null").array());
     }
 
     /**

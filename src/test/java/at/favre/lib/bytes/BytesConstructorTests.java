@@ -26,10 +26,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.CharBuffer;
+import java.nio.IntBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
@@ -189,6 +195,13 @@ public class BytesConstructorTests extends ABytesTest {
     }
 
     @Test
+    public void fromIntBuffer() {
+        assertArrayEquals(new byte[]{0, 0, 0, 1, 0, 0, 0, 2}, Bytes.from(IntBuffer.wrap(new int[]{1, 2})).array());
+        assertArrayEquals(Bytes.from(Bytes.from(871193), Bytes.from(6761), Bytes.from(-917656)).array(), Bytes.from(IntBuffer.wrap(new int[]{871193, 6761, -917656})).array());
+        assertArrayEquals(Bytes.empty().array(), Bytes.from(IntBuffer.allocate(0)).array());
+    }
+
+    @Test
     public void fromLong() {
         long test = 172283719283L;
         byte[] primitiveArray = ByteBuffer.allocate(8).putLong(test).array();
@@ -281,6 +294,7 @@ public class BytesConstructorTests extends ABytesTest {
         assertArrayEquals(String.valueOf(s1.toCharArray()).getBytes(StandardCharsets.ISO_8859_1), Bytes.from(s1.toCharArray(), StandardCharsets.ISO_8859_1).array());
         assertArrayEquals(String.valueOf(s1.toCharArray()).getBytes(StandardCharsets.UTF_16), Bytes.from(s1.toCharArray(), StandardCharsets.UTF_16).array());
         assertArrayEquals(String.valueOf(s1.toCharArray()).getBytes(StandardCharsets.UTF_8), Bytes.from(s1.toCharArray(), StandardCharsets.UTF_8).array());
+        assertArrayEquals(Bytes.empty().array(), Bytes.from(CharBuffer.allocate(0)).array());
     }
 
     @Test
@@ -306,8 +320,10 @@ public class BytesConstructorTests extends ABytesTest {
     private void checkCharArray(String s) {
         Bytes b1 = Bytes.from(s.toCharArray());
         Bytes b2 = Bytes.from(s.toCharArray(), StandardCharsets.UTF_8);
+        Bytes b3 = Bytes.from(CharBuffer.wrap(s.toCharArray()));
         assertArrayEquals(String.valueOf(s.toCharArray()).getBytes(StandardCharsets.UTF_8), b1.array());
         assertArrayEquals(String.valueOf(s.toCharArray()).getBytes(StandardCharsets.UTF_8), b2.array());
+        assertArrayEquals(String.valueOf(s.toCharArray()).getBytes(StandardCharsets.UTF_8), b3.array());
     }
 
     @Test

@@ -4,6 +4,7 @@
 
 * add radix encoding/parsing and fix radix tests #6, #20
 * add support for Base32 RFC4648 non-hex alphabet encoding/parsing #21
+* add constructor for `IntBuffer` and `CharBuffer`
 
 ### Deprecations (will be removed in v1.0+)
 
