@@ -392,7 +392,6 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * /**
      * Creates a new instance from given {@link BigInteger}.
      *
      * @param bigInteger to get the byte array from
