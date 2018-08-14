@@ -60,10 +60,8 @@ public interface BytesTransformer {
         private final Mode mode;
 
         BitWiseOperatorTransformer(byte[] secondArray, Mode mode) {
-            Objects.requireNonNull(secondArray, "the second byte array must not be null");
-            Objects.requireNonNull(mode, "passed bitwise mode must not be null");
-            this.secondArray = secondArray;
-            this.mode = mode;
+            this.secondArray = Objects.requireNonNull(secondArray, "the second byte array must not be null");
+            this.mode = Objects.requireNonNull(mode, "passed bitwise mode must not be null");
         }
 
         @Override
@@ -135,10 +133,8 @@ public interface BytesTransformer {
         private final Type type;
 
         ShiftTransformer(int shiftCount, Type type) {
-            Objects.requireNonNull(type, "passed shift type must not be null");
-
             this.shiftCount = shiftCount;
-            this.type = type;
+            this.type = Objects.requireNonNull(type, "passed shift type must not be null");
         }
 
         @Override
@@ -169,8 +165,7 @@ public interface BytesTransformer {
         private final byte[] secondArray;
 
         ConcatTransformer(byte[] secondArrays) {
-            Objects.requireNonNull(secondArrays, "the second byte array must not be null");
-            this.secondArray = secondArrays;
+            this.secondArray = Objects.requireNonNull(secondArrays, "the second byte array must not be null");
         }
 
         @Override
