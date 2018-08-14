@@ -543,7 +543,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @param binaryString the encoded string
      * @return decoded instance
      */
-    public static Bytes parseBinary(String binaryString) {
+    public static Bytes parseBinary(CharSequence binaryString) {
         return parseRadix(binaryString, 2);
     }
 
@@ -553,7 +553,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @param octalString the encoded string
      * @return decoded instance
      */
-    public static Bytes parseOctal(String octalString) {
+    public static Bytes parseOctal(CharSequence octalString) {
         return parseRadix(octalString, 8);
     }
 
@@ -563,7 +563,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @param decString the encoded string
      * @return decoded instance
      */
-    public static Bytes parseDec(String decString) {
+    public static Bytes parseDec(CharSequence decString) {
         return parseRadix(decString, 10);
     }
 
@@ -578,7 +578,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @param radix             radix of the String representation (supported are 2-36)
      * @return decoded instance
      */
-    public static Bytes parseRadix(String radixNumberString, int radix) {
+    public static Bytes parseRadix(CharSequence radixNumberString, int radix) {
         return parse(radixNumberString, new BinaryToTextEncoding.BaseRadixNumber(radix));
     }
 
@@ -589,7 +589,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @param hexString the encoded string
      * @return decoded instance
      */
-    public static Bytes parseHex(String hexString) {
+    public static Bytes parseHex(CharSequence hexString) {
         return parse(hexString, new BinaryToTextEncoding.Hex());
     }
 
@@ -601,7 +601,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @param base32Rfc4648String the encoded string
      * @return decoded instance
      */
-    public static Bytes parseBase32(String base32Rfc4648String) {
+    public static Bytes parseBase32(CharSequence base32Rfc4648String) {
         return parse(base32Rfc4648String, new BaseEncoding(BaseEncoding.BASE32_RFC4848, BaseEncoding.BASE32_RFC4848_PADDING));
     }
 
@@ -613,10 +613,10 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      *
      * @param base36String the encoded string
      * @return decoded instance
-     * @deprecated use {@link #parseRadix(String, int)} with 36 instead; will be removed in v1.0+
+     * @deprecated use {@link #parseRadix(CharSequence, int)} with 36 instead; will be removed in v1.0+
      */
     @Deprecated
-    public static Bytes parseBase36(String base36String) {
+    public static Bytes parseBase36(CharSequence base36String) {
         return parse(base36String, new BinaryToTextEncoding.BaseRadixNumber(36));
     }
 
@@ -626,7 +626,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @param base64String the encoded string
      * @return decoded instance
      */
-    public static Bytes parseBase64(String base64String) {
+    public static Bytes parseBase64(CharSequence base64String) {
         return parse(base64String, new BinaryToTextEncoding.Base64Encoding());
     }
 
@@ -637,7 +637,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @param decoder the decoder used to decode the string
      * @return decoded instance
      */
-    public static Bytes parse(String encoded, BinaryToTextEncoding.Decoder decoder) {
+    public static Bytes parse(CharSequence encoded, BinaryToTextEncoding.Decoder decoder) {
         return wrap(Objects.requireNonNull(decoder, "passed decoder instance must no be null").decode(Objects.requireNonNull(encoded, "encoded data must not be null")));
     }
 

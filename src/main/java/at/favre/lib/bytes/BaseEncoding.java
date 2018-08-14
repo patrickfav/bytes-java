@@ -115,7 +115,7 @@ final class BaseEncoding implements BinaryToTextEncoding.EncoderDecoder {
     }
 
     @Override
-    public byte[] decode(String encoded) {
+    public byte[] decode(CharSequence encoded) {
         encoded = trimTrailingPadding(encoded);
         byte[] tmp = new byte[maxDecodedSize(encoded.length())];
         int len = decodeTo(tmp, encoded);

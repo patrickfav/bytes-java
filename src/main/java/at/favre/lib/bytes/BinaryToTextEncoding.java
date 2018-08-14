@@ -59,7 +59,7 @@ public interface BinaryToTextEncoding {
          * @param encoded string
          * @return byte array represented by given encoded string
          */
-        byte[] decode(String encoded);
+        byte[] decode(CharSequence encoded);
     }
 
     /**
@@ -101,13 +101,13 @@ public interface BinaryToTextEncoding {
         }
 
         @Override
-        public byte[] decode(String hexString) {
+        public byte[] decode(CharSequence hexString) {
             Objects.requireNonNull(hexString, "hex input must not be null");
             if (hexString.length() % 2 != 0)
                 throw new IllegalArgumentException("invalid hex string, must be mod 2 == 0");
 
             int start;
-            if (hexString.startsWith("0x")) {
+            if (hexString.toString().startsWith("0x")) {
                 start = 2;
             } else {
                 start = 0;
@@ -151,7 +151,7 @@ public interface BinaryToTextEncoding {
         }
 
         @Override
-        public byte[] decode(String encoded) {
+        public byte[] decode(CharSequence encoded) {
             return Base64.decode(encoded);
         }
     }
@@ -175,8 +175,8 @@ public interface BinaryToTextEncoding {
         }
 
         @Override
-        public byte[] decode(String encoded) {
-            byte[] array = new BigInteger(encoded, radix).toByteArray();
+        public byte[] decode(CharSequence encoded) {
+            byte[] array = new BigInteger(encoded.toString(), radix).toByteArray();
             if (array[0] == 0) {
                 byte[] tmp = new byte[array.length - 1];
                 System.arraycopy(array, 1, tmp, 0, tmp.length);

@@ -5,6 +5,11 @@
 * add radix encoding/parsing and fix radix tests #6, #20
 * add support for Base32 RFC4648 non-hex alphabet encoding/parsing #21
 * add constructor for `IntBuffer` and `CharBuffer`
+* `parse()` methods now expect more flexible `CharSequence` instead of `String` #23
+
+### Breaking
+
+* interface `BinaryToTextEncoding.decode()` changed param to `CharSequence` from `String` #23
 
 ### Deprecations (will be removed in v1.0+)
 

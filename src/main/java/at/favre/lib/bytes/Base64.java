@@ -47,7 +47,7 @@ final class Base64 {
             '5', '6', '7', '8', '9', '-', '_'
     };
 
-    static byte[] decode(String in) {
+    static byte[] decode(CharSequence in) {
         // Ignore trailing '=' padding and whitespace from the input.
         int limit = in.length();
         for (; limit > 0; limit--) {
