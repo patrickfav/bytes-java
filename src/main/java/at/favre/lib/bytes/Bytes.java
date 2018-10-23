@@ -98,7 +98,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes allocate(int length, byte defaultValue) {
-        if (length == 0) return EMPTY;
+        if (length == 0) return empty();
         byte[] array = new byte[length];
         if (defaultValue != 0) {
             Arrays.fill(array, defaultValue);
