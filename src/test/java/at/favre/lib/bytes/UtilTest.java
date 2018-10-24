@@ -25,6 +25,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -298,5 +300,51 @@ public class UtilTest {
                 assertEquals(Bytes.wrap(expected).encodeHex(), Bytes.wrap(actual).encodeHex());
             }
         }
+    }
+
+    @Test
+    public void testCharToByteArray() {
+        Charset[] charsets = new Charset[]{StandardCharsets.UTF_8, StandardCharsets.US_ASCII, StandardCharsets.UTF_16};
+        for (Charset charset : charsets) {
+            checkCharArrayToByteArray("".toCharArray(), charset);
+            checkCharArrayToByteArray("A".toCharArray(), charset);
+            checkCharArrayToByteArray("12".toCharArray(), charset);
+            checkCharArrayToByteArray("XYZ".toCharArray(), charset);
+            checkCharArrayToByteArray("abcdefg".toCharArray(), charset);
+            checkCharArrayToByteArray("71oh872gdl2dhp81g".toCharArray(), charset);
+
+        }
+
+        checkCharArrayToByteArray("யe2ாமறிந்தиют убSîne klâwenasd1".toCharArray(), StandardCharsets.UTF_8);
+    }
+
+    private void checkCharArrayToByteArray(char[] subject, Charset charset) {
+        for (int lenI = 1; lenI < subject.length + 1; lenI++) {
+            for (int offsetI = 0; offsetI < subject.length; offsetI++) {
+                if (offsetI + lenI > subject.length) break;
+                byte[] bytes = Util.charToByteArray(subject, charset, offsetI, lenI);
+                assertEquals(Bytes.wrap(bytes), Bytes.wrap(new String(subject).substring(offsetI, offsetI + lenI).getBytes(charset)));
+            }
+        }
+        compareArrayToByteArrayWithoutOffset(subject, charset);
+    }
+
+    private void compareArrayToByteArrayWithoutOffset(char[] subject, Charset charset) {
+        assertArrayEquals(Util.charToByteArray(subject, charset, 0, subject.length), new String(subject).getBytes(charset));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCharToByteArrayIllegalOffset() {
+        Util.charToByteArray("abcdef".toCharArray(), StandardCharsets.UTF_8, -1, 1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCharToByteArrayIllegalLength() {
+        Util.charToByteArray("abcdef".toCharArray(), StandardCharsets.UTF_8, 0, -1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCharToByteArrayIllegalOffsetPlusLength() {
+        Util.charToByteArray("abcdef".toCharArray(), StandardCharsets.UTF_8, 4, 3);
     }
 }

@@ -6,6 +6,7 @@
 * add support for Base32 RFC4648 non-hex alphabet encoding/parsing #21
 * add constructor for `IntBuffer` and `CharBuffer`
 * `parse()` methods now expect more flexible `CharSequence` instead of `String` #23
+* `from()` constructor reading from `char[]` has new version that accepts offset and length #24
 
 ### Breaking
 

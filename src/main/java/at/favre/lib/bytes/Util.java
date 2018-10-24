@@ -21,11 +21,27 @@
 
 package at.favre.lib.bytes;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInput;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Common Util methods to convert or modify byte arrays
@@ -371,6 +387,37 @@ final class Util {
         } catch (IOException e) {
             throw new IllegalStateException("could not read from file", e);
         }
+    }
+
+    /**
+     * Converts a char array to a byte array with given charset and range
+     *
+     * @param charArray to get the byte array from
+     * @param charset   charset to be used to decode the char array
+     * @param offset    to start reading the char array from (must be smaller than length and gt 0)
+     * @param length    from offset (must be between 0 and charArray.length)
+     * @return byte array of encoded chars
+     */
+    static byte[] charToByteArray(char[] charArray, Charset charset, int offset, int length) {
+        if (offset < 0 || offset > charArray.length)
+            throw new IllegalArgumentException("offset must be gt 0 and smaller than array length");
+        if (length < 0 || length > charArray.length)
+            throw new IllegalArgumentException("length must be at least 1 and less than array length");
+        if (offset + length > charArray.length)
+            throw new IllegalArgumentException("length + offset must be smaller than array length");
+
+        if (length == 0) return new byte[0];
+
+        CharBuffer charBuffer = CharBuffer.wrap(charArray);
+
+        if (offset != 0 || length != charBuffer.remaining()) {
+            charBuffer = charBuffer.subSequence(offset, offset + length);
+        }
+
+        ByteBuffer bb = charset.encode(charBuffer);
+        byte[] bytes = new byte[bb.remaining()];
+        bb.get(bytes);
+        return bytes;
     }
 
     /**

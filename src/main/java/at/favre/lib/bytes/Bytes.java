@@ -199,7 +199,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * Creates a new instance from a slice of given array
      *
      * @param array  to slice
-     * @param offset stat position
+     * @param offset start position
      * @param length length
      * @return new instance
      */
@@ -520,10 +520,20 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(char[] charArray, Charset charset) {
-        ByteBuffer bb = charset.encode(CharBuffer.wrap(charArray));
-        byte[] bytes = new byte[bb.remaining()];
-        bb.get(bytes);
-        return from(bytes);
+        return from(charArray, charset, 0, charArray.length);
+    }
+
+    /**
+     * Creates a new instance from given char array with given range. The array will be handles like an encoded string
+     *
+     * @param charArray to get the internal byte array from
+     * @param charset   charset to be used to decode the char array
+     * @param offset    start position (from given char array not encoded byte array out)
+     * @param length    length in relation to offset (from given char array not encoded byte array out)
+     * @return new instance
+     */
+    public static Bytes from(char[] charArray, Charset charset, int offset, int length) {
+        return from(Util.charToByteArray(charArray, charset, offset, length));
     }
 
     /**

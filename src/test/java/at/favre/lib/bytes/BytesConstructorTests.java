@@ -294,6 +294,8 @@ public class BytesConstructorTests extends ABytesTest {
         assertArrayEquals(String.valueOf(s1.toCharArray()).getBytes(StandardCharsets.ISO_8859_1), Bytes.from(s1.toCharArray(), StandardCharsets.ISO_8859_1).array());
         assertArrayEquals(String.valueOf(s1.toCharArray()).getBytes(StandardCharsets.UTF_16), Bytes.from(s1.toCharArray(), StandardCharsets.UTF_16).array());
         assertArrayEquals(String.valueOf(s1.toCharArray()).getBytes(StandardCharsets.UTF_8), Bytes.from(s1.toCharArray(), StandardCharsets.UTF_8).array());
+        assertArrayEquals(String.valueOf(s1.substring(0, 1).toCharArray()).getBytes(StandardCharsets.UTF_8), Bytes.from(s1.toCharArray(), StandardCharsets.UTF_8, 0, 1).array());
+        assertArrayEquals(String.valueOf(s1.substring(3, 7).toCharArray()).getBytes(StandardCharsets.UTF_8), Bytes.from(s1.toCharArray(), StandardCharsets.UTF_8, 3, 4).array());
         assertArrayEquals(Bytes.empty().array(), Bytes.from(CharBuffer.allocate(0)).array());
     }
 
