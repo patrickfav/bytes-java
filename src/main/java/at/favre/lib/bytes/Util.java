@@ -26,6 +26,7 @@ import java.io.DataInput;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
@@ -378,14 +379,36 @@ final class Util {
      * @return byte content
      */
     static byte[] readFromFile(File file) {
-        if (file == null || !file.exists() || !file.isFile()) {
-            throw new IllegalArgumentException("file must not be null, has to exist and must be a file (not a directory) " + file);
-        }
+        checkFile(file);
 
         try {
             return Files.readAllBytes(file.toPath());
         } catch (IOException e) {
             throw new IllegalStateException("could not read from file", e);
+        }
+    }
+
+    /**
+     * Reads bytes from file with given offset and max length
+     *
+     * @param file   to read bytes from
+     * @param offset to read
+     * @param length from offset
+     * @return byte array with length length
+     */
+    static byte[] readFromFile(File file, int offset, int length) {
+        checkFile(file);
+        try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
+            raf.seek(offset);
+            return readFromDataInput(raf, length);
+        } catch (Exception e) {
+            throw new IllegalStateException("could not read from random access file", e);
+        }
+    }
+
+    private static void checkFile(File file) {
+        if (file == null || !file.exists() || !file.isFile()) {
+            throw new IllegalArgumentException("file must not be null, has to exist and must be a file (not a directory) " + file);
         }
     }
 

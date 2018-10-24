@@ -7,6 +7,7 @@
 * add constructor for `IntBuffer` and `CharBuffer`
 * `parse()` methods now expect more flexible `CharSequence` instead of `String` #23
 * `from()` constructor reading from `char[]` has new version that accepts offset and length #24
+* add `from()` constructor reading file with offset and length parameter #25
 
 ### Breaking
 

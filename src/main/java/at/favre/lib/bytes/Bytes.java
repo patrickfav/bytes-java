@@ -471,6 +471,21 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Reads given file and returns the byte content. Be aware that the whole defined file content will be loaded to
+     * memory, so be careful what to read in. This uses {@link java.io.RandomAccessFile} under the hood.
+     *
+     * @param file   to read from
+     * @param offset byte offset from zero position of the file
+     * @param length to read from offset
+     * @return new instance
+     * @throws IllegalArgumentException if file does not exist
+     * @throws IllegalStateException    if file could not be read
+     */
+    public static Bytes from(File file, int offset, int length) {
+        return wrap(Util.readFromFile(file, offset, length));
+    }
+
+    /**
      * Creates a new instance from given utf-8 encoded string
      *
      * @param utf8String to get the internal byte array from

@@ -456,7 +456,44 @@ public class BytesConstructorTests extends ABytesTest {
         try {
             Bytes.from(tempFile);
             fail();
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException ignored) {
+        }
+    }
+
+    @Test
+    public void fromFileOffset() throws Exception {
+        File tempFile = testFolder.newFile("out-test2.txt");
+        Bytes bytes = Bytes.wrap(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
+        try (FileOutputStream stream = new FileOutputStream(tempFile)) {
+            stream.write(bytes.array());
+        }
+
+        for (int lenI = 1; lenI < bytes.length() + 1; lenI++) {
+            for (int offsetI = 0; offsetI < bytes.length(); offsetI++) {
+                if (offsetI + lenI > bytes.length()) break;
+                assertEquals(bytes.copy(offsetI, lenI), Bytes.from(tempFile, offsetI, lenI));
+            }
+        }
+        assertEquals(Bytes.from(tempFile), Bytes.from(tempFile, 0, (int) tempFile.length()));
+    }
+
+    @Test
+    public void fromFileOffsetWithIllegalOffsetOrLength() throws Exception {
+        File tempFile = testFolder.newFile("fromFileOffsetWithIllegalOffsetOrLength.txt");
+        try (FileOutputStream stream = new FileOutputStream(tempFile)) {
+            stream.write(new byte[]{0, 1, 2, 3});
+        }
+
+        try {
+            Bytes.from(tempFile, 0, 5);
+            fail();
+        } catch (IllegalStateException ignored) {
+        }
+
+        try {
+            Bytes.from(tempFile, 5, 1);
+            fail();
+        } catch (IllegalStateException ignored) {
         }
     }
 
