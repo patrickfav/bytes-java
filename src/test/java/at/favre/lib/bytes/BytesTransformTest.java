@@ -48,6 +48,16 @@ public class BytesTransformTest extends ABytesTest {
     }
 
     @Test
+    public void appendMultipleByteArrays() {
+        assertArrayEquals(new byte[0], Bytes.from(new byte[0]).append(new byte[0], new byte[0]).array());
+        assertArrayEquals(new byte[]{0x0, 0x01, 0x02, 0x03}, Bytes.from(new byte[]{0x0}).append(new byte[]{0x1}, new byte[]{0x2}, new byte[]{0x3}).array());
+        assertArrayEquals(Util.concat(example_bytes_seven, example_bytes_one, example_bytes_sixteen), Bytes.from(example_bytes_seven).append(example_bytes_one, example_bytes_sixteen).array());
+        assertArrayEquals(Util.concat(example_bytes_sixteen, example_bytes_sixteen, example_bytes_sixteen), Bytes.from(example_bytes_sixteen).append(example_bytes_sixteen, example_bytes_sixteen).array());
+        assertArrayEquals(Util.concat(example_bytes_two, example_bytes_seven, example_bytes_twentyfour, example_bytes_eight), Bytes.from(example_bytes_two).append(example_bytes_seven, example_bytes_twentyfour, example_bytes_eight).array());
+        assertArrayEquals(Util.concat(example_bytes_two, example_bytes_seven, example_bytes_twentyfour, example_bytes_one, example_bytes_sixteen), Bytes.from(example_bytes_two).append(example_bytes_seven, example_bytes_twentyfour).append(example_bytes_one, example_bytes_sixteen).array());
+    }
+
+    @Test
     public void appendNullSafe() {
         assertArrayEquals(new byte[0], Bytes.from(new byte[0]).appendNullSafe(new byte[0]).array());
         assertArrayEquals(new byte[1], Bytes.from(new byte[0]).appendNullSafe(new byte[1]).array());

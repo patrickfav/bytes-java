@@ -1,5 +1,9 @@
 # Releases
 
+## v1.0.0
+
+* add `append()` method supporting multiple byte arrays #26
+
 ## v0.8.0
 
 * add radix encoding/parsing and fix radix tests #6, #20

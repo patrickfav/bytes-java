@@ -21,29 +21,14 @@
 
 package at.favre.lib.bytes;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInput;
-import java.io.File;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.CharBuffer;
-import java.nio.IntBuffer;
-import java.nio.ReadOnlyBufferException;
+import java.nio.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.Normalizer;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Bytes is wrapper class for an byte-array that allows a lot of convenience operations on it:
@@ -775,6 +760,18 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public Bytes append(long long8Bytes) {
         return append(Bytes.from(long8Bytes));
+    }
+
+    /**
+     * Creates a new instance with the current array appended to the provided data (ie. append at the end).
+     * You may use this to append multiple byte arrays without the need for chaining the {@link #append(byte[])} call
+     * and therefore generating intermediate copies of the byte array, making this approach use less memory.
+     *
+     * @param arrays to append
+     * @return appended instance
+     */
+    public Bytes append(byte[]... arrays) {
+        return append(Bytes.from(arrays));
     }
 
     /**
