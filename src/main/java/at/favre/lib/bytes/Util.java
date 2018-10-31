@@ -21,28 +21,14 @@
 
 package at.favre.lib.bytes;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInput;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Common Util methods to convert or modify byte arrays
@@ -438,9 +424,36 @@ final class Util {
         }
 
         ByteBuffer bb = charset.encode(charBuffer);
-        byte[] bytes = new byte[bb.remaining()];
-        bb.get(bytes);
-        return bytes;
+        if (bb.capacity() != bb.limit()) {
+            byte[] bytes = new byte[bb.remaining()];
+            bb.get(bytes);
+            return bytes;
+        }
+        return bb.array();
+    }
+
+    /**
+     * Convert given byte array in given encoding to char array
+     *
+     * @param bytes   as data source
+     * @param charset of the byte array
+     * @return char array
+     */
+    static char[] byteToCharArray(byte[] bytes, Charset charset) {
+        Objects.requireNonNull(bytes, "bytes must not be null");
+        Objects.requireNonNull(charset, "charset must not be null");
+
+        try {
+            CharBuffer charBuffer = charset.newDecoder().decode(ByteBuffer.wrap(bytes));
+            if (charBuffer.capacity() != charBuffer.limit()) {
+                char[] compacted = new char[charBuffer.remaining()];
+                charBuffer.get(compacted);
+                return compacted;
+            }
+            return charBuffer.array();
+        } catch (CharacterCodingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     /**

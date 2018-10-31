@@ -3,6 +3,7 @@
 ## v1.0.0
 
 * add `append()` method supporting multiple byte arrays #26
+* add `toCharArray()` method which decodes internal byte array to char[] #27
 
 ## v0.8.0
 

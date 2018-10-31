@@ -1890,6 +1890,27 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Decodes the internal byte array to UTF-8 char array.
+     * This implementation will not internally create a {@link String}.
+     *
+     * @return char array
+     */
+    public char[] toCharArray() {
+        return toCharArray(StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Decodes the internal byte array with given charset to a char array.
+     * This implementation will not internally create a {@link String}.
+     *
+     * @param charset to use for decoding
+     * @return char array
+     */
+    public char[] toCharArray(Charset charset) {
+        return Util.byteToCharArray(internalArray(), charset);
+    }
+
+    /**
      * Compares this bytes instance to another.
      * <p>
      * Two byte bytes are compared by comparing their sequences of

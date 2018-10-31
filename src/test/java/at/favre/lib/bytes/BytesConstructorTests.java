@@ -26,11 +26,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -297,6 +293,35 @@ public class BytesConstructorTests extends ABytesTest {
         assertArrayEquals(String.valueOf(s1.substring(0, 1).toCharArray()).getBytes(StandardCharsets.UTF_8), Bytes.from(s1.toCharArray(), StandardCharsets.UTF_8, 0, 1).array());
         assertArrayEquals(String.valueOf(s1.substring(3, 7).toCharArray()).getBytes(StandardCharsets.UTF_8), Bytes.from(s1.toCharArray(), StandardCharsets.UTF_8, 3, 4).array());
         assertArrayEquals(Bytes.empty().array(), Bytes.from(CharBuffer.allocate(0)).array());
+    }
+
+    @Test
+    public void toCharArray() {
+        String unicodeString = "|µ€@7é8ahslishalsdalöskdḼơᶉëᶆ ȋṕšᶙṁ ḍỡḽǭᵳ ʂǐť ӓṁệẗ, ĉṓɲṩḙċ";
+        assertArrayEquals(Bytes.from(unicodeString.toCharArray()).array(), Bytes.from(Bytes.from(unicodeString).toCharArray()).array());
+
+        checkToCharArray(unicodeString, StandardCharsets.UTF_8);
+        checkToCharArray(unicodeString, StandardCharsets.UTF_16);
+        checkToCharArray(unicodeString, StandardCharsets.UTF_16BE);
+
+        String asciiString = "asciiASCIIString1234$%&";
+
+        checkToCharArray(asciiString, StandardCharsets.UTF_8);
+        checkToCharArray(asciiString, StandardCharsets.UTF_16);
+        checkToCharArray(asciiString, StandardCharsets.US_ASCII);
+        checkToCharArray(asciiString, StandardCharsets.ISO_8859_1);
+    }
+
+    private void checkToCharArray(String string, Charset charset) {
+        byte[] b0 = String.valueOf(string.toCharArray()).getBytes(charset);
+        char[] charArray = Bytes.from(b0).toCharArray(charset);
+        assertEquals(string, new String(charArray));
+        assertArrayEquals(string.toCharArray(), Bytes.from(string.toCharArray(), charset).toCharArray(charset));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void toCharArrayShouldThroughNullPointer() {
+        Bytes.allocate(4).toCharArray(null);
     }
 
     @Test
