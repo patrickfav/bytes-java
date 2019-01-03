@@ -104,12 +104,12 @@ public interface BinaryToTextEncoding {
 
         @Override
         public byte[] decode(CharSequence hexString) {
-            Objects.requireNonNull(hexString, "hex input must not be null");
-            if (hexString.length() % 2 != 0)
+            if (Objects.requireNonNull(hexString, "hex input must not be null").length() % 2 != 0)
                 throw new IllegalArgumentException("invalid hex string, must be mod 2 == 0");
 
             int start;
-            if (hexString.toString().startsWith("0x")) {
+            if (hexString.length() > 2 &&
+                    hexString.charAt(0) == '0' && hexString.charAt(1) == 'x') {
                 start = 2;
             } else {
                 start = 0;
