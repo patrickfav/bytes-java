@@ -87,10 +87,12 @@ public interface BinaryToTextEncoding {
             StringBuilder sb = new StringBuilder(byteArray.length * 2);
 
             int index;
+            char first4Bit;
+            char last4Bit;
             for (int i = 0; i < byteArray.length; i++) {
                 index = (byteOrder == ByteOrder.BIG_ENDIAN) ? i : byteArray.length - i - 1;
-                char first4Bit = Character.forDigit((byteArray[index] >> 4) & 0xF, 16);
-                char last4Bit = Character.forDigit((byteArray[index] & 0xF), 16);
+                first4Bit = Character.forDigit((byteArray[index] >> 4) & 0xF, 16);
+                last4Bit = Character.forDigit((byteArray[index] & 0xF), 16);
                 if (upperCase) {
                     first4Bit = Character.toUpperCase(first4Bit);
                     last4Bit = Character.toUpperCase(last4Bit);
@@ -115,9 +117,11 @@ public interface BinaryToTextEncoding {
 
             int len = hexString.length();
             byte[] data = new byte[(len - start) / 2];
+            int first4Bits;
+            int second4Bits;
             for (int i = start; i < len; i += 2) {
-                int first4Bits = Character.digit(hexString.charAt(i), 16);
-                int second4Bits = Character.digit(hexString.charAt(i + 1), 16);
+                first4Bits = Character.digit(hexString.charAt(i), 16);
+                second4Bits = Character.digit(hexString.charAt(i + 1), 16);
 
                 if (first4Bits == -1 || second4Bits == -1) {
                     throw new IllegalArgumentException("'" + hexString.charAt(i) + hexString.charAt(i + 1) + "' at index " + i + " is not hex formatted");
