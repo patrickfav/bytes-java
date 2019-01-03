@@ -61,7 +61,9 @@ public class BytesParseAndEncodingTest extends ABytesTest {
     @Test
     public void parseBase64() {
         assertArrayEquals(encodingExample, Bytes.parseBase64("SpT9/x6v7Q==").array());
+        assertArrayEquals(encodingExample, Bytes.parseBase64("SpT9/x6v7Q").array());
         assertArrayEquals(encodingExample, Bytes.parseBase64("SpT9_x6v7Q==").array());
+        assertArrayEquals(encodingExample, Bytes.parseBase64("SpT9_x6v7Q").array());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -81,6 +83,25 @@ public class BytesParseAndEncodingTest extends ABytesTest {
         assertEquals("", Bytes.from(new byte[0]).encodeBase64Url());
         assertEquals("AA==", Bytes.from(new byte[1]).encodeBase64Url());
         assertEquals("SpT9_x6v7Q==", Bytes.from(encodingExample).encodeBase64Url());
+    }
+
+    @Test
+    public void encodeBase64WithConfig() {
+        assertEquals("", Bytes.from(new byte[0]).encodeBase64(true, true));
+        assertEquals("AA==", Bytes.from(new byte[1]).encodeBase64(true, true));
+        assertEquals("SpT9_x6v7Q==", Bytes.from(encodingExample).encodeBase64(true, true));
+
+        assertEquals("", Bytes.from(new byte[0]).encodeBase64(true, false));
+        assertEquals("AA", Bytes.from(new byte[1]).encodeBase64(true, false));
+        assertEquals("SpT9_x6v7Q", Bytes.from(encodingExample).encodeBase64(true, false));
+
+        assertEquals("", Bytes.from(new byte[0]).encodeBase64(false, true));
+        assertEquals("AA==", Bytes.from(new byte[1]).encodeBase64(false, true));
+        assertEquals("SpT9/x6v7Q==", Bytes.from(encodingExample).encodeBase64(false, true));
+
+        assertEquals("", Bytes.from(new byte[0]).encodeBase64(false, false));
+        assertEquals("AA", Bytes.from(new byte[1]).encodeBase64(false, false));
+        assertEquals("SpT9/x6v7Q", Bytes.from(encodingExample).encodeBase64(false, false));
     }
 
     @Test

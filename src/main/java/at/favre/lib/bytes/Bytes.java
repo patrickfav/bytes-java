@@ -631,7 +631,8 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Parsing of base64 encoded byte arrays. Supporting RFC 3548 normal and url safe encoding.
+     * Parsing of base64 encoded byte arrays.
+     * Supporting RFC 4648 normal and url safe encoding, with or without padding.
      *
      * @param base64String the encoded string
      * @return decoded instance
@@ -1624,6 +1625,8 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     /**
      * Base64 representation with padding. This is *NOT* the url safe variation. This encoding has a space efficiency of 75%.
+     *
+     * This encoding is <a href="https://tools.ietf.org/html/rfc4648">RFC 4648</a> compatible.
      * <p>
      * Example: <code>SpT9/x6v7Q==</code>
      *
@@ -1631,12 +1634,14 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://en.wikipedia.org/wiki/Base64">Base64</a>
      */
     public String encodeBase64() {
-        return encode(new BinaryToTextEncoding.Base64Encoding(false, true));
+        return encodeBase64(false, true);
     }
 
     /**
-     * Base64 representation with padding. This is the url safe variation subsitution '+' and '/' with '-' and '_'
+     * Base64 representation with padding. This is the url safe variation substitution '+' and '/' with '-' and '_'
      * respectively. This encoding has a space efficiency of 75%.
+     *
+     * This encoding is <a href="https://tools.ietf.org/html/rfc4648">RFC 4648</a> compatible.
      * <p>
      * Example: <code>SpT9_x6v7Q==</code>
      *
@@ -1644,7 +1649,22 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://en.wikipedia.org/wiki/Base64">Base64</a>
      */
     public String encodeBase64Url() {
-        return encode(new BinaryToTextEncoding.Base64Encoding(true, true));
+        return encodeBase64(true, true);
+    }
+
+    /**
+     * Base64 representation with either padding or without and with or without URL and filename safe alphabet.
+     * This encoding is <a href="https://tools.ietf.org/html/rfc4648">RFC 4648</a> compatible.
+     * <p>
+     * Example: <code>SpT9/x6v7Q==</code>
+     *
+     * @param urlSafe     if true will substitute '+' and '/' with '-' and '_'
+     * @param withPadding if true will add padding the next full byte with '='
+     * @return base64 url safe string
+     * @see <a href="https://en.wikipedia.org/wiki/Base64">Base64</a>
+     */
+    public String encodeBase64(boolean urlSafe, boolean withPadding) {
+        return encode(new BinaryToTextEncoding.Base64Encoding(urlSafe, withPadding));
     }
 
     /**

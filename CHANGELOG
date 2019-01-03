@@ -4,6 +4,7 @@
 
 * add `append()` method supporting multiple byte arrays #26
 * add `toCharArray()` method which decodes internal byte array to char[] #27
+* add `encodeBase64()` supporting padding-less encoding
 
 ## v0.8.0
 
