@@ -6,6 +6,10 @@
 * add `toCharArray()` method which decodes internal byte array to char[] #27
 * add `encodeBase64()` supporting padding-less encoding
 
+### Breaking
+
+* removed deprecated `toObjectArray()`; use `toBoxedArray()` instead
+
 ## v0.8.0
 
 * add radix encoding/parsing and fix radix tests #6, #20

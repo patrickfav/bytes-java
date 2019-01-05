@@ -45,7 +45,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         for (int i = 0; i < array.length; i++) {
             assertEquals(byteArray[i], Byte.valueOf(array[i]));
         }
-        assertArrayEquals(byteArray, Bytes.from(array).toObjectArray());
+        assertArrayEquals(byteArray, Bytes.from(array).toBoxedArray());
     }
 
     @Test

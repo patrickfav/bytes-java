@@ -1734,17 +1734,10 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * @return see {@link #toBoxedArray()}
-     * @deprecated renamed API, use {@link #toBoxedArray()} instead - will be removed in v1.0+
-     */
-    @Deprecated
-    public Byte[] toObjectArray() {
-        return toBoxedArray();
-    }
-
-    /**
      * Returns a copy of the internal byte-array as boxed primitive array.
      * This requires a time and space complexity of O(n).
+     *
+     * Note: this method was previously called <code>toObjectArray()</code>
      *
      * @return copy of internal array as object array
      */
