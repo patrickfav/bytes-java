@@ -1963,7 +1963,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
         Bytes bytes = (Bytes) o;
 
         if (!Arrays.equals(byteArray, bytes.byteArray)) return false;
-        return byteOrder != null ? byteOrder.equals(bytes.byteOrder) : bytes.byteOrder == null;
+        return Objects.equals(byteOrder, bytes.byteOrder);
     }
 
     /**
