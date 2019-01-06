@@ -23,6 +23,7 @@ package at.favre.lib.bytes;
 
 import org.junit.Test;
 
+import java.nio.ByteOrder;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -234,5 +235,45 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
     @Test(expected = IllegalStateException.class)
     public void testToUUIDEmpty() {
         Bytes.allocate(0).toUUID();
+    }
+
+    @Test
+    public void testToIntArray() {
+        assertArrayEquals(new int[]{1}, Bytes.wrap(new byte[]{0, 0, 0, 1}).toIntArray());
+        assertArrayEquals(new int[]{257}, Bytes.wrap(new byte[]{0, 0, 1, 1}).toIntArray());
+        assertArrayEquals(new int[]{65_793}, Bytes.wrap(new byte[]{0, 1, 1, 1}).toIntArray());
+        assertArrayEquals(new int[]{16_843_009}, Bytes.wrap(new byte[]{1, 1, 1, 1}).toIntArray());
+        assertArrayEquals(new int[]{571_211_845}, Bytes.wrap(new byte[]{34, 12, 0, 69}).toIntArray());
+        assertArrayEquals(new int[]{1_290_429_439}, Bytes.wrap(new byte[]{76, (byte) 234, 99, (byte) 255}).toIntArray());
+
+        assertArrayEquals(new int[]{1, 1}, Bytes.wrap(new byte[]{0, 0, 0, 1, 0, 0, 0, 1}).toIntArray());
+        assertArrayEquals(new int[]{257, 1}, Bytes.wrap(new byte[]{0, 0, 1, 1, 0, 0, 0, 1}).toIntArray());
+        assertArrayEquals(new int[]{257, 65_793, 1}, Bytes.wrap(new byte[]{0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1}).toIntArray());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testToIntArrayNotMod4Was5Byte() {
+        Bytes.wrap(new byte[]{1, 0, 0, 0, 1}).toIntArray();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testToIntArrayNotMod4Only3Byte() {
+        Bytes.wrap(new byte[]{0, 0, 1}).toIntArray();
+    }
+
+    @Test
+    public void testToIntEmptyArray() {
+        assertArrayEquals(new int[0], Bytes.empty().toIntArray());
+    }
+
+    @Test
+    public void testToIntArrayLittleEndian() {
+        assertArrayEquals(new int[]{1}, Bytes.wrap(new byte[]{1, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toIntArray());
+        assertArrayEquals(new int[]{257}, Bytes.wrap(new byte[]{1, 1, 0, 0}, ByteOrder.LITTLE_ENDIAN).toIntArray());
+        assertArrayEquals(new int[]{1_290_429_439}, Bytes.wrap(new byte[]{(byte) 255, 99, (byte) 234, 76}, ByteOrder.LITTLE_ENDIAN).toIntArray());
+
+        assertArrayEquals(new int[]{1, 1}, Bytes.wrap(new byte[]{1, 0, 0, 0, 1, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toIntArray());
+        assertArrayEquals(new int[]{257, 1}, Bytes.wrap(new byte[]{1, 1, 0, 0, 1, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toIntArray());
+        assertArrayEquals(new int[]{257, 65_793, 1}, Bytes.wrap(new byte[]{1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toIntArray());
     }
 }

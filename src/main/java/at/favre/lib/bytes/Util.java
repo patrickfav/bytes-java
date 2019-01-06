@@ -25,6 +25,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
+import java.nio.IntBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -457,6 +458,28 @@ final class Util {
     }
 
     /**
+     * Converts the byte array to an int array. This will spread 4 bytes into a single int:
+     *
+     * <pre>
+     *     [b1, b2, b3, b4] = int1
+     * </pre>
+     *
+     * @param bytes     to convert to int array
+     * @param byteOrder of the byte array
+     * @return int array
+     */
+    static int[] toIntArray(byte[] bytes, ByteOrder byteOrder) {
+        IntBuffer buffer = ByteBuffer.wrap(bytes).order(byteOrder).asIntBuffer();
+        if (buffer.hasArray()) {
+            return buffer.array();
+        } else {
+            int[] array = new int[buffer.remaining()];
+            buffer.get(array);
+            return array;
+        }
+    }
+
+    /**
      * Shows the length and a preview of max 8 bytes of the given byte
      *
      * @param bytes to convert to string
@@ -588,6 +611,21 @@ final class Util {
         int result = Arrays.hashCode(byteArray);
         result = 31 * result + (byteOrder != null ? byteOrder.hashCode() : 0);
         return result;
+    }
+
+    /**
+     * Checks if given length is divisable by mod factor (with zero rest).
+     * This can be used to check of a byte array can be convertet to an e.g. int array which is
+     * multiples of 4.
+     *
+     * @param length       of the byte array
+     * @param modFactor    to divide the length
+     * @param errorSubject human readable message of the exact error subject
+     */
+    static void checkModLength(int length, int modFactor, String errorSubject) {
+        if (length % modFactor != 0) {
+            throw new IllegalArgumentException("Illegal length for " + errorSubject + ". Byte array length must be multiple of " + modFactor + ", length was " + length);
+        }
     }
 
     /*

@@ -1625,7 +1625,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     /**
      * Base64 representation with padding. This is *NOT* the url safe variation. This encoding has a space efficiency of 75%.
-     *
+     * <p>
      * This encoding is <a href="https://tools.ietf.org/html/rfc4648">RFC 4648</a> compatible.
      * <p>
      * Example: <code>SpT9/x6v7Q==</code>
@@ -1640,7 +1640,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     /**
      * Base64 representation with padding. This is the url safe variation substitution '+' and '/' with '-' and '_'
      * respectively. This encoding has a space efficiency of 75%.
-     *
+     * <p>
      * This encoding is <a href="https://tools.ietf.org/html/rfc4648">RFC 4648</a> compatible.
      * <p>
      * Example: <code>SpT9_x6v7Q==</code>
@@ -1736,7 +1736,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     /**
      * Returns a copy of the internal byte-array as boxed primitive array.
      * This requires a time and space complexity of O(n).
-     *
+     * <p>
      * Note: this method was previously called <code>toObjectArray()</code>
      *
      * @return copy of internal array as object array
@@ -1859,6 +1859,25 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     public int toInt() {
         Util.checkExactLength(length(), 4, "int");
         return intAt(0);
+    }
+
+    /**
+     * Converts the internal byte array to an int array, that is, every 4 bytes will be packed into a single int.
+     * <p>
+     * E.g. 4 bytes will be packed to a length 1 int array:
+     * <pre>
+     *  [b1, b2, b3, b4] = [int1]
+     * </pre>
+     * <p>
+     * This conversion respects the internal byte order. Will only work if all bytes can be directly mapped to int,
+     * which means the byte array length must be dividable by 4 without rest.
+     *
+     * @return new int[] instance representing this byte array
+     * @throws IllegalArgumentException if internal byte length mod 4 != 0
+     */
+    public int[] toIntArray() {
+        Util.checkModLength(length(), 4, "creating an int array");
+        return Util.toIntArray(internalArray(), byteOrder);
     }
 
     /**
