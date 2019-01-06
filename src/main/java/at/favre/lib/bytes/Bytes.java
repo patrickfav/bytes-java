@@ -1324,7 +1324,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public char charAt(int index) {
         Util.checkIndexBounds(length(), index, 2, "char");
-        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getChar();
+        return ((ByteBuffer) internalBuffer().position(index)).getChar();
     }
 
     /**
@@ -1337,7 +1337,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public short shortAt(int index) {
         Util.checkIndexBounds(length(), index, 2, "short");
-        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getShort();
+        return ((ByteBuffer) internalBuffer().position(index)).getShort();
     }
 
     /**
@@ -1350,7 +1350,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public int intAt(int index) {
         Util.checkIndexBounds(length(), index, 4, "int");
-        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getInt();
+        return ((ByteBuffer) internalBuffer().position(index)).getInt();
     }
 
     /**
@@ -1363,7 +1363,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public long longAt(int index) {
         Util.checkIndexBounds(length(), index, 8, "long");
-        return ((ByteBuffer) ByteBuffer.wrap(internalArray()).order(byteOrder).position(index)).getLong();
+        return ((ByteBuffer) internalBuffer().position(index)).getLong();
     }
 
     /**
@@ -1927,7 +1927,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return char array
      */
     public char[] toCharArray(Charset charset) {
-        return Util.byteToCharArray(internalArray(), charset);
+        return Util.byteToCharArray(internalArray(), charset, byteOrder);
     }
 
     /**
@@ -2009,7 +2009,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return true if both array have same length and every byte element is the same
      */
     public boolean equals(ByteBuffer buffer) {
-        return buffer != null && byteOrder == buffer.order() && ByteBuffer.wrap(internalArray()).order(byteOrder).equals(buffer);
+        return buffer != null && byteOrder == buffer.order() && internalBuffer().equals(buffer);
     }
 
     /**

@@ -435,16 +435,17 @@ final class Util {
     /**
      * Convert given byte array in given encoding to char array
      *
-     * @param bytes   as data source
-     * @param charset of the byte array
+     * @param bytes     as data source
+     * @param charset   of the byte array
+     * @param byteOrder the order of the bytes array
      * @return char array
      */
-    static char[] byteToCharArray(byte[] bytes, Charset charset) {
+    static char[] byteToCharArray(byte[] bytes, Charset charset, ByteOrder byteOrder) {
         Objects.requireNonNull(bytes, "bytes must not be null");
         Objects.requireNonNull(charset, "charset must not be null");
 
         try {
-            CharBuffer charBuffer = charset.newDecoder().decode(ByteBuffer.wrap(bytes));
+            CharBuffer charBuffer = charset.newDecoder().decode(ByteBuffer.wrap(bytes).order(byteOrder));
             if (charBuffer.capacity() != charBuffer.limit()) {
                 char[] compacted = new char[charBuffer.remaining()];
                 charBuffer.get(compacted);

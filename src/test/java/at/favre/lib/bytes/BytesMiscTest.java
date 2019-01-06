@@ -62,6 +62,7 @@ public class BytesMiscTest extends ABytesTest {
         assertNotEquals(0, Bytes.wrap(example2_bytes_seven).hashCode());
     }
 
+    @SuppressWarnings("SimplifiableJUnitAssertion")
     @Test
     public void testEquals() {
         assertTrue(Bytes.wrap(new byte[0]).equals(Bytes.wrap(new byte[0])));
@@ -150,6 +151,7 @@ public class BytesMiscTest extends ABytesTest {
         assertFalse(Bytes.from(example_bytes_seven).isEmpty());
     }
 
+    @SuppressWarnings("SimplifiableJUnitAssertion")
     @Test
     public void containsTest() {
         assertEquals(false, Bytes.allocate(0).contains((byte) 0xFD));
@@ -373,6 +375,15 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
+    public void intAtLittleEndian() {
+        assertEquals(16777216, Bytes.wrap(new byte[]{0, 0, 0, 1}, ByteOrder.LITTLE_ENDIAN).intAt(0));
+        assertEquals(1, Bytes.wrap(new byte[]{0, 0, 0, 1}, ByteOrder.BIG_ENDIAN).intAt(0));
+        assertEquals(134217728, Bytes.wrap(new byte[]{0, 0, 0, 0b00001000}, ByteOrder.LITTLE_ENDIAN).intAt(0));
+        assertEquals(524288, Bytes.wrap(new byte[]{0, 0, 0b00001000, 0}, ByteOrder.LITTLE_ENDIAN).intAt(0));
+        assertEquals(8388608, Bytes.wrap(new byte[]{0, 0, (byte) 0b10000000, 0}, ByteOrder.LITTLE_ENDIAN).intAt(0));
+    }
+
+    @Test
     public void longAt() {
         assertEquals(0, Bytes.allocate(8).longAt(0));
         assertEquals(0, Bytes.allocate(128).longAt(0));
@@ -393,6 +404,16 @@ public class BytesMiscTest extends ABytesTest {
             fail();
         } catch (IndexOutOfBoundsException ignored) {
         }
+    }
+
+    @Test
+    public void longAtLittleEndian() {
+        assertEquals(72057594037927936L, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0, 1}, ByteOrder.LITTLE_ENDIAN).longAt(0));
+        assertEquals(1, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0, 1}, ByteOrder.BIG_ENDIAN).longAt(0));
+        assertEquals(576460752303423488L, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0, 0b00001000}, ByteOrder.LITTLE_ENDIAN).longAt(0));
+        assertEquals(2251799813685248L, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0b00001000, 0}, ByteOrder.LITTLE_ENDIAN).longAt(0));
+        assertEquals(36028797018963968L, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, (byte) 0b10000000, 0}, ByteOrder.LITTLE_ENDIAN).longAt(0));
+        assertEquals(549755813888L, Bytes.wrap(new byte[]{0, 0, 0, 0, (byte) 0b10000000, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).longAt(0));
     }
 
     @Test
