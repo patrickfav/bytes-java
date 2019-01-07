@@ -234,4 +234,15 @@ public class UtilByteTest extends AUtilTest {
             }
         }
     }
+
+    @Test
+    public void entropy() {
+        assertEquals(0, Util.Byte.entropy(new byte[0]), 0.1d);
+        assertEquals(0, Util.Byte.entropy(new byte[1]), 0.1d);
+        assertEquals(0, Util.Byte.entropy(new byte[256]), 0.1d);
+        assertEquals(0, Util.Byte.entropy(new byte[]{1}), 0.1d);
+        assertTrue(Util.Byte.entropy(new byte[]{(byte) 0x8E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x78, 0x09, 0x1E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x00, 0x0A, (byte) 0xEE, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12, (byte) 0xAF, (byte) 0x78, 0x11}) > 3.5);
+        assertTrue(Util.Byte.entropy(new byte[]{0x4A, (byte) 0x94, (byte) 0xFD, (byte) 0xFF, 0x1E, (byte) 0xAF, (byte) 0xED}) > 2.5);
+        assertTrue(Util.Byte.entropy(new byte[]{0x1A, 0x6F}) > 0.5);
+    }
 }

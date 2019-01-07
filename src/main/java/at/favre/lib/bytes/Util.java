@@ -268,6 +268,36 @@ final class Util {
             }
             return result == 0;
         }
+
+        /**
+         * Calculates the entropy factor of a byte array.
+         * <p>
+         * This implementation will not create a copy of the internal array and will only internally initialize
+         * a int array with 256 elements as temporary buffer.
+         *
+         * @param array to calculate the entropy from
+         * @return entropy factor, higher means higher entropy
+         */
+        static double entropy(byte[] array) {
+            final int[] buffer = new int[256];
+            Arrays.fill(buffer, -1);
+
+            for (byte element : array) {
+                int unsigned = 0xff & element;
+                if (buffer[unsigned] == -1) {
+                    buffer[unsigned] = 0;
+                }
+                buffer[unsigned]++;
+            }
+
+            double entropy = 0;
+            for (int count : buffer) {
+                if (count == -1) continue;
+                double prob = (double) count / array.length;
+                entropy -= prob * (Math.log(prob) / Math.log(2));
+            }
+            return entropy;
+        }
     }
 
     /**
@@ -681,58 +711,6 @@ final class Util {
     }
 
     private Util() {
-    }
-
-    /*
-    =================================================================================================
-     Copyright 2011 Twitter, Inc.
-     -------------------------------------------------------------------------------------------------
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this work except in compliance with the License.
-     You may obtain a copy of the License in the LICENSE file, or at:
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
-     =================================================================================================
-     */
-
-    /**
-     * Class that calculates the entropy factor
-     *
-     * @param <T>
-     */
-    @SuppressWarnings("WeakerAccess")
-    static final class Entropy<T> {
-        private final Map<T, Integer> map = new HashMap<>();
-        private int total = 0;
-
-        public Entropy(Iterable<T> elements) {
-            for (T element : elements) {
-                if (!map.containsKey(element)) {
-                    map.put(element, 0);
-                }
-                map.put(element, map.get(element) + 1);
-                total++;
-            }
-        }
-
-        private double Log2(double n) {
-            return Math.log(n) / Math.log(2);
-        }
-
-        public double entropy() {
-            double entropy = 0;
-            for (int count : map.values()) {
-                double prob = (double) count / total;
-                entropy -= prob * Log2(prob);
-            }
-            return entropy;
-        }
     }
 
     /**

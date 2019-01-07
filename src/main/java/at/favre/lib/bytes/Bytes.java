@@ -1402,13 +1402,13 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * variables. Specifically, assuming for simplicity that each of the microscopic configurations is equally probable,
      * the entropy of the system is the natural logarithm of that number of configurations, multiplied by the Boltzmann constant kB.
      * <p>
-     * This implementation requires O(n) time and space complexity.
+     * This implementation requires O(n) time and O(1) space complexity.
      *
      * @return entropy value; higher is more entropy (simply: more different values)
      * @see <a href="https://en.wikipedia.org/wiki/Entropy">Entropy</a>
      */
     public double entropy() {
-        return new Util.Entropy<>(toList()).entropy();
+        return Util.Byte.entropy(internalArray());
     }
 
     /* CONVERTERS POSSIBLY REUSING THE INTERNAL ARRAY ***************************************************************/
