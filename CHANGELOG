@@ -6,6 +6,7 @@
 * add `toCharArray()` method which decodes internal byte array to char[] #27
 * add `encodeBase64()` supporting padding-less encoding
 * add `toIntArray()` converter #28
+* add `toLongArray()` converter #29
 
 ### Breaking
 

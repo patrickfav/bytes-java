@@ -21,29 +21,14 @@
 
 package at.favre.lib.bytes;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInput;
-import java.io.File;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.CharBuffer;
-import java.nio.IntBuffer;
-import java.nio.ReadOnlyBufferException;
+import java.nio.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.Normalizer;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Bytes is wrapper class for an byte-array that allows a lot of convenience operations on it:
@@ -1908,6 +1893,25 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     public long toLong() {
         Util.Validation.checkExactLength(length(), 8, "long");
         return longAt(0);
+    }
+
+    /**
+     * Converts the internal byte array to an long array, that is, every 8 bytes will be packed into a single long.
+     * <p>
+     * E.g. 8 bytes will be packed to a length 1 long array:
+     * <pre>
+     *  [b1, b2, b3, b4, b5, b6, b7, b8] = [int1]
+     * </pre>
+     * <p>
+     * This conversion respects the internal byte order. Will only work if all bytes can be directly mapped to long,
+     * which means the byte array length must be dividable by 8 without rest.
+     *
+     * @return new long[] instance representing this byte array
+     * @throws IllegalArgumentException if internal byte length mod 8 != 0
+     */
+    public long[] toLongArray() {
+        Util.Validation.checkModLength(length(), 8, "creating an long array");
+        return Util.Converter.toLongArray(internalArray(), byteOrder);
     }
 
     /**

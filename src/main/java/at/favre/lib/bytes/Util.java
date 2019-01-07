@@ -21,29 +21,12 @@
 
 package at.favre.lib.bytes;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInput;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.CharBuffer;
-import java.nio.IntBuffer;
+import java.io.*;
+import java.nio.*;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Common Util methods to convert or modify byte arrays
@@ -458,22 +441,36 @@ final class Util {
          * Converts the byte array to an int array. This will spread 4 bytes into a single int:
          *
          * <pre>
-         *     [b1, b2, b3, b4] = int1
+         *     [b1, b2, b3, b4] = [int1]
          * </pre>
          *
-         * @param bytes     to convert to int array
+         * @param bytes     to convert to int array, must be % 4 == 0 to work correctly
          * @param byteOrder of the byte array
          * @return int array
          */
         static int[] toIntArray(byte[] bytes, ByteOrder byteOrder) {
             IntBuffer buffer = ByteBuffer.wrap(bytes).order(byteOrder).asIntBuffer();
-            if (buffer.hasArray()) {
-                return buffer.array();
-            } else {
-                int[] array = new int[buffer.remaining()];
-                buffer.get(array);
-                return array;
-            }
+            int[] array = new int[buffer.remaining()];
+            buffer.get(array);
+            return array;
+        }
+
+        /**
+         * Converts the byte array to an long array. This will spread 8 bytes into a single long:
+         *
+         * <pre>
+         *     [b1, b2, b3, b4, b5, b6, b7, b8] = [long1]
+         * </pre>
+         *
+         * @param bytes     to convert to long array, must be % 8 == 0 to work correctly
+         * @param byteOrder of the byte array
+         * @return long array
+         */
+        static long[] toLongArray(byte[] bytes, ByteOrder byteOrder) {
+            LongBuffer buffer = ByteBuffer.wrap(bytes).order(byteOrder).asLongBuffer();
+            long[] array = new long[buffer.remaining()];
+            buffer.get(array);
+            return array;
         }
 
         /**

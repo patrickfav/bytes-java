@@ -507,6 +507,13 @@ Bytes.wrap(array).toInt();
 Bytes.wrap(array).toDouble();
 ```
 
+To primitive arrays
+
+```java
+Bytes.wrap(array).toIntArray(); // of type int[]
+Bytes.wrap(array).toLongArray(); // of type long[]
+```
+
 To other collections
 
 ```java
@@ -525,6 +532,7 @@ and others
 
 ```java
 Bytes.wrap(array).toUUID(); // convert 16 byte to UUID
+Bytes.wrap(array).toCharArray(StandardCharsets.UTF-8); // converts to encoded char array
 ```
 
 ### Mutable and Read-Only

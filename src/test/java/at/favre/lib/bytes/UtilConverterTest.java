@@ -137,4 +137,22 @@ public class UtilConverterTest extends AUtilTest {
         assertArrayEquals(new int[0], Util.Converter.toIntArray(new byte[0], ByteOrder.LITTLE_ENDIAN));
         assertArrayEquals(new int[0], Util.Converter.toIntArray(new byte[0], ByteOrder.BIG_ENDIAN));
     }
+
+    @Test
+    public void testToLongArray() {
+        assertArrayEquals(new long[]{1}, Util.Converter.toLongArray(new byte[]{0, 0, 0, 0, 0, 0, 0, 1}, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new long[]{257}, Util.Converter.toLongArray(new byte[]{0, 0, 0, 0, 0, 0, 1, 1}, ByteOrder.BIG_ENDIAN));
+
+        assertArrayEquals(new long[]{1}, Util.Converter.toLongArray(new byte[]{1, 0, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new long[]{257}, Util.Converter.toLongArray(new byte[]{1, 1, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN));
+
+        assertArrayEquals(new long[]{-7124130559744646145L}, Util.Converter.toLongArray(new byte[]{(byte) 157, 34, 1, 0, 76, (byte) 234, 99, (byte) 255}, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new long[]{-7124130559744646145L}, Util.Converter.toLongArray(new byte[]{(byte) 255, 99, (byte) 234, 76, 0, 1, 34, (byte) 157}, ByteOrder.LITTLE_ENDIAN));
+
+        assertArrayEquals(new long[]{257, 1}, Util.Converter.toLongArray(new byte[]{0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1}, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new long[]{257, 1}, Util.Converter.toLongArray(new byte[]{1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN));
+
+        assertArrayEquals(new long[0], Util.Converter.toLongArray(new byte[0], ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new long[0], Util.Converter.toLongArray(new byte[0], ByteOrder.BIG_ENDIAN));
+    }
 }
