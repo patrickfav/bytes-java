@@ -71,9 +71,9 @@ public class BytesSharedDataConverterTest extends ABytesTest {
 
     @Test
     public void inputStream() {
-        assertArrayEquals(example_bytes_one, Util.readFromStream(Bytes.from(example_bytes_one).inputStream(), -1));
-        assertArrayEquals(example_bytes_two, Util.readFromStream(Bytes.from(example_bytes_two).inputStream(), -1));
-        assertArrayEquals(example_bytes_four, Util.readFromStream(Bytes.from(example_bytes_four).inputStream(), -1));
-        assertArrayEquals(example_bytes_sixteen, Util.readFromStream(Bytes.from(example_bytes_sixteen).inputStream(), -1));
+        assertArrayEquals(example_bytes_one, Util.File.readFromStream(Bytes.from(example_bytes_one).inputStream(), -1));
+        assertArrayEquals(example_bytes_two, Util.File.readFromStream(Bytes.from(example_bytes_two).inputStream(), -1));
+        assertArrayEquals(example_bytes_four, Util.File.readFromStream(Bytes.from(example_bytes_four).inputStream(), -1));
+        assertArrayEquals(example_bytes_sixteen, Util.File.readFromStream(Bytes.from(example_bytes_sixteen).inputStream(), -1));
     }
 }

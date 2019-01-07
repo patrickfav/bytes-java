@@ -55,36 +55,36 @@ public class UtilTest {
     }
 
     private int indexOf(byte[] empty, byte b) {
-        return Util.indexOf(empty, new byte[]{b}, 0, empty.length);
+        return Util.Byte.indexOf(empty, new byte[]{b}, 0, empty.length);
     }
 
     @Test
     public void testIndexOf_arrayTarget() {
-        assertEquals(-1, Util.indexOf(EMPTY, EMPTY, 0, EMPTY.length));
-        assertEquals(-1, Util.indexOf(ARRAY234, EMPTY, 0, ARRAY234.length));
-        assertEquals(-1, Util.indexOf(EMPTY, ARRAY234, 0, EMPTY.length));
-        assertEquals(-1, Util.indexOf(ARRAY234, ARRAY1, 0, ARRAY234.length));
-        assertEquals(-1, Util.indexOf(ARRAY1, ARRAY234, 0, ARRAY1.length));
-        assertEquals(0, Util.indexOf(ARRAY1, ARRAY1, 0, ARRAY1.length));
-        assertEquals(0, Util.indexOf(ARRAY234, ARRAY234, 0, ARRAY234.length));
-        assertEquals(0, Util.indexOf(
+        assertEquals(-1, Util.Byte.indexOf(EMPTY, EMPTY, 0, EMPTY.length));
+        assertEquals(-1, Util.Byte.indexOf(ARRAY234, EMPTY, 0, ARRAY234.length));
+        assertEquals(-1, Util.Byte.indexOf(EMPTY, ARRAY234, 0, EMPTY.length));
+        assertEquals(-1, Util.Byte.indexOf(ARRAY234, ARRAY1, 0, ARRAY234.length));
+        assertEquals(-1, Util.Byte.indexOf(ARRAY1, ARRAY234, 0, ARRAY1.length));
+        assertEquals(0, Util.Byte.indexOf(ARRAY1, ARRAY1, 0, ARRAY1.length));
+        assertEquals(0, Util.Byte.indexOf(ARRAY234, ARRAY234, 0, ARRAY234.length));
+        assertEquals(0, Util.Byte.indexOf(
                 ARRAY234, new byte[]{(byte) 2, (byte) 3}, 0, 2));
-        assertEquals(1, Util.indexOf(
+        assertEquals(1, Util.Byte.indexOf(
                 ARRAY234, new byte[]{(byte) 3, (byte) 4}, 0, 2));
-        assertEquals(1, Util.indexOf(ARRAY234, new byte[]{(byte) 3}, 0, ARRAY234.length));
-        assertEquals(2, Util.indexOf(ARRAY234, new byte[]{(byte) 4}, 0, ARRAY234.length));
-        assertEquals(1, Util.indexOf(new byte[]{(byte) 2, (byte) 3, (byte) 3, (byte) 3, (byte) 3}, new byte[]{(byte) 3}, 0, 5));
-        assertEquals(2, Util.indexOf(
+        assertEquals(1, Util.Byte.indexOf(ARRAY234, new byte[]{(byte) 3}, 0, ARRAY234.length));
+        assertEquals(2, Util.Byte.indexOf(ARRAY234, new byte[]{(byte) 4}, 0, ARRAY234.length));
+        assertEquals(1, Util.Byte.indexOf(new byte[]{(byte) 2, (byte) 3, (byte) 3, (byte) 3, (byte) 3}, new byte[]{(byte) 3}, 0, 5));
+        assertEquals(2, Util.Byte.indexOf(
                 new byte[]{(byte) 2, (byte) 3, (byte) 2,
                         (byte) 3, (byte) 4, (byte) 2, (byte) 3},
                 new byte[]{(byte) 2, (byte) 3, (byte) 4}
                 , 0, 7));
-        assertEquals(1, Util.indexOf(
+        assertEquals(1, Util.Byte.indexOf(
                 new byte[]{(byte) 2, (byte) 2, (byte) 3,
                         (byte) 4, (byte) 2, (byte) 3, (byte) 4},
                 new byte[]{(byte) 2, (byte) 3, (byte) 4}
                 , 0, 7));
-        assertEquals(-1, Util.indexOf(
+        assertEquals(-1, Util.Byte.indexOf(
                 new byte[]{(byte) 4, (byte) 3, (byte) 2},
                 new byte[]{(byte) 2, (byte) 3, (byte) 4}
                 , 0, 2));
@@ -106,47 +106,47 @@ public class UtilTest {
     }
 
     private int lastIndexOf(byte[] empty, byte b) {
-        return Util.lastIndexOf(empty, b, 0, empty.length);
+        return Util.Byte.lastIndexOf(empty, b, 0, empty.length);
     }
 
     @Test
     public void testConcat() {
-        assertTrue(Arrays.equals(EMPTY, Util.concat()));
-        assertTrue(Arrays.equals(EMPTY, Util.concat(EMPTY)));
-        assertTrue(Arrays.equals(EMPTY, Util.concat(EMPTY, EMPTY, EMPTY)));
-        assertTrue(Arrays.equals(ARRAY1, Util.concat(ARRAY1)));
-        assertNotSame(ARRAY1, Util.concat(ARRAY1));
-        assertTrue(Arrays.equals(ARRAY1, Util.concat(EMPTY, ARRAY1, EMPTY)));
+        assertTrue(Arrays.equals(EMPTY, Util.Byte.concat()));
+        assertTrue(Arrays.equals(EMPTY, Util.Byte.concat(EMPTY)));
+        assertTrue(Arrays.equals(EMPTY, Util.Byte.concat(EMPTY, EMPTY, EMPTY)));
+        assertTrue(Arrays.equals(ARRAY1, Util.Byte.concat(ARRAY1)));
+        assertNotSame(ARRAY1, Util.Byte.concat(ARRAY1));
+        assertTrue(Arrays.equals(ARRAY1, Util.Byte.concat(EMPTY, ARRAY1, EMPTY)));
         assertTrue(Arrays.equals(
                 new byte[]{(byte) 1, (byte) 1, (byte) 1},
-                Util.concat(ARRAY1, ARRAY1, ARRAY1)));
+                Util.Byte.concat(ARRAY1, ARRAY1, ARRAY1)));
         assertTrue(Arrays.equals(
                 new byte[]{(byte) 1, (byte) 2, (byte) 3, (byte) 4},
-                Util.concat(ARRAY1, ARRAY234)));
+                Util.Byte.concat(ARRAY1, ARRAY234)));
     }
 
     @Test
     public void testToArray() {
         // need explicit type parameter to avoid javac warning!?
         List<Byte> none = Arrays.asList();
-        assertTrue(Arrays.equals(EMPTY, Util.toArray(none)));
+        assertTrue(Arrays.equals(EMPTY, Util.Converter.toArray(none)));
 
         List<Byte> one = Arrays.asList((byte) 1);
-        assertTrue(Arrays.equals(ARRAY1, Util.toArray(one)));
+        assertTrue(Arrays.equals(ARRAY1, Util.Converter.toArray(one)));
 
         byte[] array = {(byte) 0, (byte) 1, (byte) 0x55};
 
         List<Byte> three = Arrays.asList((byte) 0, (byte) 1, (byte) 0x55);
-        assertTrue(Arrays.equals(array, Util.toArray(three)));
+        assertTrue(Arrays.equals(array, Util.Converter.toArray(three)));
 
-        assertTrue(Arrays.equals(array, Util.toArray(Util.toList(array))));
+        assertTrue(Arrays.equals(array, Util.Converter.toArray(Util.Converter.toList(array))));
     }
 
     @Test
     public void testToArray_withNull() {
         List<Byte> list = Arrays.asList((byte) 0, (byte) 1, null);
         try {
-            Util.toArray(list);
+            Util.Converter.toArray(list);
             fail();
         } catch (NullPointerException expected) {
         }
@@ -157,14 +157,14 @@ public class UtilTest {
         byte[] array = {(byte) 0, (byte) 1, (byte) 2};
 
         List<Byte> bytes = Arrays.asList((byte) 0, (byte) 1, (byte) 2);
-        assertTrue(Arrays.equals(array, Util.toArray(bytes)));
+        assertTrue(Arrays.equals(array, Util.Converter.toArray(bytes)));
     }
 
     @Test
     public void testAsList_toArray_roundTrip() {
         byte[] array = {(byte) 0, (byte) 1, (byte) 2};
-        List<Byte> list = Util.toList(array);
-        byte[] newArray = Util.toArray(list);
+        List<Byte> list = Util.Converter.toList(array);
+        byte[] newArray = Util.Converter.toArray(list);
 
         // Make sure it returned a copy
         list.set(0, (byte) 4);
@@ -178,21 +178,21 @@ public class UtilTest {
     // This test stems from a real bug found by andrewk
     public void testAsList_subList_toArray_roundTrip() {
         byte[] array = {(byte) 0, (byte) 1, (byte) 2, (byte) 3};
-        List<Byte> list = Util.toList(array);
+        List<Byte> list = Util.Converter.toList(array);
         assertTrue(Arrays.equals(new byte[]{(byte) 1, (byte) 2},
-                Util.toArray(list.subList(1, 3))));
+                Util.Converter.toArray(list.subList(1, 3))));
         assertTrue(Arrays.equals(new byte[]{},
-                Util.toArray(list.subList(2, 2))));
+                Util.Converter.toArray(list.subList(2, 2))));
     }
 
     @Test(expected = IllegalStateException.class)
     public void readFromStream() {
-        Util.readFromStream(null, -1);
+        Util.File.readFromStream(null, -1);
     }
 
     @Test
     public void concatVararg() {
-        assertArrayEquals(new byte[]{1}, Util.concatVararg((byte) 1, null));
+        assertArrayEquals(new byte[]{1}, Util.Byte.concatVararg((byte) 1, null));
     }
 
     @Test
@@ -216,34 +216,34 @@ public class UtilTest {
 
     private static void testReverse(byte[] input, byte[] expectedOutput) {
         input = Arrays.copyOf(input, input.length);
-        Util.reverse(input, 0, input.length);
+        Util.Byte.reverse(input, 0, input.length);
         assertTrue(Arrays.equals(expectedOutput, input));
     }
 
     private static void testReverse(byte[] input, int fromIndex, int toIndex, byte[] expectedOutput) {
         input = Arrays.copyOf(input, input.length);
-        Util.reverse(input, fromIndex, toIndex);
+        Util.Byte.reverse(input, fromIndex, toIndex);
         assertTrue(Arrays.equals(expectedOutput, input));
     }
 
     @Test
     public void testLeftShift() {
         byte[] test = new byte[]{0, 0, 1, 0};
-        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.shiftLeft(new byte[]{0, 0, -128, 0}, 1));
-        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.shiftLeft(new byte[]{0, 0, 64, 0}, 2));
-        assertArrayEquals(new byte[]{1, 1, 1, 0}, Util.shiftLeft(new byte[]{-128, -128, -128, -128}, 1));
-        assertArrayEquals(new byte[]{0, 0, 2, 0}, Util.shiftLeft(Bytes.from(test).array(), 1));
-        assertArrayEquals(new byte[]{0, 0, 4, 0}, Util.shiftLeft(Bytes.from(test).array(), 2));
-        assertArrayEquals(new byte[]{0, 0, 8, 0}, Util.shiftLeft(Bytes.from(test).array(), 3));
-        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 8));
-        assertArrayEquals(new byte[]{0, 2, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 9));
-        assertArrayEquals(new byte[]{1, 0, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 16));
-        assertArrayEquals(new byte[]{2, 0, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 17));
-        assertArrayEquals(new byte[]{-128, 0, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 23));
-        assertArrayEquals(new byte[]{0, 0, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 24));
-        assertArrayEquals(new byte[]{0, 0, 0, 0}, Util.shiftLeft(Bytes.from(test).array(), 24));
+        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.Byte.shiftLeft(new byte[]{0, 0, -128, 0}, 1));
+        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.Byte.shiftLeft(new byte[]{0, 0, 64, 0}, 2));
+        assertArrayEquals(new byte[]{1, 1, 1, 0}, Util.Byte.shiftLeft(new byte[]{-128, -128, -128, -128}, 1));
+        assertArrayEquals(new byte[]{0, 0, 2, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 1));
+        assertArrayEquals(new byte[]{0, 0, 4, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 2));
+        assertArrayEquals(new byte[]{0, 0, 8, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 3));
+        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 8));
+        assertArrayEquals(new byte[]{0, 2, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 9));
+        assertArrayEquals(new byte[]{1, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 16));
+        assertArrayEquals(new byte[]{2, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 17));
+        assertArrayEquals(new byte[]{-128, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 23));
+        assertArrayEquals(new byte[]{0, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 24));
+        assertArrayEquals(new byte[]{0, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 24));
 
-        assertSame(test, Util.shiftLeft(test, 1));
+        assertSame(test, Util.Byte.shiftLeft(test, 1));
     }
 
     @Test
@@ -254,7 +254,7 @@ public class UtilTest {
             Bytes rnd = Bytes.random(4 + new Random().nextInt(14));
 
             byte[] expected = Bytes.from(new BigInteger(rnd.array()).shiftLeft(shift).toByteArray()).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
-            byte[] actual = Bytes.from(Util.shiftLeft(rnd.copy().array(), shift)).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
+            byte[] actual = Bytes.from(Util.Byte.shiftLeft(rnd.copy().array(), shift)).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
 
             System.out.println("Original  \t" + rnd.encodeBinary() + " << " + shift);
             System.out.println("Expected \t" + Bytes.wrap(expected).encodeBinary());
@@ -269,18 +269,18 @@ public class UtilTest {
     public void testRightShift() {
         byte[] test = new byte[]{0, 0, 16, 0};
         assertEquals(0b01111110, 0b11111101 >>> 1);
-        assertArrayEquals(new byte[]{0b00101101, (byte) 0b01111110}, Util.shiftRight(new byte[]{0b01011010, (byte) 0b11111101}, 1));
-        assertArrayEquals(new byte[]{0, -128, -128, -128}, Util.shiftRight(new byte[]{1, 1, 1, 1}, 1));
-        assertArrayEquals(new byte[]{0, -128, 66, 0}, Util.shiftRight(new byte[]{2, 1, 8, 2}, 2));
+        assertArrayEquals(new byte[]{0b00101101, (byte) 0b01111110}, Util.Byte.shiftRight(new byte[]{0b01011010, (byte) 0b11111101}, 1));
+        assertArrayEquals(new byte[]{0, -128, -128, -128}, Util.Byte.shiftRight(new byte[]{1, 1, 1, 1}, 1));
+        assertArrayEquals(new byte[]{0, -128, 66, 0}, Util.Byte.shiftRight(new byte[]{2, 1, 8, 2}, 2));
         assertArrayEquals(new byte[]{0, -128, 66, 0}, new BigInteger(new byte[]{2, 1, 8, 2}).shiftRight(2).toByteArray());
-        assertArrayEquals(new byte[]{0, 0, 0, -128}, Util.shiftRight(Bytes.from(test).array(), 5));
-        assertArrayEquals(new byte[]{0, 0, 0, -128}, Util.shiftRight(new byte[]{0, 0, 1, 0}, 1));
-        assertArrayEquals(new byte[]{0, 0, 8, 0}, Util.shiftRight(Bytes.from(test).array(), 1));
-        assertArrayEquals(new byte[]{0, 0, 4, 0}, Util.shiftRight(Bytes.from(test).array(), 2));
-        assertArrayEquals(new byte[]{0, 0, 2, 0}, Util.shiftRight(Bytes.from(test).array(), 3));
-        assertArrayEquals(new byte[]{0, 0, 1, 0}, Util.shiftRight(Bytes.from(test).array(), 4));
+        assertArrayEquals(new byte[]{0, 0, 0, -128}, Util.Byte.shiftRight(Bytes.from(test).array(), 5));
+        assertArrayEquals(new byte[]{0, 0, 0, -128}, Util.Byte.shiftRight(new byte[]{0, 0, 1, 0}, 1));
+        assertArrayEquals(new byte[]{0, 0, 8, 0}, Util.Byte.shiftRight(Bytes.from(test).array(), 1));
+        assertArrayEquals(new byte[]{0, 0, 4, 0}, Util.Byte.shiftRight(Bytes.from(test).array(), 2));
+        assertArrayEquals(new byte[]{0, 0, 2, 0}, Util.Byte.shiftRight(Bytes.from(test).array(), 3));
+        assertArrayEquals(new byte[]{0, 0, 1, 0}, Util.Byte.shiftRight(Bytes.from(test).array(), 4));
 
-        assertSame(test, Util.shiftRight(test, 1));
+        assertSame(test, Util.Byte.shiftRight(test, 1));
     }
 
     @Test
@@ -290,7 +290,7 @@ public class UtilTest {
             Bytes rnd = Bytes.random(4 + new Random().nextInt(12));
             if (!rnd.bitAt(rnd.lengthBit() - 1)) { //only unsigned
                 byte[] expected = Bytes.from(new BigInteger(rnd.array()).shiftRight(shift).toByteArray()).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
-                byte[] actual = Bytes.from(Util.shiftRight(rnd.copy().array(), shift)).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
+                byte[] actual = Bytes.from(Util.Byte.shiftRight(rnd.copy().array(), shift)).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
 
 //                System.out.println("Original  \t" + rnd.encodeBinary() + " >> " + shift);
 //                System.out.println("Expected \t" + Bytes.wrap(expected).encodeBinary());
@@ -322,7 +322,7 @@ public class UtilTest {
         for (int lenI = 1; lenI < subject.length + 1; lenI++) {
             for (int offsetI = 0; offsetI < subject.length; offsetI++) {
                 if (offsetI + lenI > subject.length) break;
-                byte[] bytes = Util.charToByteArray(subject, charset, offsetI, lenI);
+                byte[] bytes = Util.Converter.charToByteArray(subject, charset, offsetI, lenI);
                 assertEquals(Bytes.wrap(bytes), Bytes.wrap(new String(subject).substring(offsetI, offsetI + lenI).getBytes(charset)));
             }
         }
@@ -330,21 +330,21 @@ public class UtilTest {
     }
 
     private void compareArrayToByteArrayWithoutOffset(char[] subject, Charset charset) {
-        assertArrayEquals(Util.charToByteArray(subject, charset, 0, subject.length), new String(subject).getBytes(charset));
+        assertArrayEquals(Util.Converter.charToByteArray(subject, charset, 0, subject.length), new String(subject).getBytes(charset));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCharToByteArrayIllegalOffset() {
-        Util.charToByteArray("abcdef".toCharArray(), StandardCharsets.UTF_8, -1, 1);
+        Util.Converter.charToByteArray("abcdef".toCharArray(), StandardCharsets.UTF_8, -1, 1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCharToByteArrayIllegalLength() {
-        Util.charToByteArray("abcdef".toCharArray(), StandardCharsets.UTF_8, 0, -1);
+        Util.Converter.charToByteArray("abcdef".toCharArray(), StandardCharsets.UTF_8, 0, -1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCharToByteArrayIllegalOffsetPlusLength() {
-        Util.charToByteArray("abcdef".toCharArray(), StandardCharsets.UTF_8, 4, 3);
+        Util.Converter.charToByteArray("abcdef".toCharArray(), StandardCharsets.UTF_8, 4, 3);
     }
 }

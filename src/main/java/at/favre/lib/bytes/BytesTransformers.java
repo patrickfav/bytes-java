@@ -177,7 +177,7 @@ public final class BytesTransformers {
         @Override
         public byte[] transform(byte[] currentArray, boolean inPlace) {
             byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
-            Util.shuffle(out, random);
+            Util.Byte.shuffle(out, random);
             return out;
         }
 

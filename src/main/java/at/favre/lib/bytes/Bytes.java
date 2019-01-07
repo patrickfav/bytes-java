@@ -21,14 +21,29 @@
 
 package at.favre.lib.bytes;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataInput;
+import java.io.File;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.math.BigInteger;
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.CharBuffer;
+import java.nio.IntBuffer;
+import java.nio.ReadOnlyBufferException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.Normalizer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Bytes is wrapper class for an byte-array that allows a lot of convenience operations on it:
@@ -202,7 +217,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(byte[]... moreArrays) {
-        return wrap(Util.concat(moreArrays));
+        return wrap(Util.Byte.concat(moreArrays));
     }
 
     /**
@@ -228,7 +243,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(Collection<Byte> bytesCollection) {
-        return wrap(Util.toArray(bytesCollection));
+        return wrap(Util.Converter.toArray(bytesCollection));
     }
 
     /**
@@ -238,7 +253,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(Byte[] boxedObjectArray) {
-        return wrap(Util.toPrimitiveArray(boxedObjectArray));
+        return wrap(Util.Converter.toPrimitiveArray(boxedObjectArray));
     }
 
     /**
@@ -260,7 +275,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(byte firstByte, byte... moreBytes) {
-        return wrap(Util.concatVararg(firstByte, moreBytes));
+        return wrap(Util.Byte.concatVararg(firstByte, moreBytes));
     }
 
     /**
@@ -313,7 +328,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(int... intArray) {
-        return wrap(Util.toByteArray(Objects.requireNonNull(intArray, "must provide at least a single int")));
+        return wrap(Util.Converter.toByteArray(Objects.requireNonNull(intArray, "must provide at least a single int")));
     }
 
     /**
@@ -333,7 +348,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(long... longArray) {
-        return wrap(Util.toByteArray(Objects.requireNonNull(longArray, "must provide at least a single long")));
+        return wrap(Util.Converter.toByteArray(Objects.requireNonNull(longArray, "must provide at least a single long")));
     }
 
     /**
@@ -416,7 +431,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(InputStream stream) {
-        return wrap(Util.readFromStream(stream, -1));
+        return wrap(Util.File.readFromStream(stream, -1));
     }
 
     /**
@@ -428,7 +443,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(InputStream stream, int maxLength) {
-        return wrap(Util.readFromStream(stream, maxLength));
+        return wrap(Util.File.readFromStream(stream, maxLength));
     }
 
     /**
@@ -439,7 +454,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(DataInput dataInput, int length) {
-        return wrap(Util.readFromDataInput(dataInput, length));
+        return wrap(Util.File.readFromDataInput(dataInput, length));
     }
 
     /**
@@ -452,7 +467,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @throws IllegalStateException    if file could not be read
      */
     public static Bytes from(File file) {
-        return wrap(Util.readFromFile(file));
+        return wrap(Util.File.readFromFile(file));
     }
 
     /**
@@ -467,7 +482,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @throws IllegalStateException    if file could not be read
      */
     public static Bytes from(File file, int offset, int length) {
-        return wrap(Util.readFromFile(file, offset, length));
+        return wrap(Util.File.readFromFile(file, offset, length));
     }
 
     /**
@@ -533,7 +548,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(char[] charArray, Charset charset, int offset, int length) {
-        return from(Util.charToByteArray(charArray, charset, offset, length));
+        return from(Util.Converter.charToByteArray(charArray, charset, offset, length));
     }
 
     /**
@@ -544,7 +559,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes from(UUID uuid) {
-        return wrap(Util.getBytesFromUUID(Objects.requireNonNull(uuid)).array());
+        return wrap(Util.Converter.toBytesFromUUID(Objects.requireNonNull(uuid)).array());
     }
 
     /**
@@ -1235,7 +1250,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * {@code -1} if no such index exists.
      */
     public int indexOf(byte[] subArray, int fromIndex) {
-        return Util.indexOf(internalArray(), subArray, fromIndex, length());
+        return Util.Byte.indexOf(internalArray(), subArray, fromIndex, length());
     }
 
     /**
@@ -1246,7 +1261,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return true if the start of the internal array is eq to given sub array
      */
     public boolean startsWith(byte[] subArray) {
-        return Util.indexOf(internalArray(), subArray, 0, 1) == 0;
+        return Util.Byte.indexOf(internalArray(), subArray, 0, 1) == 0;
     }
 
     /**
@@ -1258,7 +1273,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * or {@code -1} if no such index exists.
      */
     public int lastIndexOf(byte target) {
-        return Util.lastIndexOf(internalArray(), target, 0, length());
+        return Util.Byte.lastIndexOf(internalArray(), target, 0, length());
     }
 
     /**
@@ -1270,7 +1285,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public boolean endsWith(byte[] subArray) {
         int startIndex = length() - subArray.length;
-        return startIndex >= 0 && Util.indexOf(internalArray(), subArray, startIndex, startIndex + 1) == startIndex;
+        return startIndex >= 0 && Util.Byte.indexOf(internalArray(), subArray, startIndex, startIndex + 1) == startIndex;
     }
 
     /**
@@ -1282,7 +1297,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @throws IndexOutOfBoundsException if the {@code bitIndex} argument is negative or not less than the length of this array in bits.
      */
     public boolean bitAt(int bitIndex) {
-        Util.checkIndexBounds(lengthBit(), bitIndex, 1, "bit");
+        Util.Validation.checkIndexBounds(lengthBit(), bitIndex, 1, "bit");
         return ((byteAt(length() - 1 - (bitIndex / 8)) >>> bitIndex % 8) & 1) != 0;
     }
 
@@ -1296,7 +1311,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @throws IndexOutOfBoundsException if the {@code index} argument is negative or not less than the length of this array.
      */
     public byte byteAt(int index) {
-        Util.checkIndexBounds(length(), index, 1, "byte");
+        Util.Validation.checkIndexBounds(length(), index, 1, "byte");
         return internalArray()[index];
     }
 
@@ -1310,7 +1325,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @throws IndexOutOfBoundsException if the {@code index} argument is negative or not less than the length of this array.
      */
     public int unsignedByteAt(int index) {
-        Util.checkIndexBounds(length(), index, 1, "unsigned byte");
+        Util.Validation.checkIndexBounds(length(), index, 1, "unsigned byte");
         return 0xff & internalArray()[index];
     }
 
@@ -1323,7 +1338,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @throws IndexOutOfBoundsException if the {@code index} argument is negative or length is greater than index - 2
      */
     public char charAt(int index) {
-        Util.checkIndexBounds(length(), index, 2, "char");
+        Util.Validation.checkIndexBounds(length(), index, 2, "char");
         return ((ByteBuffer) internalBuffer().position(index)).getChar();
     }
 
@@ -1336,7 +1351,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @throws IndexOutOfBoundsException if the {@code index} argument is negative or length is greater than index - 2
      */
     public short shortAt(int index) {
-        Util.checkIndexBounds(length(), index, 2, "short");
+        Util.Validation.checkIndexBounds(length(), index, 2, "short");
         return ((ByteBuffer) internalBuffer().position(index)).getShort();
     }
 
@@ -1349,7 +1364,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @throws IndexOutOfBoundsException if the {@code int} argument is negative or length is greater than index - 4
      */
     public int intAt(int index) {
-        Util.checkIndexBounds(length(), index, 4, "int");
+        Util.Validation.checkIndexBounds(length(), index, 4, "int");
         return ((ByteBuffer) internalBuffer().position(index)).getInt();
     }
 
@@ -1362,7 +1377,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @throws IndexOutOfBoundsException if the {@code long} argument is negative or length is greater than index - 8
      */
     public long longAt(int index) {
-        Util.checkIndexBounds(length(), index, 8, "long");
+        Util.Validation.checkIndexBounds(length(), index, 8, "long");
         return ((ByteBuffer) internalBuffer().position(index)).getLong();
     }
 
@@ -1374,7 +1389,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return the count of given target in the byte array
      */
     public int count(byte target) {
-        return Util.countByte(internalArray(), target);
+        return Util.Byte.countByte(internalArray(), target);
     }
 
     /**
@@ -1392,7 +1407,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return the count of given target in the byte array
      */
     public int count(byte[] pattern) {
-        return Util.countByteArray(internalArray(), pattern);
+        return Util.Byte.countByteArray(internalArray(), pattern);
     }
 
     /**
@@ -1730,7 +1745,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return copy of internal array as list
      */
     public List<Byte> toList() {
-        return Util.toList(internalArray());
+        return Util.Converter.toList(internalArray());
     }
 
     /**
@@ -1742,7 +1757,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return copy of internal array as object array
      */
     public Byte[] toBoxedArray() {
-        return Util.toBoxedArray(internalArray());
+        return Util.Converter.toBoxedArray(internalArray());
     }
 
     /**
@@ -1797,7 +1812,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public byte toByte() {
-        Util.checkExactLength(length(), 1, "byte");
+        Util.Validation.checkExactLength(length(), 1, "byte");
         return internalArray()[0];
     }
 
@@ -1812,7 +1827,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public int toUnsignedByte() {
-        Util.checkExactLength(length(), 1, "unsigned byte");
+        Util.Validation.checkExactLength(length(), 1, "unsigned byte");
         return unsignedByteAt(0);
     }
 
@@ -1827,7 +1842,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public char toChar() {
-        Util.checkExactLength(length(), 2, "char");
+        Util.Validation.checkExactLength(length(), 2, "char");
         return charAt(0);
     }
 
@@ -1842,7 +1857,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public short toShort() {
-        Util.checkExactLength(length(), 2, "short");
+        Util.Validation.checkExactLength(length(), 2, "short");
         return shortAt(0);
     }
 
@@ -1857,7 +1872,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public int toInt() {
-        Util.checkExactLength(length(), 4, "int");
+        Util.Validation.checkExactLength(length(), 4, "int");
         return intAt(0);
     }
 
@@ -1876,8 +1891,8 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @throws IllegalArgumentException if internal byte length mod 4 != 0
      */
     public int[] toIntArray() {
-        Util.checkModLength(length(), 4, "creating an int array");
-        return Util.toIntArray(internalArray(), byteOrder);
+        Util.Validation.checkModLength(length(), 4, "creating an int array");
+        return Util.Converter.toIntArray(internalArray(), byteOrder);
     }
 
     /**
@@ -1891,7 +1906,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public long toLong() {
-        Util.checkExactLength(length(), 8, "long");
+        Util.Validation.checkExactLength(length(), 8, "long");
         return longAt(0);
     }
 
@@ -1904,7 +1919,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public float toFloat() {
-        Util.checkExactLength(length(), 4, "float");
+        Util.Validation.checkExactLength(length(), 4, "float");
         return internalBuffer().getFloat();
     }
 
@@ -1917,7 +1932,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public double toDouble() {
-        Util.checkExactLength(length(), 8, "double");
+        Util.Validation.checkExactLength(length(), 8, "double");
         return internalBuffer().getDouble();
     }
 
@@ -1939,7 +1954,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return char array
      */
     public char[] toCharArray(Charset charset) {
-        return Util.byteToCharArray(internalArray(), charset, byteOrder);
+        return Util.Converter.byteToCharArray(internalArray(), charset, byteOrder);
     }
 
     /**
@@ -1999,7 +2014,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return true if {@link Arrays#equals(byte[], byte[])} returns true on given and internal array
      */
     public boolean equalsConstantTime(byte[] anotherArray) {
-        return anotherArray != null && Util.constantTimeEquals(internalArray(), anotherArray);
+        return anotherArray != null && Util.Byte.constantTimeEquals(internalArray(), anotherArray);
     }
 
     /**
@@ -2010,7 +2025,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return true if both array have same length and every byte element is the same
      */
     public boolean equals(Byte[] anotherArray) {
-        return Util.equals(internalArray(), anotherArray);
+        return Util.Obj.equals(internalArray(), anotherArray);
     }
 
     /**
@@ -2037,7 +2052,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     @Override
     public int hashCode() {
         if (hashCodeCache == 0) {
-            hashCodeCache = Util.hashCode(internalArray(), byteOrder());
+            hashCodeCache = Util.Obj.hashCode(internalArray(), byteOrder());
         }
         return hashCodeCache;
     }
@@ -2050,7 +2065,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     @Override
     public String toString() {
-        return Util.toString(this);
+        return Util.Obj.toString(this);
     }
 
     @Override

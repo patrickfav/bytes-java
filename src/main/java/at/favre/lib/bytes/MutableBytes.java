@@ -139,7 +139,7 @@ public final class MutableBytes extends Bytes {
 
     @Override
     public int hashCode() {
-        return Util.hashCode(internalArray(), byteOrder());
+        return Util.Obj.hashCode(internalArray(), byteOrder());
     }
 
     @Override

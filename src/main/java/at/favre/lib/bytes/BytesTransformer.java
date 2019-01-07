@@ -143,10 +143,10 @@ public interface BytesTransformer {
 
             switch (type) {
                 case RIGHT_SHIFT:
-                    return Util.shiftRight(out, shiftCount);
+                    return Util.Byte.shiftRight(out, shiftCount);
                 default:
                 case LEFT_SHIFT:
-                    return Util.shiftLeft(out, shiftCount);
+                    return Util.Byte.shiftLeft(out, shiftCount);
             }
         }
 
@@ -170,7 +170,7 @@ public interface BytesTransformer {
 
         @Override
         public byte[] transform(byte[] currentArray, boolean inPlace) {
-            return Util.concat(currentArray, secondArray);
+            return Util.Byte.concat(currentArray, secondArray);
         }
 
         @Override
@@ -186,7 +186,7 @@ public interface BytesTransformer {
         @Override
         public byte[] transform(byte[] currentArray, boolean inPlace) {
             byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
-            Util.reverse(out, 0, out.length);
+            Util.Byte.reverse(out, 0, out.length);
             return out;
         }
 

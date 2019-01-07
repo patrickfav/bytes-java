@@ -26,7 +26,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -413,8 +417,8 @@ public class BytesConstructorTests extends ABytesTest {
     }
 
     private void checkList(byte[] array) {
-        Bytes bList = Bytes.from(Util.toList(array));
-        Bytes bLinkedList = Bytes.from(new LinkedList<>(Util.toList(array)));
+        Bytes bList = Bytes.from(Util.Converter.toList(array));
+        Bytes bLinkedList = Bytes.from(new LinkedList<>(Util.Converter.toList(array)));
         assertArrayEquals(array, bList.array());
         assertArrayEquals(array, bLinkedList.array());
     }
@@ -431,10 +435,10 @@ public class BytesConstructorTests extends ABytesTest {
         assertArrayEquals(new byte[1], Bytes.from((byte) 0).array());
         assertArrayNotEquals(new byte[0], Bytes.from((byte) 1).array());
 
-        assertArrayEquals(Util.concat(example_bytes_one, example_bytes_one, example_bytes_one), Bytes.from(example_bytes_one, example_bytes_one, example_bytes_one).array());
-        assertArrayEquals(Util.concat(example_bytes_two, example_bytes_seven), Bytes.from(example_bytes_two, example_bytes_seven).array());
-        assertArrayEquals(Util.concat(example_bytes_one, example_bytes_sixteen), Bytes.from(example_bytes_one, example_bytes_sixteen).array());
-        assertArrayNotEquals(Util.concat(example_bytes_sixteen, example_bytes_one), Bytes.from(example_bytes_one, example_bytes_sixteen).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_one, example_bytes_one, example_bytes_one), Bytes.from(example_bytes_one, example_bytes_one, example_bytes_one).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_two, example_bytes_seven), Bytes.from(example_bytes_two, example_bytes_seven).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_one, example_bytes_sixteen), Bytes.from(example_bytes_one, example_bytes_sixteen).array());
+        assertArrayNotEquals(Util.Byte.concat(example_bytes_sixteen, example_bytes_one), Bytes.from(example_bytes_one, example_bytes_sixteen).array());
 
         assertArrayEquals(new byte[]{1, 2, 3}, Bytes.from((byte) 1, (byte) 2, (byte) 3).array());
         assertArrayEquals(new byte[2], Bytes.from((byte) 0, (byte) 0).array());

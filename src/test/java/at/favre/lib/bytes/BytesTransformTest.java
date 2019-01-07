@@ -41,28 +41,28 @@ public class BytesTransformTest extends ABytesTest {
     public void append() {
         assertArrayEquals(new byte[0], Bytes.from(new byte[0]).append(new byte[0]).array());
         assertArrayEquals(new byte[1], Bytes.from(new byte[0]).append(new byte[1]).array());
-        assertArrayEquals(Util.concat(example_bytes_seven, example_bytes_one), Bytes.from(example_bytes_seven).append(example_bytes_one).array());
-        assertArrayEquals(Util.concat(example_bytes_seven, example_bytes_two), Bytes.from(example_bytes_seven).append(example_bytes_two).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_seven, example_bytes_one), Bytes.from(example_bytes_seven).append(example_bytes_one).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_seven, example_bytes_two), Bytes.from(example_bytes_seven).append(example_bytes_two).array());
 
-        assertArrayEquals(Util.concat(example_bytes_eight, example_bytes_sixteen), Bytes.from(example_bytes_eight).append(Bytes.from(example_bytes_sixteen)).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_eight, example_bytes_sixteen), Bytes.from(example_bytes_eight).append(Bytes.from(example_bytes_sixteen)).array());
     }
 
     @Test
     public void appendMultipleByteArrays() {
         assertArrayEquals(new byte[0], Bytes.from(new byte[0]).append(new byte[0], new byte[0]).array());
         assertArrayEquals(new byte[]{0x0, 0x01, 0x02, 0x03}, Bytes.from(new byte[]{0x0}).append(new byte[]{0x1}, new byte[]{0x2}, new byte[]{0x3}).array());
-        assertArrayEquals(Util.concat(example_bytes_seven, example_bytes_one, example_bytes_sixteen), Bytes.from(example_bytes_seven).append(example_bytes_one, example_bytes_sixteen).array());
-        assertArrayEquals(Util.concat(example_bytes_sixteen, example_bytes_sixteen, example_bytes_sixteen), Bytes.from(example_bytes_sixteen).append(example_bytes_sixteen, example_bytes_sixteen).array());
-        assertArrayEquals(Util.concat(example_bytes_two, example_bytes_seven, example_bytes_twentyfour, example_bytes_eight), Bytes.from(example_bytes_two).append(example_bytes_seven, example_bytes_twentyfour, example_bytes_eight).array());
-        assertArrayEquals(Util.concat(example_bytes_two, example_bytes_seven, example_bytes_twentyfour, example_bytes_one, example_bytes_sixteen), Bytes.from(example_bytes_two).append(example_bytes_seven, example_bytes_twentyfour).append(example_bytes_one, example_bytes_sixteen).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_seven, example_bytes_one, example_bytes_sixteen), Bytes.from(example_bytes_seven).append(example_bytes_one, example_bytes_sixteen).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_sixteen, example_bytes_sixteen, example_bytes_sixteen), Bytes.from(example_bytes_sixteen).append(example_bytes_sixteen, example_bytes_sixteen).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_two, example_bytes_seven, example_bytes_twentyfour, example_bytes_eight), Bytes.from(example_bytes_two).append(example_bytes_seven, example_bytes_twentyfour, example_bytes_eight).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_two, example_bytes_seven, example_bytes_twentyfour, example_bytes_one, example_bytes_sixteen), Bytes.from(example_bytes_two).append(example_bytes_seven, example_bytes_twentyfour).append(example_bytes_one, example_bytes_sixteen).array());
     }
 
     @Test
     public void appendNullSafe() {
         assertArrayEquals(new byte[0], Bytes.from(new byte[0]).appendNullSafe(new byte[0]).array());
         assertArrayEquals(new byte[1], Bytes.from(new byte[0]).appendNullSafe(new byte[1]).array());
-        assertArrayEquals(Util.concat(example_bytes_seven, example_bytes_one), Bytes.from(example_bytes_seven).appendNullSafe(example_bytes_one).array());
-        assertArrayEquals(Util.concat(example_bytes_seven, example_bytes_two), Bytes.from(example_bytes_seven).appendNullSafe(example_bytes_two).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_seven, example_bytes_one), Bytes.from(example_bytes_seven).appendNullSafe(example_bytes_one).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_seven, example_bytes_two), Bytes.from(example_bytes_seven).appendNullSafe(example_bytes_two).array());
         assertArrayEquals(new byte[0], Bytes.from(new byte[0]).appendNullSafe(null).array());
         assertArrayEquals(new byte[1], Bytes.from(new byte[1]).appendNullSafe(null).array());
         assertArrayEquals(example_bytes_seven, Bytes.from(example_bytes_seven).appendNullSafe(null).array());
@@ -70,11 +70,11 @@ public class BytesTransformTest extends ABytesTest {
 
     @Test
     public void appendPrimitives() {
-        assertArrayEquals(Util.concat(example_bytes_eight, new byte[]{1}), Bytes.from(example_bytes_eight).append((byte) 1).array());
-        assertArrayEquals(Util.concat(example_bytes_eight, ByteBuffer.allocate(2).putChar((char) 1423).array()), Bytes.from(example_bytes_eight).append((char) 1423).array());
-        assertArrayEquals(Util.concat(example_bytes_eight, ByteBuffer.allocate(2).putShort((short) 4129).array()), Bytes.from(example_bytes_eight).append((short) 4129).array());
-        assertArrayEquals(Util.concat(example_bytes_eight, ByteBuffer.allocate(4).putInt(362173671).array()), Bytes.from(example_bytes_eight).append(362173671).array());
-        assertArrayEquals(Util.concat(example_bytes_eight, ByteBuffer.allocate(8).putLong(0x6762173671L).array()), Bytes.from(example_bytes_eight).append(0x6762173671L).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_eight, new byte[]{1}), Bytes.from(example_bytes_eight).append((byte) 1).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_eight, ByteBuffer.allocate(2).putChar((char) 1423).array()), Bytes.from(example_bytes_eight).append((char) 1423).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_eight, ByteBuffer.allocate(2).putShort((short) 4129).array()), Bytes.from(example_bytes_eight).append((short) 4129).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_eight, ByteBuffer.allocate(4).putInt(362173671).array()), Bytes.from(example_bytes_eight).append(362173671).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_eight, ByteBuffer.allocate(8).putLong(0x6762173671L).array()), Bytes.from(example_bytes_eight).append(0x6762173671L).array());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class BytesTransformTest extends ABytesTest {
             byte[] oldByteArray = b.copy().array();
             Bytes newByte = Bytes.random(i % 16 + 1);
             b = b.append(newByte);
-            assertArrayEquals(Util.concat(oldByteArray, newByte.copy().array()), b.array());
+            assertArrayEquals(Util.Byte.concat(oldByteArray, newByte.copy().array()), b.array());
         }
     }
 
@@ -108,9 +108,9 @@ public class BytesTransformTest extends ABytesTest {
         assertArrayEquals(new byte[8], Bytes.from(new byte[0]).resize(8).array());
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).resize(1).array());
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).resize(1).array());
-        assertArrayEquals(Util.concat(new byte[7], example_bytes_one), Bytes.from(example_bytes_one).resize(8).array());
-        assertArrayEquals(Util.concat(new byte[1], example_bytes_seven), Bytes.from(example_bytes_seven).resize(8).array());
-        assertArrayEquals(Util.concat(new byte[1], example_bytes_sixteen), Bytes.from(example_bytes_sixteen).resize(17).array());
+        assertArrayEquals(Util.Byte.concat(new byte[7], example_bytes_one), Bytes.from(example_bytes_one).resize(8).array());
+        assertArrayEquals(Util.Byte.concat(new byte[1], example_bytes_seven), Bytes.from(example_bytes_seven).resize(8).array());
+        assertArrayEquals(Util.Byte.concat(new byte[1], example_bytes_sixteen), Bytes.from(example_bytes_sixteen).resize(17).array());
     }
 
     @Test
@@ -118,9 +118,9 @@ public class BytesTransformTest extends ABytesTest {
         assertArrayEquals(new byte[8], Bytes.from(new byte[0]).resize(8, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).resize(1, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
         assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).resize(1, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
-        assertArrayEquals(Util.concat(example_bytes_one, new byte[7]), Bytes.from(example_bytes_one).resize(8, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
-        assertArrayEquals(Util.concat(example_bytes_seven, new byte[1]), Bytes.from(example_bytes_seven).resize(8, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
-        assertArrayEquals(Util.concat(example_bytes_sixteen, new byte[1]), Bytes.from(example_bytes_sixteen).resize(17, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_one, new byte[7]), Bytes.from(example_bytes_one).resize(8, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_seven, new byte[1]), Bytes.from(example_bytes_seven).resize(8, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
+        assertArrayEquals(Util.Byte.concat(example_bytes_sixteen, new byte[1]), Bytes.from(example_bytes_sixteen).resize(17, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX).array());
     }
 
     @Test
