@@ -63,6 +63,22 @@ final class Util {
             return result;
         }
 
+
+        /**
+         * Combines a single argument with a vararg to a single array
+         *
+         * @param firstByte first arg
+         * @param moreBytes varargs
+         * @return array containing all args
+         */
+        static byte[] concatVararg(byte firstByte, byte[] moreBytes) {
+            if (moreBytes == null) {
+                return new byte[]{firstByte};
+            } else {
+                return concat(new byte[]{firstByte}, moreBytes);
+            }
+        }
+
         /**
          * Returns the start position of the first occurrence of the specified {@code
          * target} within {@code array}, or {@code -1} if there is no such occurrence.
@@ -186,21 +202,6 @@ final class Util {
                 byte tmp = array[i];
                 array[i] = array[j];
                 array[j] = tmp;
-            }
-        }
-
-        /**
-         * Combines a single argument with a vararg to a single array
-         *
-         * @param firstByte first arg
-         * @param moreBytes varargs
-         * @return array containing all args
-         */
-        static byte[] concatVararg(byte firstByte, byte[] moreBytes) {
-            if (moreBytes == null) {
-                return new byte[]{firstByte};
-            } else {
-                return concat(new byte[]{firstByte}, moreBytes);
             }
         }
 
@@ -333,21 +334,6 @@ final class Util {
         }
 
         /**
-         * Converts given array to list of boxed bytes. Will create a new list
-         * and not reuse the array reference.
-         *
-         * @param array to convert
-         * @return list with same length and content as array
-         */
-        static List<java.lang.Byte> toList(byte[] array) {
-            List<java.lang.Byte> list = new ArrayList<>(array.length);
-            for (byte b : array) {
-                list.add(b);
-            }
-            return list;
-        }
-
-        /**
          * Converts this primitive array to an boxed object array.
          * Will create a new array and not reuse the array reference.
          *
@@ -360,6 +346,21 @@ final class Util {
                 objectArray[i] = array[i];
             }
             return objectArray;
+        }
+
+        /**
+         * Converts given array to list of boxed bytes. Will create a new list
+         * and not reuse the array reference.
+         *
+         * @param array to convert
+         * @return list with same length and content as array
+         */
+        static List<java.lang.Byte> toList(byte[] array) {
+            List<java.lang.Byte> list = new ArrayList<>(array.length);
+            for (byte b : array) {
+                list.add(b);
+            }
+            return list;
         }
 
         /**
