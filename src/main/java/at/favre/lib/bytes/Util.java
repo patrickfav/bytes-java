@@ -322,11 +322,12 @@ final class Util {
          *                              is null
          */
         static byte[] toArray(Collection<java.lang.Byte> collection) {
-            Object[] boxedArray = collection.toArray();
-            int len = boxedArray.length;
-            byte[] array = new byte[len];
-            for (int i = 0; i < len; i++) {
-                array[i] = (java.lang.Byte) boxedArray[i];
+            final int len = collection.size();
+            final byte[] array = new byte[len];
+            int i = 0;
+            for (java.lang.Byte b : collection) {
+                array[i] = b;
+                i++;
             }
             return array;
         }
