@@ -45,6 +45,15 @@ final class Util {
          * For example, {@code append(new byte[] {a, b}, new byte[] {}, new
          * byte[] {c}} returns the byteArray {@code {a, b, c}}.
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param arrays zero or more {@code byte} arrays
          * @return a single byteArray containing all the values from the source arrays, in
          * order
@@ -67,6 +76,15 @@ final class Util {
         /**
          * Combines a single argument with a vararg to a single array
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param firstByte first arg
          * @param moreBytes varargs
          * @return array containing all args
@@ -86,6 +104,15 @@ final class Util {
          * <p>More formally, returns the lowest index {@code i} such that {@code
          * java.util.Arrays.copyOfRange(array, i, i + target.length)} contains exactly
          * the same elements as {@code target}.
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n*m)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
          *
          * @param array  the array to search for the sequence {@code target}
          * @param target the array to search for as a sub-sequence of {@code array}
@@ -113,6 +140,15 @@ final class Util {
          * Returns the index of the last appearance of the value {@code target} in
          * {@code array}.
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param array  an array of {@code byte} values, possibly empty
          * @param target a primitive {@code byte} value
          * @return the greatest index {@code i} for which {@code array[i] == target},
@@ -130,6 +166,15 @@ final class Util {
         /**
          * Counts the occurrence of target in the the in the subject array
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param array  to count in
          * @param target to count
          * @return number of times target is in subject
@@ -146,6 +191,15 @@ final class Util {
 
         /**
          * Counts the times given pattern (ie. an array) can be found in given array
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n*m)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
          *
          * @param array   to count in
          * @param pattern to match in array
@@ -175,6 +229,15 @@ final class Util {
          * <p>
          * See: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>true</code></li>
+         * </ul>
+         * </p>
+         *
          * @param array  to shuffle
          * @param random used to derive entropy - use {@link java.security.SecureRandom} instance if you want this to be secure
          */
@@ -193,6 +256,15 @@ final class Util {
          * Collections.reverse(Bytes.asList(array).subList(fromIndex, toIndex))}, but is likely to be more
          * efficient.
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>true</code></li>
+         * </ul>
+         * </p>
+         *
          * @throws IndexOutOfBoundsException if {@code fromIndex < 0}, {@code toIndex > array.length}, or
          *                                   {@code toIndex > fromIndex}
          */
@@ -208,6 +280,19 @@ final class Util {
         /**
          * Light shift of whole byte array by shiftBitCount bits.
          * This method will alter the input byte array.
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>true</code></li>
+         * </ul>
+         * </p>
+         *
+         * @param byteArray     to shift
+         * @param shiftBitCount how many bits to shift
+         * @return shifted byte array
          */
         static byte[] shiftLeft(byte[] byteArray, int shiftBitCount) {
             final int shiftMod = shiftBitCount % 8;
@@ -234,6 +319,19 @@ final class Util {
         /**
          * Unsigned/logical right shift of whole byte array by shiftBitCount bits.
          * This method will alter the input byte array.
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>true</code></li>
+         * </ul>
+         * </p>
+         *
+         * @param byteArray     to shift
+         * @param shiftBitCount how many bits to shift
+         * @return shifted byte array
          */
         static byte[] shiftRight(byte[] byteArray, int shiftBitCount) {
             final int shiftMod = shiftBitCount % 8;
@@ -259,13 +357,26 @@ final class Util {
 
         /**
          * See https://codahale.com/a-lesson-in-timing-attacks/
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
+         * @param array        to check for equals
+         * @param anotherArray to check against array
+         * @return if both arrays have the same length and same length for every index
          */
-        static boolean constantTimeEquals(byte[] obj, byte[] anotherArray) {
-            if (anotherArray == null || obj.length != anotherArray.length) return false;
+        static boolean constantTimeEquals(byte[] array, byte[] anotherArray) {
+            if (anotherArray == null || array.length != anotherArray.length) return false;
 
             int result = 0;
-            for (int i = 0; i < obj.length; i++) {
-                result |= obj[i] ^ anotherArray[i];
+            for (int i = 0; i < array.length; i++) {
+                result |= array[i] ^ anotherArray[i];
             }
             return result == 0;
         }
@@ -275,6 +386,15 @@ final class Util {
          * <p>
          * This implementation will not create a copy of the internal array and will only internally initialize
          * a int array with 256 elements as temporary buffer.
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
          *
          * @param array to calculate the entropy from
          * @return entropy factor, higher means higher entropy
