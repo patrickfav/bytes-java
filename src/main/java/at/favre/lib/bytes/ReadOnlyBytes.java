@@ -22,7 +22,6 @@
 package at.favre.lib.bytes;
 
 import java.nio.ByteOrder;
-import java.nio.ReadOnlyBufferException;
 
 /**
  * The read-only version of {@link Bytes} created by calling {@link #readOnly()}.
@@ -44,13 +43,23 @@ public final class ReadOnlyBytes extends Bytes {
     }
 
     @Override
+    public boolean isMutable() {
+        return false;
+    }
+
+    @Override
     public boolean isReadOnly() {
         return true;
     }
 
     @Override
     public byte[] array() {
-        throw new ReadOnlyBufferException();
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ImmutableBytes immutable() {
+        throw new UnsupportedOperationException("read only does not support converting to immutable");
     }
 
     /**

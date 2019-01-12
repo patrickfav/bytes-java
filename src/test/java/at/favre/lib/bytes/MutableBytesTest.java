@@ -106,7 +106,7 @@ public class MutableBytesTest extends ABytesTest {
 
         for (int i = 0; i < b.length(); i++) {
             byte old = b.byteAt(i);
-            MutableBytes bcopy = b.setByteAt(i, (byte) 0);
+            Bytes bcopy = b.setByteAt(i, (byte) 0);
             assertSame(b, bcopy);
             if (old != 0) {
                 assertNotEquals(old, b.byteAt(i));

@@ -2,6 +2,12 @@ package at.favre.lib.bytes;
 
 import java.nio.ByteOrder;
 
+/**
+ * An immutable version of {@link Bytes}.
+ * <p>
+ * Every operation will create a new instance and a new copy of the
+ * internal array (if it would be modified).
+ */
 public class ImmutableBytes extends Bytes {
 
     ImmutableBytes(byte[] byteArray, ByteOrder byteOrder) {
@@ -11,6 +17,11 @@ public class ImmutableBytes extends Bytes {
     @Override
     public byte[] array() {
         return copy().internalArray();
+    }
+
+    @Override
+    public boolean isMutable() {
+        return false;
     }
 
     @Override

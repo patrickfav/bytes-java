@@ -45,7 +45,7 @@ import java.util.*;
  * It supports byte ordering (little/big endianness).
  * <p>
  * This class is immutable as long as the internal array is not changed from outside (which can't be assured, when
- * using using <code>wrap()</code>). It is possible to create a mutable version (see {@link MutableBytes}).
+ * using using <code>wrap()</code>). It is possible to create a immutable version (see {@link ImmutableBytes}).
  * <p>
  * <strong>Example:</strong>
  * <pre>
@@ -1079,7 +1079,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * Generic transformation of this instance.
      * <p>
      * This transformation might be done in-place (ie. without copying the internal array and overwriting its old state),
-     * or on a copy of the internal data, depending on the type (e.g. {@link MutableBytes}) and if the operation can be done
+     * or on a copy of the internal data, depending on the type (e.g. {@link ImmutableBytes}) and if the operation can be done
      * in-place. Therefore the caller has to ensure that certain side-effects, which occur due to the changing of the internal
      * data, do not create bugs in his/her code. Usually immutability is preferred, but when handling many or big byte arrays,
      * mutability enables drastically better performance.
@@ -1593,11 +1593,11 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      *
      * @return immutable version of this instance
      */
-    public Bytes immutable() {
+    public ImmutableBytes immutable() {
         if (this instanceof ImmutableBytes) {
-            return this;
+            return (ImmutableBytes) this;
         }
-        return new ImmutableBytes(internalArray(), byteOrder());
+        return new ImmutableBytes(copy().internalArray(), byteOrder());
     }
 
     @Override

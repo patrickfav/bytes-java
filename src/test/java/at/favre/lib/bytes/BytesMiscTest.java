@@ -26,7 +26,6 @@ import org.junit.Test;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.ReadOnlyBufferException;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -475,43 +474,6 @@ public class BytesMiscTest extends ABytesTest {
         assertTrue(Bytes.from(example_bytes_twentyfour).entropy() > 3.5);
         assertTrue(Bytes.from(example_bytes_seven).entropy() > 2.5);
         assertTrue(Bytes.from(example_bytes_two).entropy() > 0.5);
-    }
-
-    @Test
-    public void readOnlyShouldKeepProperty() {
-        ReadOnlyBytes b = Bytes.from(example_bytes_seven).readOnly();
-        assertSame(b, b.readOnly());
-        assertTrue(b.isReadOnly());
-        assertTrue(b.copy().isReadOnly());
-        assertTrue(b.duplicate().isReadOnly());
-        assertTrue(b.reverse().isReadOnly());
-        assertTrue(b.resize(7).isReadOnly());
-        assertTrue(b.resize(6).isReadOnly());
-        assertTrue(b.not().isReadOnly());
-        assertTrue(b.leftShift(1).isReadOnly());
-        assertTrue(b.rightShift(1).isReadOnly());
-        assertTrue(b.and(Bytes.random(b.length())).isReadOnly());
-        assertTrue(b.or(Bytes.random(b.length())).isReadOnly());
-        assertTrue(b.xor(Bytes.random(b.length())).isReadOnly());
-        assertTrue(b.append(3).isReadOnly());
-        assertTrue(b.hashSha256().isReadOnly());
-    }
-
-    @Test
-    public void readOnly() {
-        assertFalse(Bytes.from(example_bytes_twentyfour).isReadOnly());
-        assertTrue(Bytes.from(example_bytes_twentyfour).readOnly().isReadOnly());
-        assertTrue(Bytes.from(example_bytes_twentyfour).readOnly().copy().isReadOnly());
-
-        assertArrayEquals(example_bytes_twentyfour, Bytes.from(example_bytes_twentyfour).readOnly().internalArray());
-        try {
-            Bytes.from(example_bytes_twentyfour).readOnly().array();
-            fail();
-        } catch (ReadOnlyBufferException ignored) {
-        }
-
-        Bytes b = Bytes.from(example_bytes_twentyfour).readOnly();
-        assertSame(b, b.readOnly());
     }
 
     @Test
