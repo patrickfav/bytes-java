@@ -27,7 +27,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-abstract class ABytesTest {
+public abstract class ABytesTest {
     byte[] example_bytes_empty;
 
     byte[] example_bytes_one;
