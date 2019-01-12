@@ -27,7 +27,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public abstract class ABytesTest {
+abstract class ABytesTest {
     byte[] example_bytes_empty;
 
     byte[] example_bytes_one;
@@ -55,7 +55,7 @@ public abstract class ABytesTest {
     String example_hex_twentyfour;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         example_bytes_empty = new byte[0];
         example_bytes_one = new byte[]{0x67};
         example_hex_one = "67";

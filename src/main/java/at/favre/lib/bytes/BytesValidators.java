@@ -27,6 +27,7 @@ import java.util.Collections;
 /**
  * Util and easy access for {@link BytesValidators}
  */
+@SuppressWarnings("WeakerAccess")
 public final class BytesValidators {
 
     private BytesValidators() {

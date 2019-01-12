@@ -31,7 +31,7 @@ import static org.junit.Assert.assertFalse;
 
 public class BytesTransformTest {
     @Test
-    public void testApiVisible() throws Exception {
+    public void testApiVisible() {
         assertFalse(BytesTransformers.checksum(new CRC32(), ChecksumTransformer.Mode.TRANSFORM, 4).supportInPlaceTransformation());
     }
 }

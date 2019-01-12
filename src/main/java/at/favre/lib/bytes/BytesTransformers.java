@@ -18,6 +18,7 @@ import java.util.zip.GZIPOutputStream;
 /**
  * Collection of additional {@link BytesTransformer} for more specific use cases
  */
+@SuppressWarnings("WeakerAccess")
 public final class BytesTransformers {
 
     private BytesTransformers() {
@@ -222,7 +223,7 @@ public final class BytesTransformers {
         }
 
         /**
-         * Converting each byte into unsinged version and comparing it (0...255) vs (-128..127)
+         * Converting each byte into unsigned version and comparing it (0...255) vs (-128..127)
          */
         static final class UnsignedByteComparator implements Comparator<Byte> {
             @Override
@@ -246,7 +247,7 @@ public final class BytesTransformers {
 
         ChecksumTransformer(Checksum checksum, Mode mode, int checksumLengthByte) {
             if (checksumLengthByte <= 0 || checksumLengthByte > 8)
-                throw new IllegalArgumentException("checksumlength must be between 1 and 8 bytes");
+                throw new IllegalArgumentException("checksum length must be between 1 and 8 bytes");
 
             Objects.requireNonNull(checksum, "checksum instance must not be null");
             this.checksum = checksum;

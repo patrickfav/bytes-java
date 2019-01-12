@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
 public class BytesValidatorTest extends ABytesTest {
 
     @Test
-    public void testOnlyOfValidator() throws Exception {
+    public void testOnlyOfValidator() {
         assertFalse(Bytes.allocate(0).validateNotOnlyZeros());
         assertFalse(Bytes.allocate(2).validateNotOnlyZeros());
         assertTrue(Bytes.wrap(example_bytes_seven).validateNotOnlyZeros());
@@ -50,7 +50,7 @@ public class BytesValidatorTest extends ABytesTest {
     }
 
     @Test
-    public void testLengthValidators() throws Exception {
+    public void testLengthValidators() {
         assertFalse(Bytes.allocate(0).validate(atLeast(1)));
         assertTrue(Bytes.allocate(1).validate(atLeast(1)));
         assertTrue(Bytes.allocate(2).validate(atLeast(1)));
@@ -65,7 +65,7 @@ public class BytesValidatorTest extends ABytesTest {
     }
 
     @Test
-    public void testOrValidation() throws Exception {
+    public void testOrValidation() {
         assertTrue(Bytes.allocate(0).validate(or(exactLength(1), exactLength(0))));
         assertTrue(Bytes.allocate(2).validate(or(atLeast(3), onlyOf((byte) 0))));
         assertTrue(Bytes.allocate(3).validate(or(onlyOf((byte) 1), onlyOf((byte) 0))));
@@ -74,7 +74,7 @@ public class BytesValidatorTest extends ABytesTest {
     }
 
     @Test
-    public void testAndValidation() throws Exception {
+    public void testAndValidation() {
         assertFalse(Bytes.allocate(5).validate(and(atLeast(3), notOnlyOf((byte) 0))));
         assertFalse(Bytes.wrap(new byte[]{1, 0}).validate(and(atLeast(3), notOnlyOf((byte) 0))));
         assertTrue(Bytes.wrap(new byte[]{1, 0, 0}).validate(and(atLeast(3), notOnlyOf((byte) 0))));
@@ -82,26 +82,26 @@ public class BytesValidatorTest extends ABytesTest {
     }
 
     @Test
-    public void testNotValidation() throws Exception {
+    public void testNotValidation() {
         assertEquals(Bytes.allocate(2).validate(not(onlyOf((byte) 0))), Bytes.allocate(2).validate(notOnlyOf((byte) 0)));
         assertTrue(Bytes.allocate(2).validate(not(atLeast(16))));
         assertFalse(Bytes.allocate(2).validate(not(atMost(16))));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testLogicalNoElements() throws Exception {
+    public void testLogicalNoElements() {
         Bytes.allocate(2).validate(new BytesValidator.Logical(Collections.<BytesValidator>emptyList(), BytesValidator.Logical.Operator.AND));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testLogicalTooManyElements() throws Exception {
+    public void testLogicalTooManyElements() {
         Bytes.allocate(2).validate(new BytesValidator.Logical(
                 Arrays.<BytesValidator>asList(new BytesValidator.Length(2, BytesValidator.Length.Mode.GREATER_OR_EQ_THAN), new BytesValidator.Length(2, BytesValidator.Length.Mode.EXACT))
                 , BytesValidator.Logical.Operator.NOT));
     }
 
     @Test
-    public void testNestedValidation() throws Exception {
+    public void testNestedValidation() {
         assertTrue(Bytes.allocate(16).validate(
                 or(and(atLeast(8), not(onlyOf(((byte) 0)))),
                         or(exactLength(16), exactLength(12)))));
@@ -113,7 +113,7 @@ public class BytesValidatorTest extends ABytesTest {
     }
 
     @Test
-    public void testStartWithValidate() throws Exception {
+    public void testStartWithValidate() {
         assertTrue(Bytes.wrap(new byte[]{0, 3, 0}).validate(startsWith((byte) 0, (byte) 3)));
         assertFalse(Bytes.wrap(new byte[]{0, 2, 0}).validate(startsWith((byte) 0, (byte) 3)));
         assertTrue(Bytes.wrap(new byte[]{0, 2, 0}).validate(startsWith((byte) 0)));
@@ -123,7 +123,7 @@ public class BytesValidatorTest extends ABytesTest {
     }
 
     @Test
-    public void testEndsWithValidate() throws Exception {
+    public void testEndsWithValidate() {
         assertTrue(Bytes.wrap(new byte[]{1, 2, 3}).validate(endsWith((byte) 2, (byte) 3)));
         assertFalse(Bytes.wrap(new byte[]{0, 2, 0}).validate(endsWith((byte) 3, (byte) 0)));
         assertTrue(Bytes.wrap(new byte[]{0, 2, 0}).validate(endsWith((byte) 0)));

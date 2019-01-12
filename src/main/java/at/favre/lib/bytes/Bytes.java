@@ -1081,7 +1081,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * This transformation might be done in-place (ie. without copying the internal array and overwriting its old state),
      * or on a copy of the internal data, depending on the type (e.g. {@link MutableBytes}) and if the operation can be done
      * in-place. Therefore the caller has to ensure that certain side-effects, which occur due to the changing of the internal
-     * data, do not create bugs in his/her code. Usually immutability is prefered, but when handling many or big byte arrays,
+     * data, do not create bugs in his/her code. Usually immutability is preferred, but when handling many or big byte arrays,
      * mutability enables drastically better performance.
      *
      * @param transformer used to transform this instance

@@ -121,14 +121,14 @@ public class BytesMiscTest extends ABytesTest {
 
         assertTrue(-1 >= Bytes.from(b1).compareTo(Bytes.from(b2)));
         assertTrue(1 <= Bytes.from(b2).compareTo(Bytes.from(b1)));
-        assertTrue(0 == Bytes.from(b1).compareTo(Bytes.from(b1)));
+        assertEquals(0, Bytes.from(b1).compareTo(Bytes.from(b1)));
 
         byte[] bOne = new byte[]{0x01};
         byte[] bTwo = new byte[]{0x02};
 
         assertTrue(-1 >= Bytes.from(bOne).compareTo(Bytes.from(bTwo)));
         assertTrue(1 <= Bytes.from(bTwo).compareTo(Bytes.from(bOne)));
-        assertTrue(0 == Bytes.from(bOne).compareTo(Bytes.from(bOne)));
+        assertEquals(0, Bytes.from(bOne).compareTo(Bytes.from(bOne)));
     }
 
     @Test
@@ -507,7 +507,7 @@ public class BytesMiscTest extends ABytesTest {
         try {
             Bytes.from(example_bytes_twentyfour).readOnly().array();
             fail();
-        } catch (ReadOnlyBufferException e) {
+        } catch (ReadOnlyBufferException ignored) {
         }
 
         Bytes b = Bytes.from(example_bytes_twentyfour).readOnly();
