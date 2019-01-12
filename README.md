@@ -580,6 +580,18 @@ Bytes b = Bytes.from(array).mutable().copy();
 assertTrue(b.isMutable());
 ```
 
+##### AutoClosable for try-with-resources
+
+In security-relevant environments it is best practice to wipe the memory of secret data, such as
+secret keys. This can be used with Java 7 feature try-with-resource like this:
+
+```java
+try (MutableBytes b = Bytes.wrap(aesBytes).mutable()) {
+    SecretKey s = new SecretKeySpec(b.array(), "AES");
+    ...
+}
+```
+
 #### Readonly Bytes
 
 On the other hand, if you want a export a instance with limited access,

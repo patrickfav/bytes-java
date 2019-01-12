@@ -23,6 +23,8 @@ package at.favre.lib.bytes;
 
 import org.junit.Test;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -166,5 +168,19 @@ public class MutableBytesTest extends ABytesTest {
         assertTrue(b.xor(Bytes.random(b.length())).isMutable());
         assertTrue(b.append(3).isMutable());
         assertTrue(b.hashSha256().isMutable());
+    }
+
+    @Test
+    public void testAutoCloseable() {
+        MutableBytes leak;
+
+        try (MutableBytes b = Bytes.wrap(new byte[16]).mutable()) {
+            assertArrayEquals(new byte[16], b.array());
+            SecretKey s = new SecretKeySpec(b.array(), "AES");
+            leak = b;
+        }
+
+        assertArrayNotEquals(new byte[16], leak.array());
+
     }
 }
