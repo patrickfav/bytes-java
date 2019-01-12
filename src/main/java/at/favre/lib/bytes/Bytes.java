@@ -1440,7 +1440,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
 
     /**
      * Returns a new read-only byte instance. Read-only means, that there is no direct access to the underlying byte
-     * array and all transformers will create a copy (ie. immutable)
+     * array and all transformers will create a copy.
      *
      * @return a new instance if not already readonly, or "this" otherwise
      */

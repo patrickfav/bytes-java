@@ -3,7 +3,7 @@
 Bytes is a utility library that makes it easy to **create**, **parse**, **transform**,
 **validate** and **convert** byte arrays in Java. It's main class `Bytes` is
 a collections of bytes and the main API. It supports [endianness](https://en.wikipedia.org/wiki/Endianness)
-as well as **immutable** and **mutable** access, so the caller may decide to favor
+as well as **copy-on-write** and **mutable** access, so the caller may decide to favor
 performance. This can be seen as combination of the features provided by
 [`BigInteger`](https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html),
 [`ByteBuffer`](https://docs.oracle.com/javase/7/docs/api/java/nio/ByteBuffer.html) but
@@ -80,7 +80,7 @@ byte[] result = b.array(); //get as byte array
 
 ## API Description
 
-Per default the instance is **immutable**, which means any transformation will
+Per default the instance is **semi-immutable**, which means any transformation will
 create a copy of the internal array (it is, however, possible to get and
 modify the internal array). There is a **mutable** version which supports
 in-place modification for better performance and a **read-only** version which
