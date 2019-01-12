@@ -32,7 +32,7 @@ import java.util.Objects;
  * Adds additional mutator, which may change the internal array in-place, like {@link #wipe()}
  */
 @SuppressWarnings("WeakerAccess")
-public final class MutableBytes extends Bytes {
+public final class MutableBytes extends Bytes implements AutoCloseable {
 
     MutableBytes(byte[] byteArray, ByteOrder byteOrder) {
         super(byteArray, byteOrder, new Factory());
@@ -145,6 +145,11 @@ public final class MutableBytes extends Bytes {
     @Override
     public boolean equals(Object o) {
         return super.equals(o);
+    }
+
+    @Override
+    public void close() {
+        secureWipe();
     }
 
     /**

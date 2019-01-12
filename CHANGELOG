@@ -7,6 +7,7 @@
 * add `encodeBase64()` supporting padding-less encoding
 * add `toIntArray()` converter #28
 * add `toLongArray()` converter #29
+* add `AutoCloseable` to MutableBytes interface #31
 
 ### Breaking
 

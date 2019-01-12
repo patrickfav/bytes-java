@@ -22,7 +22,10 @@ to blindly paste code snippets from
 [l](https://stackoverflow.com/questions/4231674/converting-an-array-of-bytes-to-listbyte)
 [o](https://stackoverflow.com/questions/28703273/sorting-byte-arrays-in-numeric-order)
 [w](https://stackoverflow.com/questions/4385623/bytes-of-a-string-in-java)
-[.com](https://stackoverflow.com/questions/23360692/byte-position-in-java)
+[.](https://stackoverflow.com/questions/23360692/byte-position-in-java)
+[c](https://stackoverflow.com/questions/11437203/byte-array-to-int-array)
+[o](https://stackoverflow.com/a/9670279/774398)
+[m](https://stackoverflow.com/questions/1519736/random-shuffling-of-an-array)
 
 [![Download](https://api.bintray.com/packages/patrickfav/maven/bytes-java/images/download.svg)](https://bintray.com/patrickfav/maven/bytes-java/_latestVersion)
 [![Build Status](https://travis-ci.org/patrickfav/bytes-java.svg?branch=master)](https://travis-ci.org/patrickfav/bytes-java)
@@ -575,6 +578,18 @@ Bytes b2 = b.immutable();
 ```java
 Bytes b = Bytes.from(array).mutable().copy();
 assertTrue(b.isMutable());
+```
+
+##### AutoClosable for try-with-resources
+
+In security-relevant environments it is best practice to wipe the memory of secret data, such as
+secret keys. This can be used with Java 7 feature try-with-resource like this:
+
+```java
+try (MutableBytes b = Bytes.wrap(aesBytes).mutable()) {
+    SecretKey s = new SecretKeySpec(b.array(), "AES");
+    ...
+}
 ```
 
 #### Readonly Bytes
