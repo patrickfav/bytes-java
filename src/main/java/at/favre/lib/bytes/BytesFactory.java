@@ -31,13 +31,26 @@ public interface BytesFactory {
     /**
      * Create an instance with given array and order
      *
-     * @param array     to directly us
+     * @param array     to directly use
      * @param byteOrder the array is in
      * @return a new instance
      */
     Bytes wrap(byte[] array, ByteOrder byteOrder);
 
+    /**
+     * Create an instance with given other instance and new array
+     *
+     * @param other of the copy source
+     * @param array to directly use
+     * @return a new instance
+     */
     Bytes wrap(Bytes other, byte[] array);
 
+    /**
+     * Create an instance with given other instance
+     *
+     * @param other of the copy source
+     * @return a new instance
+     */
     Bytes wrap(Bytes other);
 }
