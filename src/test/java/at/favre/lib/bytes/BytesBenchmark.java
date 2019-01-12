@@ -30,9 +30,9 @@ public class BytesBenchmark {
     @Ignore
     public void immutableVsMutable() throws Exception {
         int length = 16 * 1024;
-        Bytes randomXorOp = Bytes.random(length).mutable();
+        Bytes randomXorOp = Bytes.random(length);
         Bytes immutable = Bytes.allocate(length);
-        Bytes mutable = Bytes.allocate(length).mutable();
+        Bytes mutable = Bytes.allocate(length);
 
         for (int i = 0; i < 10; i++) {
             immutable = immutable.xor(randomXorOp);

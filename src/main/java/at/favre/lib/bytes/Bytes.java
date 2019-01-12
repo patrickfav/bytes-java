@@ -59,7 +59,7 @@ import java.util.*;
  * use {@link BytesTransformers#sortUnsigned()}.
  */
 @SuppressWarnings("WeakerAccess")
-public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
+public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, AutoCloseable {
 
     private static final Bytes EMPTY = Bytes.wrap(new byte[0]);
 
@@ -957,7 +957,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return copied instance
      */
     public Bytes copy() {
-        return transform(new BytesTransformer.CopyTransformer(0, length()));
+        return copy(0, length());
     }
 
     /**
@@ -968,7 +968,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return copied instance
      */
     public Bytes copy(int offset, int length) {
-        return transform(new BytesTransformer.CopyTransformer(offset, length));
+        return factory.wrap(Util.Byte.copy(internalArray(), length, offset), byteOrder);
     }
 
     /**
@@ -1088,7 +1088,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return the transformed instance (might be the same, or a new one)
      */
     public Bytes transform(BytesTransformer transformer) {
-        return factory.wrap(transformer.transform(internalArray(), isMutable()), byteOrder);
+        return factory.wrap(this, transformer.transform(internalArray(), isMutable()));
     }
 
     /* VALIDATORS ***************************************************************************************************/
@@ -1157,7 +1157,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return true if mutable, ie. transformers will change internal array
      */
     public boolean isMutable() {
-        return false;
+        return true;
     }
 
     /**
@@ -1419,7 +1419,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance backed by the same data
      */
     public Bytes duplicate() {
-        return factory.wrap(internalArray(), byteOrder);
+        return factory.wrap(array(), byteOrder);
     }
 
     /**
@@ -1470,21 +1470,6 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Returns a mutable version of this instance with sharing the same underlying byte-array.
-     * If you want the mutable version to be a copy, call {@link #copy()} first.
-     *
-     * @return new mutable instance with same reference to internal byte array, or "this" if this is already of type {@link MutableBytes}
-     * @throws ReadOnlyBufferException if this is a read-only instance
-     */
-    public MutableBytes mutable() {
-        if (this instanceof MutableBytes) {
-            return (MutableBytes) this;
-        } else {
-            return new MutableBytes(array(), byteOrder);
-        }
-    }
-
-    /**
      * Creates an input stream with the same backing data as the intern array of this instance
      *
      * @return new input stream
@@ -1508,6 +1493,116 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     byte[] internalArray() {
         return byteArray;
+    }
+
+    /* IN-PLACE-TRANSFORMER ******************************************************************************/
+
+    /**
+     * Uses given array to overwrite internal array
+     *
+     * @param newArray used to overwrite internal
+     * @return this instance
+     * @throws IndexOutOfBoundsException if newArray.length &gt; internal length
+     */
+    public Bytes overwrite(byte[] newArray) {
+        return overwrite(newArray, 0);
+    }
+
+    /**
+     * Uses given array to overwrite internal array.
+     *
+     * @param newArray            used to overwrite internal
+     * @param offsetInternalArray index of the internal array to start overwriting
+     * @return this instance
+     * @throws IndexOutOfBoundsException if newArray.length + offsetInternalArray &gt; internal length
+     */
+    public Bytes overwrite(byte[] newArray, int offsetInternalArray) {
+        Objects.requireNonNull(newArray, "must provide non-null array as source");
+        byte[] array = array();
+        System.arraycopy(newArray, 0, array, offsetInternalArray, newArray.length);
+        return factory.wrap(this, array);
+    }
+
+    private void overwriteInternal(byte[] newArray, int offsetInternalArray) {
+        Objects.requireNonNull(newArray, "must provide non-null array as source");
+        System.arraycopy(newArray, 0, internalArray(), offsetInternalArray, newArray.length);
+    }
+
+    /**
+     * Sets new byte to given index
+     *
+     * @param index   the index to change
+     * @param newByte the new byte to set
+     * @return this instance
+     */
+    public Bytes setByteAt(int index, byte newByte) {
+        byte[] array = array();
+        array[index] = newByte;
+        return factory.wrap(this, array);
+    }
+
+    /**
+     * Fills the internal byte array with all zeros
+     *
+     * @return this instance
+     */
+    public Bytes wipe() {
+        return fill((byte) 0);
+    }
+
+    /**
+     * Fills the internal byte array with provided byte
+     *
+     * @param fillByte to fill with
+     * @return this instance
+     */
+    public Bytes fill(byte fillByte) {
+        byte[] array = array();
+        Arrays.fill(array, fillByte);
+        return factory.wrap(this, array);
+    }
+
+    /**
+     * Fills the internal byte array with random data provided by {@link SecureRandom}
+     *
+     * @return this instance
+     */
+    public Bytes secureWipe() {
+        return secureWipe(new SecureRandom());
+    }
+
+    /**
+     * Fills the internal byte array with random data provided by given random instance
+     *
+     * @param random to generate entropy
+     * @return this instance
+     */
+    public Bytes secureWipe(SecureRandom random) {
+        byte[] array = array();
+        Objects.requireNonNull(random, "random param must not be null");
+        if (length() > 0) {
+            random.nextBytes(array);
+        }
+        return factory.wrap(this, array);
+    }
+
+    /**
+     * Convert this instance to an immutable version with the same reference of the internal array and byte-order.
+     * If the mutable instance is kept, it can be used to alter the internal array of the just created instance, so be
+     * aware.
+     *
+     * @return immutable version of this instance
+     */
+    public Bytes immutable() {
+        if (this instanceof ImmutableBytes) {
+            return this;
+        }
+        return new ImmutableBytes(internalArray(), byteOrder());
+    }
+
+    @Override
+    public void close() {
+        secureWipe();
     }
 
     /* ENCODER ************************************************************************************************/
@@ -2085,7 +2180,21 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
         public Bytes wrap(byte[] array, ByteOrder byteOrder) {
             return new Bytes(array, byteOrder);
         }
+
+        @Override
+        public Bytes wrap(Bytes other, byte[] array) {
+            if (other.length() == array.length) {
+                other.overwriteInternal(array, 0);
+                return other;
+            }
+            return wrap(array, other.byteOrder());
+        }
+
+        @Override
+        public Bytes wrap(Bytes other) {
+            return other;
+        }
     }
 
-    static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 2L;
 }

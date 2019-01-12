@@ -61,5 +61,15 @@ public final class ReadOnlyBytes extends Bytes {
         public Bytes wrap(byte[] array, ByteOrder byteOrder) {
             return new ReadOnlyBytes(array, byteOrder);
         }
+
+        @Override
+        public Bytes wrap(Bytes other, byte[] array) {
+            return wrap(array, other.byteOrder());
+        }
+
+        @Override
+        public Bytes wrap(Bytes other) {
+            return wrap(other.isMutable() ? other.copy().array() : other.array(), other.byteOrder());
+        }
     }
 }

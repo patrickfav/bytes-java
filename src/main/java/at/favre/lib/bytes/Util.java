@@ -419,6 +419,12 @@ final class Util {
             }
             return entropy;
         }
+
+        public static byte[] copy(byte[] array, int length, int offset) {
+            byte[] copy = new byte[length];
+            System.arraycopy(array, offset, copy, 0, copy.length);
+            return copy;
+        }
     }
 
     /**

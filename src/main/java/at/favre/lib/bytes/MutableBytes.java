@@ -160,5 +160,19 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
         public Bytes wrap(byte[] array, ByteOrder byteOrder) {
             return new MutableBytes(array, byteOrder);
         }
+
+        @Override
+        public Bytes wrap(Bytes other, byte[] array) {
+            if (other.length() == array.length) {
+                other.overwrite(array);
+                return other;
+            }
+            return wrap(array, other.byteOrder());
+        }
+
+        @Override
+        public Bytes wrap(Bytes other) {
+            return other;
+        }
     }
 }

@@ -109,8 +109,8 @@ public class BytesMiscTest extends ABytesTest {
     public void testEqualsContent() {
         assertTrue(Bytes.wrap(new byte[0]).byteOrder(ByteOrder.BIG_ENDIAN).equalsContent(Bytes.wrap(new byte[0]).byteOrder(ByteOrder.LITTLE_ENDIAN)));
         assertTrue(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.BIG_ENDIAN).equalsContent(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
-        assertTrue(Bytes.from(example_bytes_seven).mutable().equalsContent(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
-        assertTrue(Bytes.from(example_bytes_seven).mutable().equalsContent(Bytes.from(example_bytes_seven)));
+        assertTrue(Bytes.from(example_bytes_seven).equalsContent(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
+        assertTrue(Bytes.from(example_bytes_seven).equalsContent(Bytes.from(example_bytes_seven)));
         assertTrue(Bytes.from(example_bytes_seven).readOnly().equalsContent(Bytes.from(example_bytes_seven)));
     }
 

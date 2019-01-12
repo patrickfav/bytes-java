@@ -36,4 +36,8 @@ public interface BytesFactory {
      * @return a new instance
      */
     Bytes wrap(byte[] array, ByteOrder byteOrder);
+
+    Bytes wrap(Bytes other, byte[] array);
+
+    Bytes wrap(Bytes other);
 }
