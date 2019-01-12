@@ -436,6 +436,15 @@ final class Util {
          * collection.toArray()}.  Calling this method is as thread-safe as calling
          * that method.
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param collection a collection of {@code Byte} objects
          * @return an array containing the same values as {@code collection}, in the
          * same order, converted to primitives
@@ -457,6 +466,15 @@ final class Util {
          * Converts this primitive array to an boxed object array.
          * Will create a new array and not reuse the array reference.
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param array to convert
          * @return new array
          */
@@ -471,6 +489,15 @@ final class Util {
         /**
          * Converts given array to list of boxed bytes. Will create a new list
          * and not reuse the array reference.
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
          *
          * @param array to convert
          * @return list with same length and content as array
@@ -487,6 +514,15 @@ final class Util {
          * Converts this object array to an primitives type array.
          * Will create a new array and not reuse the array reference.
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param objectArray to convert
          * @return new array
          */
@@ -502,13 +538,24 @@ final class Util {
          * Creates a byte array from given int array.
          * The resulting byte array will have length intArray * 4.
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param intArray to convert
          * @return resulting byte array
          */
         static byte[] toByteArray(int[] intArray) {
             byte[] primitivesArray = new byte[intArray.length * 4];
+            ByteBuffer buffer = ByteBuffer.allocate(4);
             for (int i = 0; i < intArray.length; i++) {
-                byte[] intBytes = ByteBuffer.allocate(4).putInt(intArray[i]).array();
+                buffer.clear();
+                byte[] intBytes = buffer.putInt(intArray[i]).array();
                 System.arraycopy(intBytes, 0, primitivesArray, (i * 4), intBytes.length);
             }
             return primitivesArray;
@@ -518,13 +565,24 @@ final class Util {
          * Creates a byte array from given long array.
          * The resulting byte array will have length longArray * 8
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param longArray to convert
          * @return resulting byte array
          */
         static byte[] toByteArray(long[] longArray) {
             byte[] primitivesArray = new byte[longArray.length * 8];
+            ByteBuffer buffer = ByteBuffer.allocate(8);
             for (int i = 0; i < longArray.length; i++) {
-                byte[] longBytes = ByteBuffer.allocate(8).putLong(longArray[i]).array();
+                buffer.clear();
+                byte[] longBytes = buffer.putLong(longArray[i]).array();
                 System.arraycopy(longBytes, 0, primitivesArray, (i * 8), longBytes.length);
             }
             return primitivesArray;
@@ -532,6 +590,15 @@ final class Util {
 
         /**
          * Converts a char array to a byte array with given charset and range
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
          *
          * @param charArray to get the byte array from
          * @param charset   charset to be used to decode the char array
@@ -567,6 +634,15 @@ final class Util {
         /**
          * Convert given byte array in given encoding to char array
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param bytes     as data source
          * @param charset   of the byte array
          * @param byteOrder the order of the bytes array
@@ -596,6 +672,15 @@ final class Util {
          *     [b1, b2, b3, b4] = [int1]
          * </pre>
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param bytes     to convert to int array, must be % 4 == 0 to work correctly
          * @param byteOrder of the byte array
          * @return int array
@@ -614,6 +699,15 @@ final class Util {
          *     [b1, b2, b3, b4, b5, b6, b7, b8] = [long1]
          * </pre>
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param bytes     to convert to long array, must be % 8 == 0 to work correctly
          * @param byteOrder of the byte array
          * @return long array
@@ -628,6 +722,15 @@ final class Util {
         /**
          * Convert UUID to a newly generated 16 byte long array representation. Puts the 8 byte most significant bits and
          * 8 byte least significant bits into an byte array.
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(1)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
          *
          * @param uuid to convert to array
          * @return buffer containing the 16 bytes
@@ -647,6 +750,25 @@ final class Util {
         private Obj() {
         }
 
+        /**
+         * Equals method comparing 2 byte arrays.
+         * This utilizes a quick return of the array differs on any given property so not suitable
+         * for security relevant checks. See  {@link Util.Byte#constantTimeEquals(byte[], byte[])}
+         * for that.
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
+         * @param obj          subject a
+         * @param anotherArray subject b to compare to a
+         * @return if a.len == b.len and for every 0..len a[i] == b[i]
+         */
         static boolean equals(byte[] obj, java.lang.Byte[] anotherArray) {
             if (anotherArray == null) return false;
             if (obj.length != anotherArray.length) return false;
@@ -661,6 +783,15 @@ final class Util {
         /**
          * Hashcode implementation for a byte array and given byte order
          *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
          * @param byteArray to calculate hashCode of
          * @param byteOrder to calculate hashCode of
          * @return hashCode
@@ -673,6 +804,15 @@ final class Util {
 
         /**
          * Shows the length and a preview of max 8 bytes of the given byte
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(1)</code></li>
+         * <li>Space Complexity: <code>O(1)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
          *
          * @param bytes to convert to string
          * @return string representation
@@ -698,36 +838,64 @@ final class Util {
         private Validation() {
         }
 
-        private static void checkFile(java.io.File file) {
-            if (file == null || !file.exists() || !file.isFile()) {
-                throw new IllegalArgumentException("file must not be null, has to exist and must be a file (not a directory) " + file);
-            }
-        }
-
+        /**
+         * Check if a length of an primitive (e.g. int = 4 byte) fits in given length from given start index.
+         * Throws exception with descriptive exception message.
+         *
+         * @param length          of the whole array
+         * @param index           to start from array length
+         * @param primitiveLength length of the primitive type to check
+         * @param type            for easier debugging the human readable type of the checked primitive
+         *                        to put in exception message
+         * @throws IndexOutOfBoundsException if index + primitiveLength > length
+         */
         static void checkIndexBounds(int length, int index, int primitiveLength, String type) {
             if (index < 0 || index + primitiveLength > length) {
                 throw new IndexOutOfBoundsException("cannot get " + type + " from index out of bounds: " + index);
             }
         }
 
+        /**
+         * Check if given length is an expected length.
+         * Throws exception with descriptive exception message.
+         *
+         * @param length         of the whole array
+         * @param expectedLength how length is expected
+         * @param type           for easier debugging the human readable type of the checked primitive
+         *                       to put in exception message
+         * @throws IllegalArgumentException if length != expectedLength
+         */
         static void checkExactLength(int length, int expectedLength, String type) {
             if (length != expectedLength) {
-                throw new IllegalStateException("cannot convert to " + type + " if length != " + expectedLength + " bytes (was " + length + ")");
+                throw new IllegalArgumentException("cannot convert to " + type + " if length != " + expectedLength + " bytes (was " + length + ")");
             }
         }
 
         /**
-         * Checks if given length is divisable by mod factor (with zero rest).
-         * This can be used to check of a byte array can be convertet to an e.g. int array which is
+         * Checks if given length is divisible by mod factor (with zero rest).
+         * This can be used to check of a byte array can be converted to an e.g. int array which is
          * multiples of 4.
          *
          * @param length       of the byte array
          * @param modFactor    to divide the length
          * @param errorSubject human readable message of the exact error subject
+         * @throws IllegalArgumentException if length % modFactor != 0
          */
         static void checkModLength(int length, int modFactor, String errorSubject) {
             if (length % modFactor != 0) {
                 throw new IllegalArgumentException("Illegal length for " + errorSubject + ". Byte array length must be multiple of " + modFactor + ", length was " + length);
+            }
+        }
+
+        /**
+         * Check if the file exists and is a file.
+         *
+         * @param file to check
+         * @throws IllegalArgumentException if either file is null, does not exists or is not a file
+         */
+        private static void checkFileExists(java.io.File file) {
+            if (file == null || !file.exists() || !file.isFile()) {
+                throw new IllegalArgumentException("file must not be null, has to exist and must be a file (not a directory) " + file);
             }
         }
     }
@@ -803,7 +971,7 @@ final class Util {
          * @return byte content
          */
         static byte[] readFromFile(java.io.File file) {
-            Validation.checkFile(file);
+            Validation.checkFileExists(file);
 
             try {
                 return Files.readAllBytes(file.toPath());
@@ -821,7 +989,7 @@ final class Util {
          * @return byte array with length length
          */
         static byte[] readFromFile(java.io.File file, int offset, int length) {
-            Validation.checkFile(file);
+            Validation.checkFileExists(file);
             try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
                 raf.seek(offset);
                 return readFromDataInput(raf, length);

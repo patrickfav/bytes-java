@@ -86,7 +86,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         try {
             Bytes.from(example_bytes_two).toByte();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -99,7 +99,7 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         try {
             Bytes.from(example_bytes_two).toUnsignedByte();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -112,12 +112,12 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         try {
             Bytes.from(new byte[3]).toChar();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
         try {
             Bytes.from(new byte[1]).toChar();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -130,12 +130,12 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         try {
             Bytes.from(new byte[3]).toShort();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
         try {
             Bytes.from(new byte[1]).toShort();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -153,12 +153,12 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         try {
             Bytes.from(new byte[5]).toInt();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
         try {
             Bytes.from(new byte[3]).toInt();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -173,12 +173,12 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         try {
             Bytes.from(new byte[9]).toLong();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
         try {
             Bytes.from(new byte[7]).toLong();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -193,12 +193,12 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         try {
             Bytes.from(new byte[5]).toFloat();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
         try {
             Bytes.from(new byte[3]).toFloat();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -213,12 +213,12 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         try {
             Bytes.from(new byte[9]).toDouble();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
         try {
             Bytes.from(new byte[7]).toDouble();
             fail();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
