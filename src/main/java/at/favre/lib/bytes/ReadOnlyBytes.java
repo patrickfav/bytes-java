@@ -34,7 +34,7 @@ import java.nio.ReadOnlyBufferException;
 public final class ReadOnlyBytes extends Bytes {
 
     /**
-     * Creates a new immutable instance
+     * Creates a new read-only instance
      *
      * @param byteArray internal byte array
      * @param byteOrder the internal byte order - this is used to interpret given array, not to change it
