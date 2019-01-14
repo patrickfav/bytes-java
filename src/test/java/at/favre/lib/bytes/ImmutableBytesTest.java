@@ -31,8 +31,8 @@ import static org.junit.Assert.*;
 public class ImmutableBytesTest extends ABytesTest {
     @Test
     public void immutableShouldKeepProperty() {
-        testImmutableProperties(Bytes.from(example_bytes_seven).immutable());
-        testImmutableProperties(Bytes.wrapImmutable(example_bytes_seven));
+        testImmutableProperties(Bytes.of(example_bytes_seven).immutable());
+        testImmutableProperties(Bytes.ofImmutable(example_bytes_seven));
     }
 
     private void testImmutableProperties(ImmutableBytes b) {
@@ -55,7 +55,7 @@ public class ImmutableBytesTest extends ABytesTest {
 
     @Test
     public void testConvertImmutable() {
-        Bytes b = Bytes.from(example_bytes_seven);
+        Bytes b = Bytes.of(example_bytes_seven);
         Bytes m = b.copy();
         assertEquals(b, m);
         assertTrue(b.equalsContent(m));
@@ -86,7 +86,7 @@ public class ImmutableBytesTest extends ABytesTest {
     }
 
     Bytes fromAndTest(byte[] bytes) {
-        Bytes b = Bytes.from(bytes);
+        Bytes b = Bytes.of(bytes);
         assertArrayEquals(bytes, b.array());
         return b;
     }

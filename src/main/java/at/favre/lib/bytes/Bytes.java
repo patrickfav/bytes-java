@@ -157,29 +157,19 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
         return new Bytes(Objects.requireNonNull(array, "passed array must not be null"), byteOrder);
     }
 
-    public static ImmutableBytes wrapImmutable(byte[] array) {
-        return wrapImmutable(array, DEFAULT_ORDER);
-    }
-
-    public static ImmutableBytes wrapImmutable(byte[] array, ByteOrder byteOrder) {
-        return new ImmutableBytes(Objects.requireNonNull(Arrays.copyOf(array, array.length),
-                "passed array must not be null"),
-                Objects.requireNonNull(byteOrder, "byte order must not be null"));
-    }
-
     /**
-     * Creates a new instance from given collections of single bytes.
+     * Creates a new instance of given collections of single bytes.
      * This will create a copy of given bytes and will not directly use given bytes or byte array.
      *
      * @param byteArrayToCopy must not be null and will not be used directly, but a copy
      * @return new instance
      */
-    public static Bytes from(byte[] byteArrayToCopy) {
+    public static Bytes of(byte[] byteArrayToCopy) {
         return wrap(Arrays.copyOf(Objects.requireNonNull(byteArrayToCopy, "must at least pass a single byte"), byteArrayToCopy.length));
     }
 
     /**
-     * Creates a new instance from given collections of single bytes.
+     * Creates a new instance of given collections of single bytes.
      * This will create a copy of given bytes and will not directly use given bytes or byte array.
      * <p>
      * If given array is null, a zero length byte array will be created and used instead.
@@ -187,95 +177,105 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @param byteArrayToCopy will not be used directly, but a copy; may be null
      * @return new instance
      */
-    public static Bytes fromNullSafe(byte[] byteArrayToCopy) {
-        return byteArrayToCopy != null ? from(byteArrayToCopy) : empty();
+    public static Bytes ofNullSafe(byte[] byteArrayToCopy) {
+        return byteArrayToCopy != null ? of(byteArrayToCopy) : empty();
     }
 
     /**
-     * Creates a new instance from a slice of given array
+     * Creates a new instance of a slice of given array
      *
      * @param array  to slice
      * @param offset start position
      * @param length length
      * @return new instance
      */
-    public static Bytes from(byte[] array, int offset, int length) {
+    public static Bytes of(byte[] array, int offset, int length) {
         Objects.requireNonNull(array, "passed array must not be null");
         byte[] part = new byte[length];
         System.arraycopy(array, offset, part, 0, length);
         return wrap(part);
     }
 
+    public static ImmutableBytes ofImmutable(byte[] array) {
+        return ofImmutable(array, DEFAULT_ORDER);
+    }
+
+    public static ImmutableBytes ofImmutable(byte[] array, ByteOrder byteOrder) {
+        return new ImmutableBytes(Objects.requireNonNull(Arrays.copyOf(array, array.length),
+                "passed array must not be null"),
+                Objects.requireNonNull(byteOrder, "byte order must not be null"));
+    }
+
     /**
-     * Creates a new instance from given array of byte arrays
+     * Creates a new instance of given array of byte arrays
      *
      * @param moreArrays must not be null
      * @return new instance
      */
-    public static Bytes from(byte[]... moreArrays) {
+    public static Bytes of(byte[]... moreArrays) {
         return wrap(Util.Byte.concat(moreArrays));
     }
 
     /**
-     * Creates a new instance from given array of byte arrays
+     * Creates a new instance of given array of byte arrays
      *
      * @param moreBytes must not be null
      * @return new instance
      */
-    public static Bytes from(Bytes... moreBytes) {
+    public static Bytes of(Bytes... moreBytes) {
         Objects.requireNonNull(moreBytes, "bytes most not be null");
         byte[][] bytes = new byte[moreBytes.length][];
         for (int i = 0; i < moreBytes.length; i++) {
             bytes[i] = moreBytes[i].array();
         }
-        return from(bytes);
+        return of(bytes);
     }
 
     /**
-     * Creates a new instance from given collections. This will create a lot of auto-unboxing events,
+     * Creates a new instance of given collections. This will create a lot of auto-unboxing events,
      * so use with care with bigger lists.
      *
-     * @param bytesCollection to create from
+     * @param bytesCollection to create of
      * @return new instance
      */
-    public static Bytes from(Collection<Byte> bytesCollection) {
+    public static Bytes of(Collection<Byte> bytesCollection) {
         return wrap(Util.Converter.toArray(bytesCollection));
     }
 
     /**
-     * Creates a new instance from given object byte array. Will copy and unbox every element.
+     * Creates a new instance of given object byte array. Will copy and unbox every element.
      *
-     * @param boxedObjectArray to create from
+     * @param boxedObjectArray to create of
      * @return new instance
      */
-    public static Bytes from(Byte[] boxedObjectArray) {
+    public static Bytes of(Byte[] boxedObjectArray) {
         return wrap(Util.Converter.toPrimitiveArray(boxedObjectArray));
     }
 
     /**
-     * Creates a new single array element array instance from given byte
+     * Creates a new single array element array instance of given byte
      *
-     * @param singleByte to create from
+     * @param singleByte to create of
      * @return new instance
      */
-    public static Bytes from(byte singleByte) {
+    public static Bytes of(byte singleByte) {
         return wrap(new byte[]{singleByte});
     }
 
     /**
-     * Creates a new instance from given collections of single bytes.
+     * Creates a new instance of given collections of single bytes.
      * This will create a copy of given bytes and will not directly use given bytes or byte array.
      *
      * @param firstByte must not be null and will not be used directly, but a copy
      * @param moreBytes more bytes vararg
      * @return new instance
      */
-    public static Bytes from(byte firstByte, byte... moreBytes) {
+    public static Bytes of(byte firstByte, byte... moreBytes) {
         return wrap(Util.Byte.concatVararg(firstByte, moreBytes));
     }
 
     /**
-     * Creates a new instance from given boolean.
+     * Creates a new instance of given boolean.
      * This will create a new single array element array instance using the convention that false is zero.
      * E.g. Creates array <code>new byte[] {1}</code> if booleanValue is true and <code>new byte[] {0}</code> if
      * booleanValue is false.
@@ -283,173 +283,173 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @param booleanValue to convert (false is zero, true is one)
      * @return new instance
      */
-    public static Bytes from(boolean booleanValue) {
+    public static Bytes of(boolean booleanValue) {
         return wrap(new byte[]{booleanValue ? (byte) 1 : 0});
     }
 
     /**
-     * Creates a new instance from given unsigned 2 byte char.
+     * Creates a new instance of given unsigned 2 byte char.
      *
-     * @param char2Byte to create from
+     * @param char2Byte to create of
      * @return new instance
      */
-    public static Bytes from(char char2Byte) {
+    public static Bytes of(char char2Byte) {
         return wrap(ByteBuffer.allocate(2).putChar(char2Byte).array());
     }
 
     /**
-     * Creates a new instance from given 2 byte short.
+     * Creates a new instance of given 2 byte short.
      *
-     * @param short2Byte to create from
+     * @param short2Byte to create of
      * @return new instance
      */
-    public static Bytes from(short short2Byte) {
+    public static Bytes of(short short2Byte) {
         return wrap(ByteBuffer.allocate(2).putShort(short2Byte).array());
     }
 
     /**
-     * Creates a new instance from given 4 byte integer.
+     * Creates a new instance of given 4 byte integer.
      *
-     * @param integer4byte to create from
+     * @param integer4byte to create of
      * @return new instance
      */
-    public static Bytes from(int integer4byte) {
+    public static Bytes of(int integer4byte) {
         return wrap(ByteBuffer.allocate(4).putInt(integer4byte).array());
     }
 
     /**
-     * Creates a new instance from given 4 byte integer array.
+     * Creates a new instance of given 4 byte integer array.
      *
-     * @param intArray to create from
+     * @param intArray to create of
      * @return new instance
      */
-    public static Bytes from(int... intArray) {
+    public static Bytes of(int... intArray) {
         return wrap(Util.Converter.toByteArray(Objects.requireNonNull(intArray, "must provide at least a single int")));
     }
 
     /**
-     * Creates a new instance from given 8 byte long.
+     * Creates a new instance of given 8 byte long.
      *
-     * @param long8byte to create from
+     * @param long8byte to create of
      * @return new instance
      */
-    public static Bytes from(long long8byte) {
+    public static Bytes of(long long8byte) {
         return wrap(ByteBuffer.allocate(8).putLong(long8byte).array());
     }
 
     /**
-     * Creates a new instance from given 8 byte long array.
+     * Creates a new instance of given 8 byte long array.
      *
-     * @param longArray to create from
+     * @param longArray to create of
      * @return new instance
      */
-    public static Bytes from(long... longArray) {
+    public static Bytes of(long... longArray) {
         return wrap(Util.Converter.toByteArray(Objects.requireNonNull(longArray, "must provide at least a single long")));
     }
 
     /**
-     * Creates a new instance from given 4 byte floating point number (float).
+     * Creates a new instance of given 4 byte floating point number (float).
      *
-     * @param float4byte to create from
+     * @param float4byte to create of
      * @return new instance
      */
-    public static Bytes from(float float4byte) {
+    public static Bytes of(float float4byte) {
         return wrap(ByteBuffer.allocate(4).putFloat(float4byte).array());
     }
 
     /**
-     * Creates a new instance from given 8 byte floating point number (double).
+     * Creates a new instance of given 8 byte floating point number (double).
      *
-     * @param double8Byte to create from
+     * @param double8Byte to create of
      * @return new instance
      */
-    public static Bytes from(double double8Byte) {
+    public static Bytes of(double double8Byte) {
         return wrap(ByteBuffer.allocate(8).putDouble(double8Byte).array());
     }
 
     /**
-     * Creates a new instance from given {@link ByteBuffer}.
+     * Creates a new instance of given {@link ByteBuffer}.
      * Will use the same backing byte array and honour the buffer's byte order.
      *
-     * @param buffer to get the byte array from (must not be null)
+     * @param buffer to get the byte array of (must not be null)
      * @return new instance
      */
-    public static Bytes from(ByteBuffer buffer) {
+    public static Bytes of(ByteBuffer buffer) {
         return wrap(Objects.requireNonNull(buffer, "provided byte buffer must not be null").array(), buffer.order());
     }
 
     /**
-     * Creates a new instance from given {@link CharBuffer}.
+     * Creates a new instance of given {@link CharBuffer}.
      * Will ignore buffer's byte order and use {@link ByteOrder#BIG_ENDIAN}
      *
-     * @param buffer to get the char array from (must not be null)
+     * @param buffer to get the char array of (must not be null)
      * @return new instance
      */
-    public static Bytes from(CharBuffer buffer) {
-        return from(Objects.requireNonNull(buffer, "provided char buffer must not be null").array());
+    public static Bytes of(CharBuffer buffer) {
+        return of(Objects.requireNonNull(buffer, "provided char buffer must not be null").array());
     }
 
     /**
-     * Creates a new instance from given {@link IntBuffer}.
+     * Creates a new instance of given {@link IntBuffer}.
      * Will ignore buffer's byte order and use {@link ByteOrder#BIG_ENDIAN}
      *
-     * @param buffer to get the int array from (must not be null)
+     * @param buffer to get the int array of (must not be null)
      * @return new instance
      */
-    public static Bytes from(IntBuffer buffer) {
-        return from(Objects.requireNonNull(buffer, "provided int buffer must not be null").array());
+    public static Bytes of(IntBuffer buffer) {
+        return of(Objects.requireNonNull(buffer, "provided int buffer must not be null").array());
     }
 
     /**
-     * Creates a new instance from given {@link BitSet}.
+     * Creates a new instance of given {@link BitSet}.
      *
-     * @param set to get the byte array from
+     * @param set to get the byte array of
      * @return new instance
      */
-    public static Bytes from(BitSet set) {
+    public static Bytes of(BitSet set) {
         return wrap(set.toByteArray());
     }
 
     /**
-     * Creates a new instance from given {@link BigInteger}.
+     * Creates a new instance of given {@link BigInteger}.
      *
-     * @param bigInteger to get the byte array from
+     * @param bigInteger to get the byte array of
      * @return new instance
      */
-    public static Bytes from(BigInteger bigInteger) {
+    public static Bytes of(BigInteger bigInteger) {
         return wrap(bigInteger.toByteArray());
     }
 
     /**
-     * Reads given whole input stream and creates a new instance from read data
+     * Reads given whole input stream and creates a new instance of read data
      *
-     * @param stream to read from
+     * @param stream to read of
      * @return new instance
      */
-    public static Bytes from(InputStream stream) {
+    public static Bytes of(InputStream stream) {
         return wrap(Util.File.readFromStream(stream, -1));
     }
 
     /**
-     * Reads given input stream up to maxLength and creates a new instance from read data.
+     * Reads given input stream up to maxLength and creates a new instance of read data.
      * Read maxLength is never longer than stream size (ie. maxLength is only limiting, not assuring maxLength)
      *
-     * @param stream    to read from
+     * @param stream    to read of
      * @param maxLength read to this maxLength or end of stream
      * @return new instance
      */
-    public static Bytes from(InputStream stream, int maxLength) {
+    public static Bytes of(InputStream stream, int maxLength) {
         return wrap(Util.File.readFromStream(stream, maxLength));
     }
 
     /**
-     * Reads given {@link DataInput} and creates a new instance from read data
+     * Reads given {@link DataInput} and creates a new instance of read data
      *
-     * @param dataInput to read from
+     * @param dataInput to read of
      * @param length    how many bytes should be read
      * @return new instance
      */
-    public static Bytes from(DataInput dataInput, int length) {
+    public static Bytes of(DataInput dataInput, int length) {
         return wrap(Util.File.readFromDataInput(dataInput, length));
     }
 
@@ -457,12 +457,12 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * Reads given file and returns the byte content. Be aware that the whole file content will be loaded to
      * memory, so be careful what to read in.
      *
-     * @param file to read from
+     * @param file to read of
      * @return new instance
      * @throws IllegalArgumentException if file does not exist
      * @throws IllegalStateException    if file could not be read
      */
-    public static Bytes from(File file) {
+    public static Bytes of(File file) {
         return wrap(Util.File.readFromFile(file));
     }
 
@@ -470,81 +470,81 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * Reads given file and returns the byte content. Be aware that the whole defined file content will be loaded to
      * memory, so be careful what to read in. This uses {@link java.io.RandomAccessFile} under the hood.
      *
-     * @param file   to read from
-     * @param offset byte offset from zero position of the file
-     * @param length to read from offset
+     * @param file   to read of
+     * @param offset byte offset of zero position of the file
+     * @param length to read of offset
      * @return new instance
      * @throws IllegalArgumentException if file does not exist
      * @throws IllegalStateException    if file could not be read
      */
-    public static Bytes from(File file, int offset, int length) {
+    public static Bytes of(File file, int offset, int length) {
         return wrap(Util.File.readFromFile(file, offset, length));
     }
 
     /**
-     * Creates a new instance from given utf-8 encoded string
+     * Creates a new instance of given utf-8 encoded string
      *
-     * @param utf8String to get the internal byte array from
+     * @param utf8String to get the internal byte array of
      * @return new instance
      */
-    public static Bytes from(CharSequence utf8String) {
-        return from(utf8String, StandardCharsets.UTF_8);
+    public static Bytes of(CharSequence utf8String) {
+        return of(utf8String, StandardCharsets.UTF_8);
     }
 
     /**
-     * Creates a new instance from normalized form of given utf-8 encoded string
+     * Creates a new instance of normalized form of given utf-8 encoded string
      *
-     * @param utf8String to get the internal byte array from
+     * @param utf8String to get the internal byte array of
      * @param form       to normalize, usually you want {@link java.text.Normalizer.Form#NFKD} for compatibility
      * @return new instance
      */
-    public static Bytes from(CharSequence utf8String, Normalizer.Form form) {
-        return from(Normalizer.normalize(utf8String, form), StandardCharsets.UTF_8);
+    public static Bytes of(CharSequence utf8String, Normalizer.Form form) {
+        return of(Normalizer.normalize(utf8String, form), StandardCharsets.UTF_8);
     }
 
     /**
-     * Creates a new instance from given string
+     * Creates a new instance of given string
      *
-     * @param string  to get the internal byte array from
+     * @param string  to get the internal byte array of
      * @param charset used to decode the string
      * @return new instance
      */
-    public static Bytes from(CharSequence string, Charset charset) {
+    public static Bytes of(CharSequence string, Charset charset) {
         return wrap(Objects.requireNonNull(string, "provided string must not be null").toString().getBytes(Objects.requireNonNull(charset, "provided charset must not be null")));
     }
 
     /**
-     * Creates a new instance from given char array using utf-8 encoding
+     * Creates a new instance of given char array using utf-8 encoding
      *
-     * @param charArray to get the internal byte array from
+     * @param charArray to get the internal byte array of
      * @return new instance
      */
-    public static Bytes from(char[] charArray) {
-        return from(charArray, StandardCharsets.UTF_8);
+    public static Bytes of(char[] charArray) {
+        return of(charArray, StandardCharsets.UTF_8);
     }
 
     /**
-     * Creates a new instance from given char array. The array will be handles like an encoded string
+     * Creates a new instance of given char array. The array will be handles like an encoded string
      *
-     * @param charArray to get the internal byte array from
+     * @param charArray to get the internal byte array of
      * @param charset   charset to be used to decode the char array
      * @return new instance
      */
-    public static Bytes from(char[] charArray, Charset charset) {
-        return from(charArray, charset, 0, charArray.length);
+    public static Bytes of(char[] charArray, Charset charset) {
+        return of(charArray, charset, 0, charArray.length);
     }
 
     /**
-     * Creates a new instance from given char array with given range. The array will be handles like an encoded string
+     * Creates a new instance of given char array with given range. The array will be handles like an encoded string
      *
-     * @param charArray to get the internal byte array from
+     * @param charArray to get the internal byte array of
      * @param charset   charset to be used to decode the char array
-     * @param offset    start position (from given char array not encoded byte array out)
-     * @param length    length in relation to offset (from given char array not encoded byte array out)
+     * @param offset    start position (of given char array not encoded byte array out)
+     * @param length    length in relation to offset (of given char array not encoded byte array out)
      * @return new instance
      */
-    public static Bytes from(char[] charArray, Charset charset, int offset, int length) {
-        return from(Util.Converter.charToByteArray(charArray, charset, offset, length));
+    public static Bytes of(char[] charArray, Charset charset, int offset, int length) {
+        return of(Util.Converter.charToByteArray(charArray, charset, offset, length));
     }
 
     /**
@@ -554,7 +554,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @param uuid to convert to array
      * @return new instance
      */
-    public static Bytes from(UUID uuid) {
+    public static Bytes of(UUID uuid) {
         return wrap(Util.Converter.toBytesFromUUID(Objects.requireNonNull(uuid)).array());
     }
 
@@ -731,7 +731,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return appended instance
      */
     public Bytes append(byte singleByte) {
-        return append(Bytes.from(singleByte));
+        return append(Bytes.of(singleByte));
     }
 
     /**
@@ -741,7 +741,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return appended instance
      */
     public Bytes append(char char2Bytes) {
-        return append(Bytes.from(char2Bytes));
+        return append(Bytes.of(char2Bytes));
     }
 
     /**
@@ -751,7 +751,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return appended instance
      */
     public Bytes append(short short2Bytes) {
-        return append(Bytes.from(short2Bytes));
+        return append(Bytes.of(short2Bytes));
     }
 
     /**
@@ -761,7 +761,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return appended instance
      */
     public Bytes append(int integer4Bytes) {
-        return append(Bytes.from(integer4Bytes));
+        return append(Bytes.of(integer4Bytes));
     }
 
     /**
@@ -771,7 +771,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return appended instance
      */
     public Bytes append(long long8Bytes) {
-        return append(Bytes.from(long8Bytes));
+        return append(Bytes.of(long8Bytes));
     }
 
     /**
@@ -783,7 +783,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return appended instance
      */
     public Bytes append(byte[]... arrays) {
-        return append(Bytes.from(arrays));
+        return append(Bytes.of(arrays));
     }
 
     /**

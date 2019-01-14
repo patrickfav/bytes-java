@@ -31,39 +31,39 @@ public class BytesSharedDataConverterTest extends ABytesTest {
 
     @Test
     public void array() {
-        assertArrayEquals(new byte[0], Bytes.from(new byte[0]).array());
-        assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).array());
-        assertArrayEquals(example_bytes_two, Bytes.from(example_bytes_two).array());
-        assertArrayEquals(example_bytes_four, Bytes.from(example_bytes_four).array());
-        assertArrayEquals(example_bytes_seven, Bytes.from(example_bytes_seven).array());
-        assertArrayEquals(example_bytes_eight, Bytes.from(example_bytes_eight).array());
-        assertArrayEquals(example_bytes_sixteen, Bytes.from(example_bytes_sixteen).array());
+        assertArrayEquals(new byte[0], Bytes.of(new byte[0]).array());
+        assertArrayEquals(example_bytes_one, Bytes.of(example_bytes_one).array());
+        assertArrayEquals(example_bytes_two, Bytes.of(example_bytes_two).array());
+        assertArrayEquals(example_bytes_four, Bytes.of(example_bytes_four).array());
+        assertArrayEquals(example_bytes_seven, Bytes.of(example_bytes_seven).array());
+        assertArrayEquals(example_bytes_eight, Bytes.of(example_bytes_eight).array());
+        assertArrayEquals(example_bytes_sixteen, Bytes.of(example_bytes_sixteen).array());
     }
 
     @Test
     public void bigInteger() {
-        assertArrayEquals(example_bytes_one, Bytes.from(example_bytes_one).toBigInteger().toByteArray());
-        assertArrayEquals(example_bytes_two, Bytes.from(example_bytes_two).toBigInteger().toByteArray());
-        assertArrayEquals(example_bytes_four, Bytes.from(example_bytes_four).toBigInteger().toByteArray());
-        assertArrayEquals(example_bytes_seven, Bytes.from(example_bytes_seven).toBigInteger().toByteArray());
-        assertArrayEquals(example_bytes_eight, Bytes.from(example_bytes_eight).toBigInteger().toByteArray());
-        assertArrayEquals(example_bytes_sixteen, Bytes.from(example_bytes_sixteen).toBigInteger().toByteArray());
+        assertArrayEquals(example_bytes_one, Bytes.of(example_bytes_one).toBigInteger().toByteArray());
+        assertArrayEquals(example_bytes_two, Bytes.of(example_bytes_two).toBigInteger().toByteArray());
+        assertArrayEquals(example_bytes_four, Bytes.of(example_bytes_four).toBigInteger().toByteArray());
+        assertArrayEquals(example_bytes_seven, Bytes.of(example_bytes_seven).toBigInteger().toByteArray());
+        assertArrayEquals(example_bytes_eight, Bytes.of(example_bytes_eight).toBigInteger().toByteArray());
+        assertArrayEquals(example_bytes_sixteen, Bytes.of(example_bytes_sixteen).toBigInteger().toByteArray());
     }
 
     @Test
     public void buffer() {
-        assertEquals(ByteBuffer.wrap(new byte[0]), Bytes.from(new byte[0]).buffer());
-        assertEquals(ByteBuffer.wrap(example_bytes_one), Bytes.from(example_bytes_one).buffer());
-        assertEquals(ByteBuffer.wrap(example_bytes_two), Bytes.from(example_bytes_two).buffer());
-        assertEquals(ByteBuffer.wrap(example_bytes_four), Bytes.from(example_bytes_four).buffer());
-        assertEquals(ByteBuffer.wrap(example_bytes_seven), Bytes.from(example_bytes_seven).buffer());
-        assertEquals(ByteBuffer.wrap(example_bytes_eight), Bytes.from(example_bytes_eight).buffer());
-        assertEquals(ByteBuffer.wrap(example_bytes_sixteen), Bytes.from(example_bytes_sixteen).buffer());
+        assertEquals(ByteBuffer.wrap(new byte[0]), Bytes.of(new byte[0]).buffer());
+        assertEquals(ByteBuffer.wrap(example_bytes_one), Bytes.of(example_bytes_one).buffer());
+        assertEquals(ByteBuffer.wrap(example_bytes_two), Bytes.of(example_bytes_two).buffer());
+        assertEquals(ByteBuffer.wrap(example_bytes_four), Bytes.of(example_bytes_four).buffer());
+        assertEquals(ByteBuffer.wrap(example_bytes_seven), Bytes.of(example_bytes_seven).buffer());
+        assertEquals(ByteBuffer.wrap(example_bytes_eight), Bytes.of(example_bytes_eight).buffer());
+        assertEquals(ByteBuffer.wrap(example_bytes_sixteen), Bytes.of(example_bytes_sixteen).buffer());
     }
 
     @Test
     public void duplicate() {
-        Bytes b = Bytes.from(example_bytes_sixteen);
+        Bytes b = Bytes.of(example_bytes_sixteen);
         Bytes b2 = b.duplicate();
         assertNotSame(b, b2);
         assertSame(b.array(), b2.array());
@@ -71,9 +71,9 @@ public class BytesSharedDataConverterTest extends ABytesTest {
 
     @Test
     public void inputStream() {
-        assertArrayEquals(example_bytes_one, Util.File.readFromStream(Bytes.from(example_bytes_one).inputStream(), -1));
-        assertArrayEquals(example_bytes_two, Util.File.readFromStream(Bytes.from(example_bytes_two).inputStream(), -1));
-        assertArrayEquals(example_bytes_four, Util.File.readFromStream(Bytes.from(example_bytes_four).inputStream(), -1));
-        assertArrayEquals(example_bytes_sixteen, Util.File.readFromStream(Bytes.from(example_bytes_sixteen).inputStream(), -1));
+        assertArrayEquals(example_bytes_one, Util.File.readFromStream(Bytes.of(example_bytes_one).inputStream(), -1));
+        assertArrayEquals(example_bytes_two, Util.File.readFromStream(Bytes.of(example_bytes_two).inputStream(), -1));
+        assertArrayEquals(example_bytes_four, Util.File.readFromStream(Bytes.of(example_bytes_four).inputStream(), -1));
+        assertArrayEquals(example_bytes_sixteen, Util.File.readFromStream(Bytes.of(example_bytes_sixteen).inputStream(), -1));
     }
 }

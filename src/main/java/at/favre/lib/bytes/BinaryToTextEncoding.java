@@ -151,7 +151,7 @@ public interface BinaryToTextEncoding {
 
         @Override
         public String encode(byte[] array, ByteOrder byteOrder) {
-            return new String(Base64.encode((byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.from(array).reverse().array(), urlSafe, padding), StandardCharsets.US_ASCII);
+            return new String(Base64.encode((byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.of(array).reverse().array(), urlSafe, padding), StandardCharsets.US_ASCII);
         }
 
         @Override
@@ -175,7 +175,7 @@ public interface BinaryToTextEncoding {
 
         @Override
         public String encode(byte[] array, ByteOrder byteOrder) {
-            return new BigInteger(1, (byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.from(array).reverse().array()).toString(radix);
+            return new BigInteger(1, (byteOrder == ByteOrder.BIG_ENDIAN) ? array : Bytes.of(array).reverse().array()).toString(radix);
         }
 
         @Override

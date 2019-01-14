@@ -73,7 +73,7 @@ int result = b.toInt(); //get as signed int
 ```
 
 ```java
-Bytes b = Bytes.from(array1);  //create from copy of array1
+Bytes b = Bytes.from(array1);  of
 b.resize(2).xor(array2); //shrink to 2 bytes and xor with other array
 byte[] result = b.array(); //get as byte array
 ```
@@ -167,8 +167,8 @@ Bytes.from(byteInputStream, 16); //read java.io.InputStream with length limitati
 Bytes.from(byteList); //List<Byte> byteList = ...
 Bytes.from(myBitSet); //java.util.BitSet myBitSet = ...
 Bytes.from(bigInteger); //java.math.BigInteger
-Bytes.from(file); //reads bytes from any java.io.File
-Bytes.from(dataInput, 16); //reads bytes from any java.io.DataInput
+Bytes.from(file); of
+Bytes.from(dataInput, 16); of
 Bytes.from(UUID.randomUUID()); //read 16 bytes from UUID
 ```
 

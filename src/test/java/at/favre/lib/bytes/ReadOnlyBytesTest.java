@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 public class ReadOnlyBytesTest extends ABytesTest {
     @Test
     public void readOnlyShouldKeepProperty() {
-        ReadOnlyBytes b = Bytes.from(example_bytes_seven).readOnly();
+        ReadOnlyBytes b = Bytes.of(example_bytes_seven).readOnly();
         assertSame(b, b.readOnly());
         assertFalse(b.isMutable());
         assertTrue(b.isReadOnly());
@@ -48,28 +48,28 @@ public class ReadOnlyBytesTest extends ABytesTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void readOnlyDuplicateNotAllowed() {
-        Bytes.from(example_bytes_seven).readOnly().duplicate();
+        Bytes.of(example_bytes_seven).readOnly().duplicate();
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void readOnlyImmutableNotAllowed() {
-        Bytes.from(example_bytes_seven).readOnly().immutable();
+        Bytes.of(example_bytes_seven).readOnly().immutable();
     }
 
     @Test
     public void readOnly() {
-        assertFalse(Bytes.from(example_bytes_twentyfour).isReadOnly());
-        assertTrue(Bytes.from(example_bytes_twentyfour).readOnly().isReadOnly());
-        assertTrue(Bytes.from(example_bytes_twentyfour).readOnly().copy().isReadOnly());
+        assertFalse(Bytes.of(example_bytes_twentyfour).isReadOnly());
+        assertTrue(Bytes.of(example_bytes_twentyfour).readOnly().isReadOnly());
+        assertTrue(Bytes.of(example_bytes_twentyfour).readOnly().copy().isReadOnly());
 
-        assertArrayEquals(example_bytes_twentyfour, Bytes.from(example_bytes_twentyfour).readOnly().internalArray());
+        assertArrayEquals(example_bytes_twentyfour, Bytes.of(example_bytes_twentyfour).readOnly().internalArray());
         try {
-            Bytes.from(example_bytes_twentyfour).readOnly().array();
+            Bytes.of(example_bytes_twentyfour).readOnly().array();
             fail();
         } catch (UnsupportedOperationException ignored) {
         }
 
-        Bytes b = Bytes.from(example_bytes_twentyfour).readOnly();
+        Bytes b = Bytes.of(example_bytes_twentyfour).readOnly();
         assertSame(b, b.readOnly());
     }
 }

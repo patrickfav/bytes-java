@@ -49,15 +49,15 @@ public class Base64Test {
 
     @Test
     public void encode() {
-        assertArrayEquals(Bytes.from("").array(), Base64.encode("".getBytes()));
-        assertArrayEquals(Bytes.from("Zg==").array(), Base64.encode("f".getBytes()));
-        assertArrayEquals(Bytes.from("Zm8=").array(), Base64.encode("fo".getBytes()));
-        assertArrayEquals(Bytes.from("Zm9v").array(), Base64.encode("foo".getBytes()));
-        assertArrayEquals(Bytes.from("Zm9vYg==").array(), Base64.encode("foob".getBytes()));
-        assertArrayEquals(Bytes.from("Zm9vYmE=").array(), Base64.encode("fooba".getBytes()));
-        assertArrayEquals(Bytes.from("Zm9vYmFy").array(), Base64.encode("foobar".getBytes()));
-        assertArrayEquals(Bytes.from("aQo=").array(), Base64.encode("i\n".getBytes()));
-        assertArrayEquals(Bytes.from("aSA=").array(), Base64.encode("i ".getBytes()));
+        assertArrayEquals(Bytes.of("").array(), Base64.encode("".getBytes()));
+        assertArrayEquals(Bytes.of("Zg==").array(), Base64.encode("f".getBytes()));
+        assertArrayEquals(Bytes.of("Zm8=").array(), Base64.encode("fo".getBytes()));
+        assertArrayEquals(Bytes.of("Zm9v").array(), Base64.encode("foo".getBytes()));
+        assertArrayEquals(Bytes.of("Zm9vYg==").array(), Base64.encode("foob".getBytes()));
+        assertArrayEquals(Bytes.of("Zm9vYmE=").array(), Base64.encode("fooba".getBytes()));
+        assertArrayEquals(Bytes.of("Zm9vYmFy").array(), Base64.encode("foobar".getBytes()));
+        assertArrayEquals(Bytes.of("aQo=").array(), Base64.encode("i\n".getBytes()));
+        assertArrayEquals(Bytes.of("aSA=").array(), Base64.encode("i ".getBytes()));
     }
 
 }

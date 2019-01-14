@@ -52,10 +52,10 @@ public class BytesParseAndEncodingTest extends ABytesTest {
     @Test
     public void encodeHex() {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1};
-        assertEquals("a0e1", Bytes.from(defaultArray).encodeHex());
-        assertEquals("A0E1", Bytes.from(defaultArray).encodeHex(true));
-        assertEquals(Bytes.from(defaultArray).encodeHex(), Bytes.from(defaultArray).encodeHex(false));
-        assertEquals("4a94fdff1eafed", Bytes.from(encodingExample).encodeHex());
+        assertEquals("a0e1", Bytes.of(defaultArray).encodeHex());
+        assertEquals("A0E1", Bytes.of(defaultArray).encodeHex(true));
+        assertEquals(Bytes.of(defaultArray).encodeHex(), Bytes.of(defaultArray).encodeHex(false));
+        assertEquals("4a94fdff1eafed", Bytes.of(encodingExample).encodeHex());
     }
 
     @Test
@@ -73,35 +73,35 @@ public class BytesParseAndEncodingTest extends ABytesTest {
 
     @Test
     public void encodeBase64() {
-        assertEquals("", Bytes.from(new byte[0]).encodeBase64());
-        assertEquals("AA==", Bytes.from(new byte[1]).encodeBase64());
-        assertEquals("SpT9/x6v7Q==", Bytes.from(encodingExample).encodeBase64());
+        assertEquals("", Bytes.of(new byte[0]).encodeBase64());
+        assertEquals("AA==", Bytes.of(new byte[1]).encodeBase64());
+        assertEquals("SpT9/x6v7Q==", Bytes.of(encodingExample).encodeBase64());
     }
 
     @Test
     public void encodeBase64Url() {
-        assertEquals("", Bytes.from(new byte[0]).encodeBase64Url());
-        assertEquals("AA==", Bytes.from(new byte[1]).encodeBase64Url());
-        assertEquals("SpT9_x6v7Q==", Bytes.from(encodingExample).encodeBase64Url());
+        assertEquals("", Bytes.of(new byte[0]).encodeBase64Url());
+        assertEquals("AA==", Bytes.of(new byte[1]).encodeBase64Url());
+        assertEquals("SpT9_x6v7Q==", Bytes.of(encodingExample).encodeBase64Url());
     }
 
     @Test
     public void encodeBase64WithConfig() {
-        assertEquals("", Bytes.from(new byte[0]).encodeBase64(true, true));
-        assertEquals("AA==", Bytes.from(new byte[1]).encodeBase64(true, true));
-        assertEquals("SpT9_x6v7Q==", Bytes.from(encodingExample).encodeBase64(true, true));
+        assertEquals("", Bytes.of(new byte[0]).encodeBase64(true, true));
+        assertEquals("AA==", Bytes.of(new byte[1]).encodeBase64(true, true));
+        assertEquals("SpT9_x6v7Q==", Bytes.of(encodingExample).encodeBase64(true, true));
 
-        assertEquals("", Bytes.from(new byte[0]).encodeBase64(true, false));
-        assertEquals("AA", Bytes.from(new byte[1]).encodeBase64(true, false));
-        assertEquals("SpT9_x6v7Q", Bytes.from(encodingExample).encodeBase64(true, false));
+        assertEquals("", Bytes.of(new byte[0]).encodeBase64(true, false));
+        assertEquals("AA", Bytes.of(new byte[1]).encodeBase64(true, false));
+        assertEquals("SpT9_x6v7Q", Bytes.of(encodingExample).encodeBase64(true, false));
 
-        assertEquals("", Bytes.from(new byte[0]).encodeBase64(false, true));
-        assertEquals("AA==", Bytes.from(new byte[1]).encodeBase64(false, true));
-        assertEquals("SpT9/x6v7Q==", Bytes.from(encodingExample).encodeBase64(false, true));
+        assertEquals("", Bytes.of(new byte[0]).encodeBase64(false, true));
+        assertEquals("AA==", Bytes.of(new byte[1]).encodeBase64(false, true));
+        assertEquals("SpT9/x6v7Q==", Bytes.of(encodingExample).encodeBase64(false, true));
 
-        assertEquals("", Bytes.from(new byte[0]).encodeBase64(false, false));
-        assertEquals("AA", Bytes.from(new byte[1]).encodeBase64(false, false));
-        assertEquals("SpT9/x6v7Q", Bytes.from(encodingExample).encodeBase64(false, false));
+        assertEquals("", Bytes.of(new byte[0]).encodeBase64(false, false));
+        assertEquals("AA", Bytes.of(new byte[1]).encodeBase64(false, false));
+        assertEquals("SpT9/x6v7Q", Bytes.of(encodingExample).encodeBase64(false, false));
     }
 
     @Test
@@ -111,14 +111,14 @@ public class BytesParseAndEncodingTest extends ABytesTest {
 
     @Test
     public void encodeBase32() {
-        assertEquals("JKKP37Y6V7WQ====", Bytes.from(encodingExample).encodeBase32());
+        assertEquals("JKKP37Y6V7WQ====", Bytes.of(encodingExample).encodeBase32());
     }
 
     @Test
     public void encodeBinary() {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1};
-        assertEquals("1010000011100001", Bytes.from(defaultArray).encodeBinary());
-        assertEquals("1001010100101001111110111111111000111101010111111101101", Bytes.from(encodingExample).encodeBinary());
+        assertEquals("1010000011100001", Bytes.of(defaultArray).encodeBinary());
+        assertEquals("1001010100101001111110111111111000111101010111111101101", Bytes.of(encodingExample).encodeBinary());
     }
 
     @Test
@@ -129,8 +129,8 @@ public class BytesParseAndEncodingTest extends ABytesTest {
     @Test
     public void encodeOctal() {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1};
-        assertEquals("120341", Bytes.from(defaultArray).encodeOctal());
-        assertEquals("1124517677707527755", Bytes.from(encodingExample).encodeOctal());
+        assertEquals("120341", Bytes.of(defaultArray).encodeOctal());
+        assertEquals("1124517677707527755", Bytes.of(encodingExample).encodeOctal());
     }
 
     @Test
@@ -141,8 +141,8 @@ public class BytesParseAndEncodingTest extends ABytesTest {
     @Test
     public void encodeDec() {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1};
-        assertEquals("41185", Bytes.from(defaultArray).encodeDec());
-        assertEquals("20992966904426477", Bytes.from(encodingExample).encodeDec());
+        assertEquals("41185", Bytes.of(defaultArray).encodeDec());
+        assertEquals("20992966904426477", Bytes.of(encodingExample).encodeDec());
     }
 
     @Test
@@ -153,8 +153,8 @@ public class BytesParseAndEncodingTest extends ABytesTest {
     @Test
     public void encodeBase36() {
         byte[] defaultArray = new byte[]{(byte) 0xA0, (byte) 0xE1, (byte) 0x13};
-        assertEquals("69zbn", Bytes.from(defaultArray).encodeBase36());
-        assertEquals("5qpdvuwjvu5", Bytes.from(encodingExample).encodeBase36());
+        assertEquals("69zbn", Bytes.of(defaultArray).encodeBase36());
+        assertEquals("5qpdvuwjvu5", Bytes.of(encodingExample).encodeBase36());
     }
 
     @Test
@@ -173,25 +173,25 @@ public class BytesParseAndEncodingTest extends ABytesTest {
 
     @Test
     public void encodeRadix() {
-        assertEquals("1001010100101001111110111111111000111101010111111101101", Bytes.from(encodingExample).encodeRadix(2));
-        assertEquals("10202221221221000222101012210121012", Bytes.from(encodingExample).encodeRadix(3));
-        assertEquals("1022211033313333013222333231", Bytes.from(encodingExample).encodeRadix(4));
-        assertEquals("134003042232210013121402", Bytes.from(encodingExample).encodeRadix(5));
-        assertEquals("542412151505231515005", Bytes.from(encodingExample).encodeRadix(6));
-        assertEquals("1124517677707527755", Bytes.from(encodingExample).encodeRadix(8));
-        assertEquals("20992966904426477", Bytes.from(encodingExample).encodeRadix(10));
-        assertEquals("4a94fdff1eafed", Bytes.from(encodingExample).encodeRadix(16));
-        assertEquals("5iibpp5dgpgp", Bytes.from(encodingExample).encodeRadix(26));
-        assertEquals("5qpdvuwjvu5", Bytes.from(encodingExample).encodeRadix(36));
+        assertEquals("1001010100101001111110111111111000111101010111111101101", Bytes.of(encodingExample).encodeRadix(2));
+        assertEquals("10202221221221000222101012210121012", Bytes.of(encodingExample).encodeRadix(3));
+        assertEquals("1022211033313333013222333231", Bytes.of(encodingExample).encodeRadix(4));
+        assertEquals("134003042232210013121402", Bytes.of(encodingExample).encodeRadix(5));
+        assertEquals("542412151505231515005", Bytes.of(encodingExample).encodeRadix(6));
+        assertEquals("1124517677707527755", Bytes.of(encodingExample).encodeRadix(8));
+        assertEquals("20992966904426477", Bytes.of(encodingExample).encodeRadix(10));
+        assertEquals("4a94fdff1eafed", Bytes.of(encodingExample).encodeRadix(16));
+        assertEquals("5iibpp5dgpgp", Bytes.of(encodingExample).encodeRadix(26));
+        assertEquals("5qpdvuwjvu5", Bytes.of(encodingExample).encodeRadix(36));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void encodeRadixIllegalTooHigh() {
-        Bytes.from(encodingExample).encodeRadix(37);
+        Bytes.of(encodingExample).encodeRadix(37);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void encodeRadixIllegalTooLow() {
-        Bytes.from(encodingExample).encodeRadix(1);
+        Bytes.of(encodingExample).encodeRadix(1);
     }
 }

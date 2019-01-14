@@ -49,7 +49,7 @@ public class MutableBytesTest extends ABytesTest {
     public void overwritePartialArray() {
         Bytes b = fromAndTest(example_bytes_seven);
         assertSame(b, b.overwrite(new byte[]{(byte) 0xAA}, 0));
-        assertArrayEquals(Bytes.from((byte) 0xAA).append(Bytes.wrap(example_bytes_seven).copy(1, example_bytes_seven.length - 1)).array(), b.array());
+        assertArrayEquals(Bytes.of((byte) 0xAA).append(Bytes.wrap(example_bytes_seven).copy(1, example_bytes_seven.length - 1)).array(), b.array());
     }
 
     @Test
@@ -57,7 +57,7 @@ public class MutableBytesTest extends ABytesTest {
         Bytes b = fromAndTest(example_bytes_seven);
         assertSame(b, b.overwrite(new byte[]{(byte) 0xAA}, 1));
         assertArrayEquals(
-                Bytes.from(example_bytes_seven)
+                Bytes.of(example_bytes_seven)
                         .copy(0, 1)
                         .append((byte) 0xAA)
                         .append(Bytes.wrap(example_bytes_seven).copy(2, example_bytes_seven.length - 2)).array(), b.array());
@@ -72,7 +72,7 @@ public class MutableBytesTest extends ABytesTest {
 
     @Test
     public void testCheckReferencesAndCopy() {
-        Bytes b = Bytes.from(example_bytes_seven);
+        Bytes b = Bytes.of(example_bytes_seven);
         Bytes m = b.copy();
         assertEquals(b, m);
         assertTrue(b.equalsContent(m));
@@ -186,10 +186,10 @@ public class MutableBytesTest extends ABytesTest {
 
 
     @Test
-    public void testCheckReferenceFrom() {
+    public void testCheckReferenceOf() {
         byte[] ref = new byte[]{1, 2, 3, 4};
 
-        Bytes refFrom = Bytes.from(ref);
+        Bytes refFrom = Bytes.of(ref);
         byte[] refFromInternalArr = refFrom.array();
         assertNotSame(ref, refFrom.array());
         assertArrayEquals(ref, refFrom.array());

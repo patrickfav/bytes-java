@@ -32,12 +32,12 @@ public class BytesByteOrderTest extends ABytesTest {
 
     @Test
     public void miscInput() {
-        testOrder(Bytes.from(350));
-        testOrder(Bytes.from(172863182736L));
-        testOrder(Bytes.from(example_bytes_one));
-        testOrder(Bytes.from(example_bytes_four));
-        testOrder(Bytes.from(example_bytes_sixteen));
-        testOrder(Bytes.from(example_bytes_twentyfour));
+        testOrder(Bytes.of(350));
+        testOrder(Bytes.of(172863182736L));
+        testOrder(Bytes.of(example_bytes_one));
+        testOrder(Bytes.of(example_bytes_four));
+        testOrder(Bytes.of(example_bytes_sixteen));
+        testOrder(Bytes.of(example_bytes_twentyfour));
     }
 
     private void testOrder(Bytes bytes) {
@@ -53,79 +53,79 @@ public class BytesByteOrderTest extends ABytesTest {
 
     @Test
     public void encodeBinary() {
-        Bytes b = Bytes.from(example_bytes_four);
+        Bytes b = Bytes.of(example_bytes_four);
         assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).encodeBinary(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).encodeBinary());
         assertEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).encodeBinary(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().encodeBinary());
     }
 
     @Test
     public void encodeOct() {
-        Bytes b = Bytes.from(example_bytes_four);
+        Bytes b = Bytes.of(example_bytes_four);
         assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).encodeOctal(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).encodeOctal());
         assertEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).encodeOctal(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().encodeOctal());
     }
 
     @Test
     public void encodeDec() {
-        Bytes b = Bytes.from(example_bytes_four);
+        Bytes b = Bytes.of(example_bytes_four);
         assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).encodeDec(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).encodeDec());
         assertEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).encodeDec(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().encodeDec());
     }
 
     @Test
     public void encodeHex() {
-        Bytes b = Bytes.from(example_bytes_two);
+        Bytes b = Bytes.of(example_bytes_two);
         assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).encodeHex(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex());
         assertEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).encodeHex(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().encodeHex());
     }
 
     @Test
     public void encodeBase36() {
-        Bytes b = Bytes.from(example_bytes_four);
+        Bytes b = Bytes.of(example_bytes_four);
         assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).encodeBase36(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).encodeBase36());
         assertEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).encodeBase36(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().encodeBase36());
     }
 
     @Test
     public void encodeBase64() {
-        Bytes b = Bytes.from(example_bytes_four);
+        Bytes b = Bytes.of(example_bytes_four);
         assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).encodeBase64(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).encodeBase64());
         assertEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).encodeBase64(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().encodeBase64());
     }
 
     @Test
     public void toByte() {
-        Bytes b = Bytes.from(example_bytes_one);
+        Bytes b = Bytes.of(example_bytes_one);
         assertEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).toByte(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).toByte());
     }
 
     @Test
     public void toChar() {
-        Bytes b = Bytes.from(example_bytes_two);
+        Bytes b = Bytes.of(example_bytes_two);
         assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).toChar(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).toChar());
     }
 
     @Test
     public void toShort() {
-        Bytes b = Bytes.from(example_bytes_two);
+        Bytes b = Bytes.of(example_bytes_two);
         assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).toShort(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
     }
 
     @Test
     public void toInt() {
-        Bytes b = Bytes.from(example_bytes_four);
+        Bytes b = Bytes.of(example_bytes_four);
         assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).toInt(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).toInt());
     }
 
     @Test
     public void toLong() {
-        Bytes b = Bytes.from(example_bytes_eight);
+        Bytes b = Bytes.of(example_bytes_eight);
         assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).toLong(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).toLong());
     }
 
     @Test
     public void bigInteger() {
-        Bytes b = Bytes.from(example_bytes_four);
+        Bytes b = Bytes.of(example_bytes_four);
         assertNotEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).toBigInteger(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).toBigInteger());
         assertEquals(b.byteOrder(ByteOrder.BIG_ENDIAN).toBigInteger(), b.byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().toBigInteger());
     }

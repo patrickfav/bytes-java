@@ -104,7 +104,7 @@ public interface BytesTransformer {
     final class NegateTransformer implements BytesTransformer {
         @Override
         public byte[] transform(byte[] currentArray, boolean inPlace) {
-            byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
+            byte[] out = inPlace ? currentArray : Bytes.of(currentArray).array();
 
             for (int i = 0; i < out.length; i++) {
                 out[i] = (byte) ~out[i];
@@ -139,7 +139,7 @@ public interface BytesTransformer {
 
         @Override
         public byte[] transform(byte[] currentArray, boolean inPlace) {
-            byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
+            byte[] out = inPlace ? currentArray : Bytes.of(currentArray).array();
 
             switch (type) {
                 case RIGHT_SHIFT:
@@ -185,7 +185,7 @@ public interface BytesTransformer {
     final class ReverseTransformer implements BytesTransformer {
         @Override
         public byte[] transform(byte[] currentArray, boolean inPlace) {
-            byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
+            byte[] out = inPlace ? currentArray : Bytes.of(currentArray).array();
             Util.Byte.reverse(out, 0, out.length);
             return out;
         }
@@ -294,7 +294,7 @@ public interface BytesTransformer {
 
         @Override
         public byte[] transform(byte[] currentArray, boolean inPlace) {
-            byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
+            byte[] out = inPlace ? currentArray : Bytes.of(currentArray).array();
 
             if (position < 0 || position >= 8 * currentArray.length) {
                 throw new IllegalArgumentException("bit index " + (position * 8) + " out of bounds");

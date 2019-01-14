@@ -54,8 +54,8 @@ public class BytesMiscTest extends ABytesTest {
         Bytes instance = Bytes.wrap(example_bytes_seven);
         assertEquals(instance.hashCode(), instance.hashCode());
         assertNotEquals(0, instance.hashCode());
-        assertEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.from(example_bytes_seven).hashCode());
-        assertEquals(Bytes.wrap(example2_bytes_seven).hashCode(), Bytes.from(example2_bytes_seven).hashCode());
+        assertEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.of(example_bytes_seven).hashCode());
+        assertEquals(Bytes.wrap(example2_bytes_seven).hashCode(), Bytes.of(example2_bytes_seven).hashCode());
         assertNotEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.wrap(example2_bytes_seven).hashCode());
         assertNotEquals(Bytes.wrap(example_bytes_eight).hashCode(), Bytes.wrap(example2_bytes_seven).hashCode());
         assertNotEquals(0, Bytes.wrap(example2_bytes_seven).hashCode());
@@ -66,9 +66,9 @@ public class BytesMiscTest extends ABytesTest {
     public void testEquals() {
         assertTrue(Bytes.wrap(new byte[0]).equals(Bytes.wrap(new byte[0])));
         assertTrue(Bytes.wrap(new byte[16]).equals(Bytes.wrap(new byte[16])));
-        assertTrue(Bytes.wrap(example_bytes_seven).equals(Bytes.from(example_bytes_seven)));
-        assertFalse(Bytes.wrap(example_bytes_seven).byteOrder(ByteOrder.BIG_ENDIAN).equals(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
-        assertTrue(Bytes.wrap(example2_bytes_seven).equals(Bytes.from(example2_bytes_seven)));
+        assertTrue(Bytes.wrap(example_bytes_seven).equals(Bytes.of(example_bytes_seven)));
+        assertFalse(Bytes.wrap(example_bytes_seven).byteOrder(ByteOrder.BIG_ENDIAN).equals(Bytes.of(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
+        assertTrue(Bytes.wrap(example2_bytes_seven).equals(Bytes.of(example2_bytes_seven)));
         assertFalse(Bytes.wrap(example_bytes_seven).equals(Bytes.wrap(example2_bytes_seven)));
         assertFalse(Bytes.wrap(example_bytes_eight).equals(Bytes.wrap(example2_bytes_seven)));
     }
@@ -107,10 +107,10 @@ public class BytesMiscTest extends ABytesTest {
     @Test
     public void testEqualsContent() {
         assertTrue(Bytes.wrap(new byte[0]).byteOrder(ByteOrder.BIG_ENDIAN).equalsContent(Bytes.wrap(new byte[0]).byteOrder(ByteOrder.LITTLE_ENDIAN)));
-        assertTrue(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.BIG_ENDIAN).equalsContent(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
-        assertTrue(Bytes.from(example_bytes_seven).equalsContent(Bytes.from(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
-        assertTrue(Bytes.from(example_bytes_seven).equalsContent(Bytes.from(example_bytes_seven)));
-        assertTrue(Bytes.from(example_bytes_seven).readOnly().equalsContent(Bytes.from(example_bytes_seven)));
+        assertTrue(Bytes.of(example_bytes_seven).byteOrder(ByteOrder.BIG_ENDIAN).equalsContent(Bytes.of(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
+        assertTrue(Bytes.of(example_bytes_seven).equalsContent(Bytes.of(example_bytes_seven).byteOrder(ByteOrder.LITTLE_ENDIAN)));
+        assertTrue(Bytes.of(example_bytes_seven).equalsContent(Bytes.of(example_bytes_seven)));
+        assertTrue(Bytes.of(example_bytes_seven).readOnly().equalsContent(Bytes.of(example_bytes_seven)));
     }
 
     @Test
@@ -118,36 +118,36 @@ public class BytesMiscTest extends ABytesTest {
         byte[] b1 = new byte[]{0x01};
         byte[] b2 = new byte[]{0x01, 0x02};
 
-        assertTrue(-1 >= Bytes.from(b1).compareTo(Bytes.from(b2)));
-        assertTrue(1 <= Bytes.from(b2).compareTo(Bytes.from(b1)));
-        assertEquals(0, Bytes.from(b1).compareTo(Bytes.from(b1)));
+        assertTrue(-1 >= Bytes.of(b1).compareTo(Bytes.of(b2)));
+        assertTrue(1 <= Bytes.of(b2).compareTo(Bytes.of(b1)));
+        assertEquals(0, Bytes.of(b1).compareTo(Bytes.of(b1)));
 
         byte[] bOne = new byte[]{0x01};
         byte[] bTwo = new byte[]{0x02};
 
-        assertTrue(-1 >= Bytes.from(bOne).compareTo(Bytes.from(bTwo)));
-        assertTrue(1 <= Bytes.from(bTwo).compareTo(Bytes.from(bOne)));
-        assertEquals(0, Bytes.from(bOne).compareTo(Bytes.from(bOne)));
+        assertTrue(-1 >= Bytes.of(bOne).compareTo(Bytes.of(bTwo)));
+        assertTrue(1 <= Bytes.of(bTwo).compareTo(Bytes.of(bOne)));
+        assertEquals(0, Bytes.of(bOne).compareTo(Bytes.of(bOne)));
     }
 
     @Test
     public void testLength() {
-        assertEquals(0, Bytes.from(new byte[0]).length());
+        assertEquals(0, Bytes.of(new byte[0]).length());
 
         for (int i = 0; i < 128; i++) {
-            assertEquals(i, Bytes.from(new byte[i]).length());
-            assertEquals(i * 8, Bytes.from(new byte[i]).lengthBit());
+            assertEquals(i, Bytes.of(new byte[i]).length());
+            assertEquals(i * 8, Bytes.of(new byte[i]).lengthBit());
             assertEquals(i, Bytes.allocate(i).length());
         }
     }
 
     @Test
     public void testIsEmpty() {
-        assertTrue(Bytes.from(new byte[0]).isEmpty());
+        assertTrue(Bytes.of(new byte[0]).isEmpty());
         assertTrue(Bytes.allocate(0).isEmpty());
-        assertFalse(Bytes.from(new byte[1]).isEmpty());
+        assertFalse(Bytes.of(new byte[1]).isEmpty());
         assertFalse(Bytes.allocate(1).isEmpty());
-        assertFalse(Bytes.from(example_bytes_seven).isEmpty());
+        assertFalse(Bytes.of(example_bytes_seven).isEmpty());
     }
 
     @SuppressWarnings("SimplifiableJUnitAssertion")
@@ -155,18 +155,18 @@ public class BytesMiscTest extends ABytesTest {
     public void containsTest() {
         assertEquals(false, Bytes.allocate(0).contains((byte) 0xFD));
         assertEquals(true, Bytes.allocate(128).contains((byte) 0x00));
-        assertEquals(true, Bytes.from(example_bytes_seven).contains((byte) 0xFD));
-        assertEquals(true, Bytes.from(example_bytes_seven).contains((byte) 0xAF));
-        assertEquals(false, Bytes.from(example_bytes_seven).contains((byte) 0x00));
+        assertEquals(true, Bytes.of(example_bytes_seven).contains((byte) 0xFD));
+        assertEquals(true, Bytes.of(example_bytes_seven).contains((byte) 0xAF));
+        assertEquals(false, Bytes.of(example_bytes_seven).contains((byte) 0x00));
     }
 
     @Test
     public void indexOfByte() {
         assertEquals(-1, Bytes.allocate(0).indexOf((byte) 0xFD));
         assertEquals(0, Bytes.allocate(128).indexOf((byte) 0x00));
-        assertEquals(2, Bytes.from(example_bytes_seven).indexOf((byte) 0xFD));
-        assertEquals(5, Bytes.from(example_bytes_seven).indexOf((byte) 0xAF));
-        assertEquals(-1, Bytes.from(example_bytes_seven).indexOf((byte) 0x00));
+        assertEquals(2, Bytes.of(example_bytes_seven).indexOf((byte) 0xFD));
+        assertEquals(5, Bytes.of(example_bytes_seven).indexOf((byte) 0xAF));
+        assertEquals(-1, Bytes.of(example_bytes_seven).indexOf((byte) 0x00));
     }
 
     @Test
@@ -174,24 +174,24 @@ public class BytesMiscTest extends ABytesTest {
         assertEquals(-1, Bytes.allocate(0).indexOf((byte) 0xFD, 0));
         assertEquals(-1, Bytes.allocate(0).indexOf((byte) 0xFD, 100));
         assertEquals(5, Bytes.allocate(128).indexOf((byte) 0x00, 5));
-        assertEquals(2, Bytes.from(example_bytes_sixteen).indexOf((byte) 0xFD, 0));
-        assertEquals(10, Bytes.from(example_bytes_sixteen).indexOf((byte) 0xFD, 5));
+        assertEquals(2, Bytes.of(example_bytes_sixteen).indexOf((byte) 0xFD, 0));
+        assertEquals(10, Bytes.of(example_bytes_sixteen).indexOf((byte) 0xFD, 5));
     }
 
     @Test
     public void indexOfArray() {
         assertEquals(-1, Bytes.allocate(0).indexOf(new byte[]{(byte) 0xFD}));
         assertEquals(-1, Bytes.allocate(1).indexOf(new byte[0]));
-        assertEquals(2, Bytes.from(example_bytes_seven).indexOf(new byte[]{(byte) 0xFD, (byte) 0xFF}));
-        assertEquals(-1, Bytes.from(example_bytes_seven).indexOf(new byte[]{(byte) 0xFD, (byte) 0x00}));
+        assertEquals(2, Bytes.of(example_bytes_seven).indexOf(new byte[]{(byte) 0xFD, (byte) 0xFF}));
+        assertEquals(-1, Bytes.of(example_bytes_seven).indexOf(new byte[]{(byte) 0xFD, (byte) 0x00}));
     }
 
     @Test
     public void indexOfArrayFromIndex() {
         assertEquals(-1, Bytes.allocate(0).indexOf(new byte[]{(byte) 0xFD}, 0));
         assertEquals(-1, Bytes.allocate(1).indexOf(new byte[0], 0));
-        assertEquals(-1, Bytes.from(example_bytes_seven).indexOf(new byte[]{(byte) 0xFD, (byte) 0xFF}, 8));
-        assertEquals(2, Bytes.from(new byte[]{(byte) 0x8E, (byte) 0xD1, (byte) 0x8E, (byte) 0xD1, 0x12, (byte) 0xAF, (byte) 0x78, 0x09, 0x1E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12}).indexOf(new byte[]{(byte) 0x8E, (byte) 0xD1}, 1));
+        assertEquals(-1, Bytes.of(example_bytes_seven).indexOf(new byte[]{(byte) 0xFD, (byte) 0xFF}, 8));
+        assertEquals(2, Bytes.of(new byte[]{(byte) 0x8E, (byte) 0xD1, (byte) 0x8E, (byte) 0xD1, 0x12, (byte) 0xAF, (byte) 0x78, 0x09, 0x1E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12}).indexOf(new byte[]{(byte) 0x8E, (byte) 0xD1}, 1));
     }
 
     @Test
@@ -200,20 +200,20 @@ public class BytesMiscTest extends ABytesTest {
         assertTrue(Bytes.allocate(1).startsWith(new byte[1]));
         assertTrue(Bytes.allocate(128).startsWith(new byte[1]));
         assertTrue(Bytes.allocate(128).startsWith(new byte[128]));
-        assertTrue(Bytes.from(example_bytes_seven).startsWith(new byte[]{0x4A}));
-        assertTrue(Bytes.from(example_bytes_seven).startsWith(new byte[]{0x4A, (byte) 0x94}));
-        assertTrue(Bytes.from(example_bytes_seven).startsWith(new byte[]{0x4A, (byte) 0x94, (byte) 0xFD}));
-        assertFalse(Bytes.from(example_bytes_seven).startsWith(new byte[]{0x4A, (byte) 0x94, (byte) 0x1D}));
-        assertTrue(Bytes.from(example_bytes_seven).startsWith(Bytes.from(example_bytes_seven).array()));
-        assertFalse(Bytes.from(example_bytes_seven).startsWith(Bytes.from(example_bytes_seven).append(0x30).array()));
+        assertTrue(Bytes.of(example_bytes_seven).startsWith(new byte[]{0x4A}));
+        assertTrue(Bytes.of(example_bytes_seven).startsWith(new byte[]{0x4A, (byte) 0x94}));
+        assertTrue(Bytes.of(example_bytes_seven).startsWith(new byte[]{0x4A, (byte) 0x94, (byte) 0xFD}));
+        assertFalse(Bytes.of(example_bytes_seven).startsWith(new byte[]{0x4A, (byte) 0x94, (byte) 0x1D}));
+        assertTrue(Bytes.of(example_bytes_seven).startsWith(Bytes.of(example_bytes_seven).array()));
+        assertFalse(Bytes.of(example_bytes_seven).startsWith(Bytes.of(example_bytes_seven).append(0x30).array()));
     }
 
     @Test
     public void endsWith() {
-        assertTrue(Bytes.from(example_bytes_seven).endsWith(new byte[]{(byte) 0xFF, 0x1E, (byte) 0xAF, (byte) 0xED}));
-        assertTrue(Bytes.from(example_bytes_seven).endsWith(new byte[]{0x1E, (byte) 0xAF, (byte) 0xED}));
-        assertTrue(Bytes.from(example_bytes_seven).endsWith(new byte[]{(byte) 0xAF, (byte) 0xED}));
-        assertTrue(Bytes.from(example_bytes_seven).endsWith(new byte[]{(byte) 0xED}));
+        assertTrue(Bytes.of(example_bytes_seven).endsWith(new byte[]{(byte) 0xFF, 0x1E, (byte) 0xAF, (byte) 0xED}));
+        assertTrue(Bytes.of(example_bytes_seven).endsWith(new byte[]{0x1E, (byte) 0xAF, (byte) 0xED}));
+        assertTrue(Bytes.of(example_bytes_seven).endsWith(new byte[]{(byte) 0xAF, (byte) 0xED}));
+        assertTrue(Bytes.of(example_bytes_seven).endsWith(new byte[]{(byte) 0xED}));
         assertFalse(Bytes.allocate(0).endsWith(new byte[1]));
         assertTrue(Bytes.allocate(1).endsWith(new byte[1]));
         assertTrue(Bytes.allocate(128).endsWith(new byte[1]));
@@ -224,9 +224,9 @@ public class BytesMiscTest extends ABytesTest {
     public void lastIndexOf() {
         assertEquals(-1, Bytes.allocate(0).lastIndexOf((byte) 0xFD));
         assertEquals(127, Bytes.allocate(128).lastIndexOf((byte) 0x00));
-        assertEquals(2, Bytes.from(example_bytes_seven).lastIndexOf((byte) 0xFD));
-        assertEquals(5, Bytes.from(example_bytes_seven).lastIndexOf((byte) 0xAF));
-        assertEquals(-1, Bytes.from(example_bytes_seven).lastIndexOf((byte) 0x00));
+        assertEquals(2, Bytes.of(example_bytes_seven).lastIndexOf((byte) 0xFD));
+        assertEquals(5, Bytes.of(example_bytes_seven).lastIndexOf((byte) 0xAF));
+        assertEquals(-1, Bytes.of(example_bytes_seven).lastIndexOf((byte) 0x00));
     }
 
     @Test
@@ -237,18 +237,18 @@ public class BytesMiscTest extends ABytesTest {
         }
 
         for (int i = 0; i < 8; i++) {
-            assertTrue(Bytes.from((byte) 0xFF).bitAt(i));
+            assertTrue(Bytes.of((byte) 0xFF).bitAt(i));
         }
 
-        assertFalse(Bytes.from((byte) 8).bitAt(0));
-        assertFalse(Bytes.from((byte) 8).bitAt(1));
-        assertFalse(Bytes.from((byte) 8).bitAt(2));
-        assertTrue(Bytes.from((byte) 8).bitAt(3));
-        assertFalse(Bytes.from((byte) 8).bitAt(4));
-        assertFalse(Bytes.from((byte) 0b11010000).bitAt(0));
-        assertFalse(Bytes.from((byte) 0b10010000).bitAt(0));
-        assertTrue(Bytes.from((byte) 0b10010001).bitAt(0));
-        assertFalse(Bytes.from((byte) 0b0010_1000).bitAt(4));
+        assertFalse(Bytes.of((byte) 8).bitAt(0));
+        assertFalse(Bytes.of((byte) 8).bitAt(1));
+        assertFalse(Bytes.of((byte) 8).bitAt(2));
+        assertTrue(Bytes.of((byte) 8).bitAt(3));
+        assertFalse(Bytes.of((byte) 8).bitAt(4));
+        assertFalse(Bytes.of((byte) 0b11010000).bitAt(0));
+        assertFalse(Bytes.of((byte) 0b10010000).bitAt(0));
+        assertTrue(Bytes.of((byte) 0b10010001).bitAt(0));
+        assertFalse(Bytes.of((byte) 0b0010_1000).bitAt(4));
         assertFalse(Bytes.parseBinary("101111110101100100110010011111001011101110110011011000010000000").bitAt(54));
 
         try {
@@ -268,7 +268,7 @@ public class BytesMiscTest extends ABytesTest {
     public void byteAt() {
         assertEquals(0, Bytes.allocate(1).byteAt(0));
         assertEquals(0, Bytes.allocate(128).byteAt(127));
-        assertEquals(-1, Bytes.from((byte) 0b1111_1111).byteAt(0));
+        assertEquals(-1, Bytes.of((byte) 0b1111_1111).byteAt(0));
 
         for (int i = 0; i < example_bytes_twentyfour.length; i++) {
             assertEquals(example_bytes_twentyfour[i], Bytes.wrap(example_bytes_twentyfour).byteAt(i));
@@ -291,7 +291,7 @@ public class BytesMiscTest extends ABytesTest {
     public void unsignedByteAt() {
         assertEquals(0, Bytes.allocate(1).unsignedByteAt(0));
         assertEquals(0, Bytes.allocate(128).unsignedByteAt(127));
-        assertEquals(255, Bytes.from((byte) 0b1111_1111).unsignedByteAt(0));
+        assertEquals(255, Bytes.of((byte) 0b1111_1111).unsignedByteAt(0));
 
         try {
             Bytes.allocate(1).unsignedByteAt(1);
@@ -437,8 +437,8 @@ public class BytesMiscTest extends ABytesTest {
         assertEquals(0, Bytes.allocate(0).count((byte) 0));
         assertEquals(1, Bytes.allocate(1).count((byte) 0));
         assertEquals(128, Bytes.allocate(128).count((byte) 0));
-        assertEquals(3, Bytes.from(example_bytes_twentyfour).count((byte) 0xAA));
-        assertEquals(1, Bytes.from(example_bytes_seven).count((byte) 0xAF));
+        assertEquals(3, Bytes.of(example_bytes_twentyfour).count((byte) 0xAA));
+        assertEquals(1, Bytes.of(example_bytes_seven).count((byte) 0xAF));
     }
 
     @Test
@@ -447,17 +447,17 @@ public class BytesMiscTest extends ABytesTest {
         assertEquals(0, Bytes.allocate(1).count(new byte[0]));
         assertEquals(0, Bytes.allocate(128).count(new byte[0]));
         assertEquals(128, Bytes.allocate(128).count(new byte[]{0}));
-        assertEquals(3, Bytes.from(example_bytes_twentyfour).count(new byte[]{(byte) 0xFD}));
-        assertEquals(3, Bytes.from(example_bytes_twentyfour).count(new byte[]{(byte) 0xD1}));
-        assertEquals(0, Bytes.from(example_bytes_twentyfour).count(new byte[]{(byte) 0x22}));
-        assertEquals(1, Bytes.from(example_bytes_eight).count(new byte[]{(byte) 0xAF}));
-        assertEquals(0, Bytes.from(example_bytes_eight).count(new byte[]{(byte) 0xAF, 0x00}));
-        assertEquals(0, Bytes.from(example_bytes_eight).count(new byte[]{(byte) 0xED}));
-        assertEquals(0, Bytes.from(example_bytes_eight).count(new byte[]{(byte) 0x22}));
-        assertEquals(2, Bytes.from(new byte[]{0, 1, 2, 3, 0, 1, 0}).count(new byte[]{0, 1}));
-        assertEquals(1, Bytes.from(new byte[]{0, 1, 2, 3, 0, 1, 0}).count(new byte[]{0, 1, 2}));
-        assertEquals(1, Bytes.from(new byte[]{0, 1, 2, 3, 0, 1, 0}).count(new byte[]{0, 1, 2, 3}));
-        assertEquals(0, Bytes.from(new byte[]{0, 1, 2, 3, 0, 1, 0}).count(new byte[]{0, 1, 2, 0}));
+        assertEquals(3, Bytes.of(example_bytes_twentyfour).count(new byte[]{(byte) 0xFD}));
+        assertEquals(3, Bytes.of(example_bytes_twentyfour).count(new byte[]{(byte) 0xD1}));
+        assertEquals(0, Bytes.of(example_bytes_twentyfour).count(new byte[]{(byte) 0x22}));
+        assertEquals(1, Bytes.of(example_bytes_eight).count(new byte[]{(byte) 0xAF}));
+        assertEquals(0, Bytes.of(example_bytes_eight).count(new byte[]{(byte) 0xAF, 0x00}));
+        assertEquals(0, Bytes.of(example_bytes_eight).count(new byte[]{(byte) 0xED}));
+        assertEquals(0, Bytes.of(example_bytes_eight).count(new byte[]{(byte) 0x22}));
+        assertEquals(2, Bytes.of(new byte[]{0, 1, 2, 3, 0, 1, 0}).count(new byte[]{0, 1}));
+        assertEquals(1, Bytes.of(new byte[]{0, 1, 2, 3, 0, 1, 0}).count(new byte[]{0, 1, 2}));
+        assertEquals(1, Bytes.of(new byte[]{0, 1, 2, 3, 0, 1, 0}).count(new byte[]{0, 1, 2, 3}));
+        assertEquals(0, Bytes.of(new byte[]{0, 1, 2, 3, 0, 1, 0}).count(new byte[]{0, 1, 2, 0}));
     }
 
     @Test(expected = NullPointerException.class)
@@ -470,10 +470,10 @@ public class BytesMiscTest extends ABytesTest {
         assertEquals(0, Bytes.allocate(0).entropy(), 0.1d);
         assertEquals(0, Bytes.allocate(1).entropy(), 0.1d);
         assertEquals(0, Bytes.allocate(256).entropy(), 0.1d);
-        assertEquals(0, Bytes.from(new byte[]{1}).entropy(), 0.1d);
-        assertTrue(Bytes.from(example_bytes_twentyfour).entropy() > 3.5);
-        assertTrue(Bytes.from(example_bytes_seven).entropy() > 2.5);
-        assertTrue(Bytes.from(example_bytes_two).entropy() > 0.5);
+        assertEquals(0, Bytes.of(new byte[]{1}).entropy(), 0.1d);
+        assertTrue(Bytes.of(example_bytes_twentyfour).entropy() > 3.5);
+        assertTrue(Bytes.of(example_bytes_seven).entropy() > 2.5);
+        assertTrue(Bytes.of(example_bytes_two).entropy() > 0.5);
     }
 
     @Test

@@ -177,7 +177,7 @@ public final class BytesTransformers {
 
         @Override
         public byte[] transform(byte[] currentArray, boolean inPlace) {
-            byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
+            byte[] out = inPlace ? currentArray : Bytes.of(currentArray).array();
             Util.Byte.shuffle(out, random);
             return out;
         }
@@ -206,14 +206,14 @@ public final class BytesTransformers {
         @Override
         public byte[] transform(byte[] currentArray, boolean inPlace) {
             if (comparator == null) {
-                byte[] out = inPlace ? currentArray : Bytes.from(currentArray).array();
+                byte[] out = inPlace ? currentArray : Bytes.of(currentArray).array();
                 Arrays.sort(out);
                 return out;
             } else {
                 //no in-place implementation with comparator
                 Byte[] boxedArray = Bytes.wrap(currentArray).toBoxedArray();
                 Arrays.sort(boxedArray, comparator);
-                return Bytes.from(boxedArray).array();
+                return Bytes.of(boxedArray).array();
             }
         }
 
@@ -258,12 +258,12 @@ public final class BytesTransformers {
         @Override
         public byte[] transform(byte[] currentArray, boolean inPlace) {
             checksum.update(currentArray, 0, currentArray.length);
-            byte[] checksumBytes = Bytes.from(checksum.getValue()).resize(checksumLengthByte).array();
+            byte[] checksumBytes = Bytes.of(checksum.getValue()).resize(checksumLengthByte).array();
 
             if (mode == Mode.TRANSFORM) {
                 return checksumBytes;
             } else {
-                return Bytes.from(currentArray, checksumBytes).array();
+                return Bytes.of(currentArray, checksumBytes).array();
             }
         }
 

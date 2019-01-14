@@ -44,21 +44,21 @@ public class BinaryToTextEncodingTest {
     public void testBase16Reference() {
         BinaryToTextEncoding.EncoderDecoder base16Encoding = new BinaryToTextEncoding.Hex(true);
         // see: https://tools.ietf.org/html/rfc4648
-        assertEquals("", base16Encoding.encode(Bytes.from("").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("66", base16Encoding.encode(Bytes.from("f").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("666F", base16Encoding.encode(Bytes.from("fo").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("666F6F", base16Encoding.encode(Bytes.from("foo").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("666F6F62", base16Encoding.encode(Bytes.from("foob").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("666F6F6261", base16Encoding.encode(Bytes.from("fooba").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("666F6F626172", base16Encoding.encode(Bytes.from("foobar").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("", base16Encoding.encode(Bytes.of("").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("66", base16Encoding.encode(Bytes.of("f").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("666F", base16Encoding.encode(Bytes.of("fo").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("666F6F", base16Encoding.encode(Bytes.of("foo").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("666F6F62", base16Encoding.encode(Bytes.of("foob").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("666F6F6261", base16Encoding.encode(Bytes.of("fooba").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("666F6F626172", base16Encoding.encode(Bytes.of("foobar").array(), ByteOrder.BIG_ENDIAN));
 
-        assertArrayEquals(Bytes.from("").array(), base16Encoding.decode(""));
-        assertArrayEquals(Bytes.from("f").array(), base16Encoding.decode("66"));
-        assertArrayEquals(Bytes.from("fo").array(), base16Encoding.decode("666F"));
-        assertArrayEquals(Bytes.from("foo").array(), base16Encoding.decode("666F6F"));
-        assertArrayEquals(Bytes.from("foob").array(), base16Encoding.decode("666F6F62"));
-        assertArrayEquals(Bytes.from("fooba").array(), base16Encoding.decode("666F6F6261"));
-        assertArrayEquals(Bytes.from("foobar").array(), base16Encoding.decode("666F6F626172"));
+        assertArrayEquals(Bytes.of("").array(), base16Encoding.decode(""));
+        assertArrayEquals(Bytes.of("f").array(), base16Encoding.decode("66"));
+        assertArrayEquals(Bytes.of("fo").array(), base16Encoding.decode("666F"));
+        assertArrayEquals(Bytes.of("foo").array(), base16Encoding.decode("666F6F"));
+        assertArrayEquals(Bytes.of("foob").array(), base16Encoding.decode("666F6F62"));
+        assertArrayEquals(Bytes.of("fooba").array(), base16Encoding.decode("666F6F6261"));
+        assertArrayEquals(Bytes.of("foobar").array(), base16Encoding.decode("666F6F626172"));
     }
 
     @Test
@@ -126,21 +126,21 @@ public class BinaryToTextEncodingTest {
     public void testBase64Reference() {
         BinaryToTextEncoding.EncoderDecoder base64Encoding = new BinaryToTextEncoding.Base64Encoding();
         // see: https://tools.ietf.org/html/rfc4648
-        assertEquals("", base64Encoding.encode(Bytes.from("").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("Zg==", base64Encoding.encode(Bytes.from("f").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("Zm8=", base64Encoding.encode(Bytes.from("fo").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("Zm9v", base64Encoding.encode(Bytes.from("foo").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("Zm9vYg==", base64Encoding.encode(Bytes.from("foob").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("Zm9vYmE=", base64Encoding.encode(Bytes.from("fooba").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("Zm9vYmFy", base64Encoding.encode(Bytes.from("foobar").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("", base64Encoding.encode(Bytes.of("").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("Zg==", base64Encoding.encode(Bytes.of("f").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("Zm8=", base64Encoding.encode(Bytes.of("fo").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("Zm9v", base64Encoding.encode(Bytes.of("foo").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("Zm9vYg==", base64Encoding.encode(Bytes.of("foob").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("Zm9vYmE=", base64Encoding.encode(Bytes.of("fooba").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("Zm9vYmFy", base64Encoding.encode(Bytes.of("foobar").array(), ByteOrder.BIG_ENDIAN));
 
-        assertArrayEquals(Bytes.from("").array(), base64Encoding.decode(""));
-        assertArrayEquals(Bytes.from("f").array(), base64Encoding.decode("Zg=="));
-        assertArrayEquals(Bytes.from("fo").array(), base64Encoding.decode("Zm8="));
-        assertArrayEquals(Bytes.from("foo").array(), base64Encoding.decode("Zm9v"));
-        assertArrayEquals(Bytes.from("foob").array(), base64Encoding.decode("Zm9vYg=="));
-        assertArrayEquals(Bytes.from("fooba").array(), base64Encoding.decode("Zm9vYmE="));
-        assertArrayEquals(Bytes.from("foobar").array(), base64Encoding.decode("Zm9vYmFy"));
+        assertArrayEquals(Bytes.of("").array(), base64Encoding.decode(""));
+        assertArrayEquals(Bytes.of("f").array(), base64Encoding.decode("Zg=="));
+        assertArrayEquals(Bytes.of("fo").array(), base64Encoding.decode("Zm8="));
+        assertArrayEquals(Bytes.of("foo").array(), base64Encoding.decode("Zm9v"));
+        assertArrayEquals(Bytes.of("foob").array(), base64Encoding.decode("Zm9vYg=="));
+        assertArrayEquals(Bytes.of("fooba").array(), base64Encoding.decode("Zm9vYmE="));
+        assertArrayEquals(Bytes.of("foobar").array(), base64Encoding.decode("Zm9vYmFy"));
     }
 
     @Test
@@ -219,21 +219,21 @@ public class BinaryToTextEncodingTest {
     public void testBase32Reference() {
         BinaryToTextEncoding.EncoderDecoder base32Encoding = new BaseEncoding(BaseEncoding.BASE32_RFC4848, BaseEncoding.BASE32_RFC4848_PADDING);
         // see: https://tools.ietf.org/html/rfc4648
-        assertEquals("", base32Encoding.encode(Bytes.from("").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("MY======", base32Encoding.encode(Bytes.from("f").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("MZXQ====", base32Encoding.encode(Bytes.from("fo").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("MZXW6===", base32Encoding.encode(Bytes.from("foo").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("MZXW6YQ=", base32Encoding.encode(Bytes.from("foob").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("MZXW6YTB", base32Encoding.encode(Bytes.from("fooba").array(), ByteOrder.BIG_ENDIAN));
-        assertEquals("MZXW6YTBOI======", base32Encoding.encode(Bytes.from("foobar").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("", base32Encoding.encode(Bytes.of("").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("MY======", base32Encoding.encode(Bytes.of("f").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("MZXQ====", base32Encoding.encode(Bytes.of("fo").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("MZXW6===", base32Encoding.encode(Bytes.of("foo").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("MZXW6YQ=", base32Encoding.encode(Bytes.of("foob").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("MZXW6YTB", base32Encoding.encode(Bytes.of("fooba").array(), ByteOrder.BIG_ENDIAN));
+        assertEquals("MZXW6YTBOI======", base32Encoding.encode(Bytes.of("foobar").array(), ByteOrder.BIG_ENDIAN));
 
-        assertArrayEquals(Bytes.from("").array(), base32Encoding.decode(""));
-        assertArrayEquals(Bytes.from("f").array(), base32Encoding.decode("MY======"));
-        assertArrayEquals(Bytes.from("fo").array(), base32Encoding.decode("MZXQ===="));
-        assertArrayEquals(Bytes.from("foo").array(), base32Encoding.decode("MZXW6==="));
-        assertArrayEquals(Bytes.from("foob").array(), base32Encoding.decode("MZXW6YQ="));
-        assertArrayEquals(Bytes.from("fooba").array(), base32Encoding.decode("MZXW6YTB"));
-        assertArrayEquals(Bytes.from("foobar").array(), base32Encoding.decode("MZXW6YTBOI======"));
+        assertArrayEquals(Bytes.of("").array(), base32Encoding.decode(""));
+        assertArrayEquals(Bytes.of("f").array(), base32Encoding.decode("MY======"));
+        assertArrayEquals(Bytes.of("fo").array(), base32Encoding.decode("MZXQ===="));
+        assertArrayEquals(Bytes.of("foo").array(), base32Encoding.decode("MZXW6==="));
+        assertArrayEquals(Bytes.of("foob").array(), base32Encoding.decode("MZXW6YQ="));
+        assertArrayEquals(Bytes.of("fooba").array(), base32Encoding.decode("MZXW6YTB"));
+        assertArrayEquals(Bytes.of("foobar").array(), base32Encoding.decode("MZXW6YTBOI======"));
     }
 
     @Test

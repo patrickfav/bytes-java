@@ -76,7 +76,7 @@ public abstract class ABytesTest {
     }
 
     Bytes fromAndTest(byte[] bytes) {
-        Bytes b = Bytes.from(bytes);
+        Bytes b = Bytes.of(bytes);
         assertArrayEquals(bytes, b.array());
         return b;
     }
