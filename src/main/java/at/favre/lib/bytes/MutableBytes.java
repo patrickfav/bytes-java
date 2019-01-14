@@ -51,8 +51,7 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
      * @throws IndexOutOfBoundsException if newArray.length &gt; internal length
      */
     public MutableBytes overwrite(byte[] newArray) {
-        overwrite(newArray, 0);
-        return this;
+        return overwrite(newArray, 0);
     }
 
     /**
@@ -87,8 +86,7 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
      * @return this instance
      */
     public MutableBytes wipe() {
-        fill((byte) 0);
-        return this;
+        return fill((byte) 0);
     }
 
     /**
@@ -108,8 +106,7 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
      * @return this instance
      */
     public MutableBytes secureWipe() {
-        secureWipe(new SecureRandom());
-        return this;
+        return secureWipe(new SecureRandom());
     }
 
     /**
