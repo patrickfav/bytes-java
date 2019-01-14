@@ -31,7 +31,11 @@ import static org.junit.Assert.*;
 public class ImmutableBytesTest extends ABytesTest {
     @Test
     public void immutableShouldKeepProperty() {
-        ImmutableBytes b = Bytes.from(example_bytes_seven).immutable();
+        testImmutableProperties(Bytes.from(example_bytes_seven).immutable());
+        testImmutableProperties(Bytes.wrapImmutable(example_bytes_seven));
+    }
+
+    private void testImmutableProperties(ImmutableBytes b) {
         assertSame(b, b.immutable());
         assertFalse(b.isReadOnly());
         assertFalse(b.isMutable());
@@ -97,6 +101,5 @@ public class ImmutableBytesTest extends ABytesTest {
         } catch (UnsupportedOperationException ignored) {
 
         }
-
     }
 }

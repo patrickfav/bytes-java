@@ -62,6 +62,7 @@ import java.util.*;
 public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, AutoCloseable {
 
     private static final Bytes EMPTY = Bytes.wrap(new byte[0]);
+    private static final ByteOrder DEFAULT_ORDER = ByteOrder.BIG_ENDIAN;
 
     /* FACTORY ***************************************************************************************************/
 
@@ -138,7 +139,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return new instance
      */
     public static Bytes wrap(byte[] array) {
-        return wrap(array, ByteOrder.BIG_ENDIAN);
+        return wrap(array, DEFAULT_ORDER);
     }
 
     /**
@@ -154,6 +155,16 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      */
     public static Bytes wrap(byte[] array, ByteOrder byteOrder) {
         return new Bytes(Objects.requireNonNull(array, "passed array must not be null"), byteOrder);
+    }
+
+    public static ImmutableBytes wrapImmutable(byte[] array) {
+        return wrapImmutable(array, DEFAULT_ORDER);
+    }
+
+    public static ImmutableBytes wrapImmutable(byte[] array, ByteOrder byteOrder) {
+        return new ImmutableBytes(Objects.requireNonNull(Arrays.copyOf(array, array.length),
+                "passed array must not be null"),
+                Objects.requireNonNull(byteOrder, "byte order must not be null"));
     }
 
     /**
