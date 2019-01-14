@@ -108,7 +108,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes wrap(Bytes bytes) {
-        return new Bytes(bytes.internalArray(), bytes.byteOrder);
+        return wrap(bytes.internalArray(), bytes.byteOrder);
     }
 
     /**
