@@ -6,7 +6,9 @@ import java.nio.ByteOrder;
  * An immutable version of {@link Bytes}.
  * <p>
  * Every operation will create a new instance and a new copy of the
- * internal array (if it would be modified).
+ * internal array (if it would be modified). Calling {@link #array()} will return a copy of the internal array.
+ * Use this only for handling smaller byte arrays as copying may incur a lot of memory allocation
+ * and garbage collection.
  */
 public class ImmutableBytes extends Bytes {
 

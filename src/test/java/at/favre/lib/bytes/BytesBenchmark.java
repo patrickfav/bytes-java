@@ -31,7 +31,7 @@ public class BytesBenchmark {
     public void immutableVsMutable() throws Exception {
         int length = 16 * 1024;
         Bytes randomXorOp = Bytes.random(length);
-        Bytes immutable = Bytes.allocate(length);
+        Bytes immutable = Bytes.allocate(length).immutable();
         Bytes mutable = Bytes.allocate(length);
 
         for (int i = 0; i < 10; i++) {
@@ -40,9 +40,9 @@ public class BytesBenchmark {
         }
 
         for (int i = 0; i < 3; i++) {
-            Thread.sleep(32);
+            Thread.sleep(1500);
             long durationImmutable = runBenchmark(randomXorOp, immutable, length);
-            Thread.sleep(120);
+            Thread.sleep(1500);
             long durationMutable = runBenchmark(randomXorOp, mutable, length);
             System.out.println("\nRun " + i);
             System.out.println("Immutable: \t" + durationImmutable + " ns");
@@ -52,7 +52,7 @@ public class BytesBenchmark {
 
     private long runBenchmark(Bytes randomXorOp, Bytes bytes, int byteLength) {
         long startImmutable = System.nanoTime();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100000; i++) {
 
             if (i % 150 == 0) {
                 randomXorOp = randomXorOp.xor(Bytes.random(byteLength));

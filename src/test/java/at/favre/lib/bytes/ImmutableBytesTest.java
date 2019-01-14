@@ -85,6 +85,25 @@ public class ImmutableBytesTest extends ABytesTest {
         assertNotEquals(0, m2i.byteAt(0));
     }
 
+    @Test
+    public void testImmutableAlwaysCopy() {
+        Bytes b = Bytes.ofImmutable(new byte[]{1, 2, 3, 4, 5});
+        assertArrayEquals(new byte[]{1, 2, 3, 4, 5}, b.array());
+
+        Bytes b2 = b.xor(new byte[]{1, 2, 1, 2, 1});
+        assertArrayEquals(new byte[]{1, 2, 3, 4, 5}, b.array());
+        assertArrayNotEquals(new byte[]{1, 2, 3, 4, 5}, b2.array());
+        assertArrayEquals(new byte[]{0, 0, 2, 6, 4}, b2.array());
+        assertNotSame(b.array(), b2.array());
+
+        Bytes b3 = b2.not();
+        assertArrayEquals(new byte[]{1, 2, 3, 4, 5}, b.array());
+        assertArrayEquals(new byte[]{0, 0, 2, 6, 4}, b2.array());
+        assertArrayNotEquals(new byte[]{0, 0, 2, 6, 4}, b3.array());
+        assertArrayEquals(new byte[]{-1, -1, -3, -7, -5}, b3.array());
+        assertNotSame(b2.array(), b3.array());
+    }
+
     Bytes fromAndTest(byte[] bytes) {
         Bytes b = Bytes.of(bytes);
         assertArrayEquals(bytes, b.array());

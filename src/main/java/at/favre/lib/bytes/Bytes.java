@@ -44,13 +44,16 @@ import java.util.*;
  * <p>
  * It supports byte ordering (little/big endianness).
  * <p>
- * This class is immutable as long as the internal array is not changed from outside (which can't be assured, when
- * using using <code>wrap()</code>). It is possible to create a immutable version (see {@link ImmutableBytes}).
+ * This class is fully mutable and the caller can read and alter the internal byte array through {@link #array()}.
+ * This mode is especially useful to design memory efficient algorithms. It is possible create an immutable
+ * instance through either calling {@link #immutable()} or creating one with {@link Bytes#ofImmutable(byte[])},
+ * where every operation will copy the internally array and the caller cannot alter it because only copies are
+ * returned.
  * <p>
  * <strong>Example:</strong>
  * <pre>
- *     Bytes b = Bytes.of(array).mutable();
- *     b.not();
+ *     Bytes b = Bytes.wrap(array).immutable();
+ *     b = b.not();
  *     System.out.println(b.encodeHex());
  * </pre>
  *
@@ -200,6 +203,8 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * Creates an immutable instance of the <strong>copy</strong> of given byte array.
      * Similar to calling <code>Bytes.wrap(array).immutable()</code> without the need for an intermediate
      * instance and possible redundant copying of the internal byte array.
+     * <p>
+     * See {@link ImmutableBytes}.
      *
      * @param byteArrayToCopy to create an immutable instance from
      * @return new instance
@@ -212,6 +217,8 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * Creates an immutable instance of the <strong>copy</strong> of given byte array.
      * Similar to calling <code>Bytes.wrap(array, byteOrder).immutable()</code> without the need for
      * an intermediate instance and possible redundant copying of the internal byte array.
+     * <p>
+     * See {@link ImmutableBytes}.
      *
      * @param byteArrayToCopy to create an immutable instance from
      * @param byteOrder       the byte order of passed array

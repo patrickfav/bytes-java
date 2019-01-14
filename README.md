@@ -205,7 +205,7 @@ Bytes result = Bytes.wrap(array1).append("some string");
 Bytes.wrap(array).xor(array2); // 0010 0011 xor() 1011 1000 = 1001 1011
 Bytes.wrap(array).or(array2); // 0010 0011 or() 1101 0100 = 1111 0111
 Bytes.wrap(array).and(array2); // 0010 0011 and() 1011 1000 = 0010 0000
-Bytes.wrap(array).negate(); // 0010 0011 negate() = 1101 1100
+Bytes.wrap(array).not(); // 0010 0011 negate() = 1101 1100
 Bytes.wrap(array).leftShift(8);
 Bytes.wrap(array).rightShift(8);
 Bytes.wrap(array).switchBit(3, true);

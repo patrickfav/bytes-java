@@ -186,34 +186,41 @@ public class MutableBytesTest extends ABytesTest {
 
     @Test
     public void testCheckReferenceOf() {
-        byte[] ref = new byte[]{1, 2, 3, 4};
+        byte[] refArr = new byte[]{1, 2, 3, 4};
 
-        Bytes refFrom = Bytes.of(ref);
-        byte[] refFromInternalArr = refFrom.array();
-        assertNotSame(ref, refFrom.array());
-        assertArrayEquals(ref, refFrom.array());
-        assertSame(refFromInternalArr, refFrom.array());
-        assertSame(refFrom.array(), refFrom.array());
+        Bytes refOf = Bytes.of(refArr);
+        byte[] refFromInternalArr = refOf.array();
+        assertNotSame(refArr, refOf.array());
+        assertArrayEquals(refArr, refOf.array());
+        assertSame(refFromInternalArr, refOf.array());
+        assertSame(refOf.array(), refOf.array());
 
-        refFrom.xor(new byte[]{0, 0, 0, 0});
-        assertSame(refFromInternalArr, refFrom.array());
-        assertNotEquals(ref, refFrom.array());
+        refOf.xor(new byte[]{0, 0, 0, 0});
+        assertSame(refFromInternalArr, refOf.array());
+        assertNotEquals(refArr, refOf.array());
+        assertNotEquals(new byte[]{1, 2, 3, 4}, refOf.array());
+
+        refOf.not();
+        assertSame(refFromInternalArr, refOf.array());
     }
 
     @Test
     public void testCheckReferenceWrap() {
-        byte[] ref = new byte[]{1, 2, 3, 4};
+        byte[] refArr = new byte[]{1, 2, 3, 4};
 
-        Bytes refWrap = Bytes.wrap(ref);
+        Bytes refWrap = Bytes.wrap(refArr);
         byte[] refFromInternalArr = refWrap.array();
-        assertSame(ref, refWrap.array());
-        assertArrayEquals(ref, refWrap.array());
+        assertSame(refArr, refWrap.array());
+        assertArrayEquals(refArr, refWrap.array());
         assertSame(refFromInternalArr, refWrap.array());
         assertSame(refWrap.array(), refWrap.array());
 
         refWrap.xor(new byte[]{0, 0, 0, 0});
         assertSame(refFromInternalArr, refWrap.array());
-        assertEquals(ref, refWrap.array());
+        assertEquals(refArr, refWrap.array());
         assertNotEquals(new byte[]{1, 2, 3, 4}, refWrap.array());
+
+        refWrap.not();
+        assertSame(refFromInternalArr, refWrap.array());
     }
 }
