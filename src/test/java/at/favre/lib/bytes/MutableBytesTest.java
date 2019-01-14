@@ -71,33 +71,33 @@ public class MutableBytesTest extends ABytesTest {
     }
 
     @Test
-    public void testConvertImmutable() {
+    public void testCheckReferencesAndCopy() {
         Bytes b = Bytes.from(example_bytes_seven);
         Bytes m = b.copy();
         assertEquals(b, m);
         assertTrue(b.equalsContent(m));
         assertEquals(b.byteOrder(), m.byteOrder());
 
-        Bytes m2b = m.immutable();
-        assertNotEquals(m2b, m);
-        assertNotEquals(m2b, b);
-        assertNotSame(m2b, b);
-        assertTrue(m2b.equalsContent(m));
-        assertEquals(m2b.byteOrder(), m.byteOrder());
+        Bytes dup = m.duplicate();
+        assertEquals(dup, m);
+        assertEquals(dup, b);
+        assertNotSame(dup, b);
+        assertTrue(dup.equalsContent(m));
+        assertEquals(dup.byteOrder(), m.byteOrder());
 
-        assertEquals(m.length(), m2b.length());
+        assertEquals(m.length(), dup.length());
         assertEquals(m.length(), b.length());
 
         assertNotEquals(example_bytes_seven[0], 0);
         assertEquals(example_bytes_seven[0], b.byteAt(0));
         assertEquals(example_bytes_seven[0], m.byteAt(0));
-        assertEquals(example_bytes_seven[0], m2b.byteAt(0));
+        assertEquals(example_bytes_seven[0], dup.byteAt(0));
 
-        /*m.fill((byte) 0);
+        m.fill((byte) 0);
 
         assertEquals(example_bytes_seven[0], b.byteAt(0));
         assertEquals(0, m.byteAt(0));
-        assertEquals(0, m2b.byteAt(0));*/
+        assertEquals(0, dup.byteAt(0));
     }
 
     @Test
@@ -182,6 +182,39 @@ public class MutableBytesTest extends ABytesTest {
         }
 
         assertArrayNotEquals(new byte[16], leak.array());
+    }
 
+
+    @Test
+    public void testCheckReferenceFrom() {
+        byte[] ref = new byte[]{1, 2, 3, 4};
+
+        Bytes refFrom = Bytes.from(ref);
+        byte[] refFromInternalArr = refFrom.array();
+        assertNotSame(ref, refFrom.array());
+        assertArrayEquals(ref, refFrom.array());
+        assertSame(refFromInternalArr, refFrom.array());
+        assertSame(refFrom.array(), refFrom.array());
+
+        refFrom.xor(new byte[]{0, 0, 0, 0});
+        assertSame(refFromInternalArr, refFrom.array());
+        assertNotEquals(ref, refFrom.array());
+    }
+
+    @Test
+    public void testCheckReferenceWrap() {
+        byte[] ref = new byte[]{1, 2, 3, 4};
+
+        Bytes refWrap = Bytes.wrap(ref);
+        byte[] refFromInternalArr = refWrap.array();
+        assertSame(ref, refWrap.array());
+        assertArrayEquals(ref, refWrap.array());
+        assertSame(refFromInternalArr, refWrap.array());
+        assertSame(refWrap.array(), refWrap.array());
+
+        refWrap.xor(new byte[]{0, 0, 0, 0});
+        assertSame(refFromInternalArr, refWrap.array());
+        assertEquals(ref, refWrap.array());
+        assertNotEquals(new byte[]{1, 2, 3, 4}, refWrap.array());
     }
 }
