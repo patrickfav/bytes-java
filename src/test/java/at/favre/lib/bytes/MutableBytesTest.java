@@ -184,7 +184,6 @@ public class MutableBytesTest extends ABytesTest {
         assertArrayNotEquals(new byte[16], leak.array());
     }
 
-
     @Test
     public void testCheckReferenceOf() {
         byte[] ref = new byte[]{1, 2, 3, 4};

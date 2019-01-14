@@ -49,7 +49,7 @@ import java.util.*;
  * <p>
  * <strong>Example:</strong>
  * <pre>
- *     Bytes b = Bytes.from(array).mutable();
+ *     Bytes b = Bytes.of(array).mutable();
  *     b.not();
  *     System.out.println(b.encodeHex());
  * </pre>
@@ -95,7 +95,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
     /**
      * Creates an Byte instance with an internal empty byte array. Same as calling {@link #allocate(int)} with 0.
      *
-     * @return the empty instance (always the same reference
+     * @return the empty instance (always the same reference)
      */
     public static Bytes empty() {
         return EMPTY;
@@ -109,7 +109,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return new instance
      */
     public static Bytes wrap(Bytes bytes) {
-        return new Bytes(bytes.internalArray(), bytes.byteOrder);
+        return wrap(bytes.internalArray(), bytes.byteOrder);
     }
 
     /**
@@ -196,12 +196,29 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
         return wrap(part);
     }
 
-    public static ImmutableBytes ofImmutable(byte[] array) {
-        return ofImmutable(array, DEFAULT_ORDER);
+    /**
+     * Creates an immutable instance of the <strong>copy</strong> of given byte array.
+     * Similar to calling <code>Bytes.wrap(array).immutable()</code> without the need for an intermediate
+     * instance and possible redundant copying of the internal byte array.
+     *
+     * @param byteArrayToCopy to create an immutable instance from
+     * @return new instance
+     */
+    public static ImmutableBytes ofImmutable(byte[] byteArrayToCopy) {
+        return ofImmutable(byteArrayToCopy, DEFAULT_ORDER);
     }
 
-    public static ImmutableBytes ofImmutable(byte[] array, ByteOrder byteOrder) {
-        return new ImmutableBytes(Objects.requireNonNull(Arrays.copyOf(array, array.length),
+    /**
+     * Creates an immutable instance of the <strong>copy</strong> of given byte array.
+     * Similar to calling <code>Bytes.wrap(array, byteOrder).immutable()</code> without the need for
+     * an intermediate instance and possible redundant copying of the internal byte array.
+     *
+     * @param byteArrayToCopy to create an immutable instance from
+     * @param byteOrder       the byte order of passed array
+     * @return new instance
+     */
+    public static ImmutableBytes ofImmutable(byte[] byteArrayToCopy, ByteOrder byteOrder) {
+        return new ImmutableBytes(Objects.requireNonNull(Arrays.copyOf(byteArrayToCopy, byteArrayToCopy.length),
                 "passed array must not be null"),
                 Objects.requireNonNull(byteOrder, "byte order must not be null"));
     }
@@ -942,7 +959,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
     }
 
     /**
-     * Returns a Byte whose value is equivalent to this Byte with the designated bit set to newBitValue. Bits start to count from the LSB (ie. Bytes.from(0).switchBit(0,true) == 1)
+     * Returns a Byte whose value is equivalent to this Byte with the designated bit set to newBitValue. Bits start to count from the LSB (ie. Bytes.of(0).switchBit(0,true) == 1)
      *
      * @param bitPosition not to confuse with byte position
      * @param newBitValue if true set to 1, 0 otherwise

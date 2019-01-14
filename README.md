@@ -73,7 +73,7 @@ int result = b.toInt(); //get as signed int
 ```
 
 ```java
-Bytes b = Bytes.from(array1);  of
+Bytes b = Bytes.of(array1);  of
 b.resize(2).xor(array2); //shrink to 2 bytes and xor with other array
 byte[] result = b.array(); //get as byte array
 ```
@@ -91,7 +91,7 @@ restricts the access to the internal array.
 There are 3 basic constructors:
 
  * `wrap()` which reuses the given array reference; this is equivalent to `ByteBuffer.wrap()`
- * `from()` which always creates a new internal array reference (i.e. a copy of the passed reference)
+ * `of()` which always creates a new internal array reference (i.e. a copy of the passed reference)
  * `parse()` which parses from binary-text-encoded strings (see other section)
 
 Here is a simple example to show the difference:
@@ -102,7 +102,7 @@ Bytes bWrap = Bytes.wrap(myArray);
 assertSame(myArray, bWrap.array());
 
 byte[] myArray2 = ...
-Bytes bFrom = Bytes.from(myArray2);
+Bytes bFrom = Bytes.of(myArray2);
 assertNotSame(myArray2, bFrom.array());
 assertArrayEquals(myArray2, bFrom.array());
 ```
@@ -110,7 +110,7 @@ assertArrayEquals(myArray2, bFrom.array());
 The following code is equivalent:
 
 ```java
-Bytes.wrap(myArray).copy() ~ Bytes.from(myArray)
+Bytes.wrap(myArray).copy() ~ Bytes.of(myArray)
 ```
 
 #### More Constructors
@@ -119,22 +119,22 @@ For a **null-safe version**, which uses the empty array in case of a null byte a
 
 ```java
 Bytes.wrapNullSafe(null);
-Bytes.fromNullSafe(null);
+Bytes.ofNullSafe(null);
 ```
 
 **Concatenating** of multiple byte arrays or bytes:
 
 ```java
-Bytes.from(array1, array2, array3);
-Bytes.from((byte) 0x01, (byte) 0x02, (byte) 0x03);
+Bytes.of(array1, array2, array3);
+Bytes.of((byte) 0x01, (byte) 0x02, (byte) 0x03);
 ```
 
 Creating byte arrays from **primitive integer** types and arrays:
 
 ```java
-Bytes.from(8);  //00000000 00000000 00000000 00001000
-Bytes.from(1897621543227L);
-Bytes.from(1634, 88903, 77263);
+Bytes.of(8);  //00000000 00000000 00000000 00001000
+Bytes.of(1897621543227L);
+Bytes.of(1634, 88903, 77263);
 ```
 
 Initializing **empty arrays** of arbitrary length:
@@ -154,22 +154,22 @@ Bytes.random(12);
 Reading byte content of encoded `String`s:
 
 ```java
-Bytes.from(utf8String)
-Bytes.from(utf8StringToNormalize, Normalizer.Form.NFKD) //normalizes unicode
-Bytes.from(asciiString, StandardCharset.US_ASCII) //any charset
+Bytes.of(utf8String)
+Bytes.of(utf8StringToNormalize, Normalizer.Form.NFKD) //normalizes unicode
+Bytes.of(asciiString, StandardCharset.US_ASCII) //any charset
 ```
 
 And other types:
 
 ```java
-Bytes.from(byteInputStream); //read whole java.io.InputStream
-Bytes.from(byteInputStream, 16); //read java.io.InputStream with length limitation
-Bytes.from(byteList); //List<Byte> byteList = ...
-Bytes.from(myBitSet); //java.util.BitSet myBitSet = ...
-Bytes.from(bigInteger); //java.math.BigInteger
-Bytes.from(file); of
-Bytes.from(dataInput, 16); of
-Bytes.from(UUID.randomUUID()); //read 16 bytes from UUID
+Bytes.of(byteInputStream); //read whole java.io.InputStream
+Bytes.of(byteInputStream, 16); //read java.io.InputStream with length limitation
+Bytes.of(byteList); //List<Byte> byteList = ...
+Bytes.of(myBitSet); //java.util.BitSet myBitSet = ...
+Bytes.of(bigInteger); //java.math.BigInteger
+Bytes.of(file); of
+Bytes.of(dataInput, 16); of
+Bytes.of(UUID.randomUUID()); //read 16 bytes from UUID
 ```
 
 For parsing binary-text-encoded strings, see below.
@@ -303,7 +303,7 @@ Bytes.encode(base85Encoder);
 Bytes.parseHex("a0e13eaa1a")
 Bytes.parseHex("0xA0E1")
 
-Bytes.from(array).encodeHex() //a0e13eaa1a
+Bytes.of(array).encodeHex() //a0e13eaa1a
  ```
 
 This lib has it's own build in **Base64** encoder:
@@ -311,24 +311,24 @@ This lib has it's own build in **Base64** encoder:
 ```java
 Bytes.parseBase64("SpT9/x6v7Q==");
 
-Bytes.from(array).encodeBase64(); //"SpT9/x6v7Q=="
-Bytes.from(array).encodeBase64Url(); //"SpT9_x6v7Q=="
+Bytes.of(array).encodeBase64(); //"SpT9/x6v7Q=="
+Bytes.of(array).encodeBase64Url(); //"SpT9_x6v7Q=="
  ```
 
 also a **Base32** encoder (using the RFC4648 non-hex alphabet):
 
 ```java
 Bytes.parseBase32("MZXQ====");
-Bytes.from(array).encodeBase32();
+Bytes.of(array).encodeBase32();
  ```
 
 Additionally the following radix encodings are supported:
 
 ```java
-Bytes.from(array).encodeBinary(); //1110110110101111
-Bytes.from(array).encodeDec(); //20992966904426477
-Bytes.from(array).encodeOctal(); //1124517677707527755
-Bytes.from(array).encodeRadix(36); //5qpdvuwjvu5
+Bytes.of(array).encodeBinary(); //1110110110101111
+Bytes.of(array).encodeDec(); //20992966904426477
+Bytes.of(array).encodeOctal(); //1124517677707527755
+Bytes.of(array).encodeRadix(36); //5qpdvuwjvu5
 ```
 
 ### Handling Strings
@@ -337,7 +337,7 @@ You can easily get the **UTF-8 encoded version** of a string with
 
 ```java
 String s = "...";
-Bytes.from(s);
+Bytes.of(s);
 ```
 
 or get the **[normalized version](https://en.wikipedia.org/wiki/Unicode_equivalence)**,
@@ -345,21 +345,21 @@ which is the recommended way to convert e.g. user passwords
 
 ```java
 String pwd = "ℌH";
-Bytes.from(pwd, Normalizer.Form.NFKD); //would be "HH" normalized
+Bytes.of(pwd, Normalizer.Form.NFKD); //would be "HH" normalized
 ```
 
 or get as any other **[character encodings](https://en.wikipedia.org/wiki/Character_encoding)**
 
 ```java
 String asciiString = "ascii";
-Bytes.from(asciiString, StandardCharsets.US_ASCII);
+Bytes.of(asciiString, StandardCharsets.US_ASCII);
 ```
 
 To easily append a string to an byte array you can do
 
 ```java
 String userPwdHash = ...;
-Bytes.from(salt).append(userPwd).hashSha256();
+Bytes.of(salt).append(userPwd).hashSha256();
 ```
 
 ### Utility Methods
@@ -554,7 +554,7 @@ to avoid unneeded array creation to minimize time and space complexity.
 To create a mutable instance just do:
 
 ```java
-MutableBytes b = Bytes.from(array).mutable();
+MutableBytes b = Bytes.of(array).mutable();
 ```
 
 Mutable classes also enable further APIs for directly modify the internal array:
@@ -576,7 +576,7 @@ Bytes b2 = b.immutable();
 *Note:* a copy will inherit mutability/read-only properties:
 
 ```java
-Bytes b = Bytes.from(array).mutable().copy();
+Bytes b = Bytes.of(array).mutable().copy();
 assertTrue(b.isMutable());
 ```
 
@@ -599,7 +599,7 @@ especially no easy way to alter the internal byte array, read-only instances
 may be created by:
 
 ```java
-Bytes b = Bytes.from(array).readOnly();
+Bytes b = Bytes.of(array).readOnly();
 ```
 
 Every call to the following conversation methods will throw a `ReadOnlyBufferException`:
