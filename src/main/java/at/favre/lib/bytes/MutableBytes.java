@@ -38,6 +38,27 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
         super(byteArray, byteOrder, new Factory());
     }
 
+    /**
+     * Creates a new instance with an empty array filled with zeros.
+     *
+     * @param length of the internal array
+     * @return new instance
+     */
+    public static MutableBytes allocate(int length) {
+        return allocate(length, (byte) 0);
+    }
+
+    /**
+     * Creates a new instance with an empty array filled with given defaultValue
+     *
+     * @param length       of the internal array
+     * @param defaultValue to fill with
+     * @return new instance
+     */
+    public static MutableBytes allocate(int length, byte defaultValue) {
+        return Bytes.allocate(length, defaultValue).mutable();
+    }
+
     @Override
     public boolean isMutable() {
         return true;
