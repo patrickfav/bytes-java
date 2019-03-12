@@ -121,4 +121,22 @@ public class ImmutableBytesTest extends ABytesTest {
 
         }
     }
+
+    @Test
+    public void readmeExample1() {
+        byte[] arr1 = new byte[]{1, 2, 3};
+        byte[] arr2 = new byte[]{4, 5};
+
+        Bytes b = Bytes.ofImmutable(arr1);
+        Bytes b2 = b.append(arr2);
+        System.out.println(b.encodeHex());  // returns "010203"
+        System.out.println(b2.encodeHex()); // returns "0102030405"
+        assertEquals(b.encodeHex(), "010203");
+        assertEquals(b2.encodeHex(), "0102030405");
+
+        Bytes bM = Bytes.of(arr1);
+        bM.append(arr2);
+        System.out.println(bM.encodeHex());
+        assertEquals(bM.encodeHex(), "0102030405");
+    }
 }

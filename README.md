@@ -1,9 +1,9 @@
 # Bytes Utility Library for Java
 
 Bytes is a utility library that makes it easy to **create**, **parse**, **transform**,
-**validate** and **convert** byte arrays in Java. It's main class `Bytes` is
+**validate** and **convert** byte arrays in Java. It's main class `Bytes` abstracts
 a collections of bytes and the main API. It supports [endianness](https://en.wikipedia.org/wiki/Endianness)
-as well as **copy-on-write** and **mutable** access, so the caller may decide to favor
+as well as fully **mutable** and **immutable** access, so the caller may decide to favor
 performance. This can be seen as combination of the features provided by
 [`BigInteger`](https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html),
 [`ByteBuffer`](https://docs.oracle.com/javase/7/docs/api/java/nio/ByteBuffer.html) but
@@ -25,7 +25,7 @@ to blindly paste code snippets from
 [.](https://stackoverflow.com/questions/23360692/byte-position-in-java)
 [c](https://stackoverflow.com/questions/11437203/byte-array-to-int-array)
 [o](https://stackoverflow.com/a/9670279/774398)
-[m](https://stackoverflow.com/questions/1519736/random-shuffling-of-an-array)
+[m](https://stackoverflow.com/questions/1519736/random-shuffling-of-an-array) as well as providing a simple to  understand and descriptive API.
 
 [![Download](https://api.bintray.com/packages/patrickfav/maven/bytes-java/images/download.svg)](https://bintray.com/patrickfav/maven/bytes-java/_latestVersion)
 [![Build Status](https://travis-ci.org/patrickfav/bytes-java.svg?branch=master)](https://travis-ci.org/patrickfav/bytes-java)
@@ -80,11 +80,17 @@ byte[] result = b.array(); //get as byte array
 
 ## API Description
 
-Per default the instance is **semi-immutable**, which means any transformation will
-create a copy of the internal array (it is, however, possible to get and
-modify the internal array). There is a **mutable** version which supports
-in-place modification for better performance and a **read-only** version which
-restricts the access to the internal array.
+Per default the instance is **mutable**, which means every transformation will alter
+the internal byte array. This mirrors the behaviour of directly mutating a byte array
+reference and should feel quite natural to use. The main advantage is to avoid 
+unnecessary copies which will prevent cluttering the heap, more GC and is general
+better for performance. On the downside, every caller can change the internal data,
+so care has to be taken to not interfere with other layers of your application.
+
+There is an **immutable** version which supports will always create a copy when transforming
+the instance, as well as only returning copies of the internal array when calling `.array()`.
+This helps to prevent side effects, but will create many copies if used extensively. Additionally
+a **read-only** version which restricts the access to the internal array can also be used.
 
 ### Constructors
 
@@ -145,6 +151,12 @@ Bytes.allocate(4, (byte) 1); //fill with 0x01
 Bytes.empty(); //creates zero length byte array
 ```
 
+Creating an **immutable** instance where every transformation will create a copy:
+
+```java
+Bytes.ofImmutable(array1);
+```
+
 Creating **random** byte arrays for e.g. testing:
 
 ```java
@@ -180,7 +192,7 @@ Transformers transform the internal byte array. It is possible to create
 custom transformers if a specific feature is not provided by the default
  implementation (see `BytesTransformer`). Depending on the type (mutable vs
  immutable) and transformer it will overwrite the internal byte array
- or always create a copy first.
+ or create a copy first.
 
 ```java
 Bytes result = Bytes.wrap(array1).transform(myCustomTransformer);
@@ -194,6 +206,7 @@ For **appending** byte arrays or primitive integer types to current instances.
 
 ```java
 Bytes result = Bytes.wrap(array1).append(array2);
+Bytes result = Bytes.wrap(array1).append(array2, array3, ...);
 Bytes result = Bytes.wrap(array1).append(1341);
 Bytes result = Bytes.wrap(array1).append((byte) 3);
 Bytes result = Bytes.wrap(array1).append("some string");
@@ -205,7 +218,7 @@ Bytes result = Bytes.wrap(array1).append("some string");
 Bytes.wrap(array).xor(array2); // 0010 0011 xor() 1011 1000 = 1001 1011
 Bytes.wrap(array).or(array2); // 0010 0011 or() 1101 0100 = 1111 0111
 Bytes.wrap(array).and(array2); // 0010 0011 and() 1011 1000 = 0010 0000
-Bytes.wrap(array).not(); // 0010 0011 negate() = 1101 1100
+Bytes.wrap(array).not(); // 0010 0011 not() = 1101 1100
 Bytes.wrap(array).leftShift(8);
 Bytes.wrap(array).rightShift(8);
 Bytes.wrap(array).switchBit(3, true);
@@ -283,6 +296,18 @@ Bytes.wrap(array).transform(sort(byteComparator));
 
 ```java
 Bytes.wrap(array).transform(shuffle());
+```
+
+#### Direct Access Mutation
+
+The following methods will directly alter the underlying byte array:
+
+```java
+b.setByteAt(3, (byte) 0xF1)
+b.overwrite(anotherArray) //directly overwrite given array
+b.fill(0x03) // fills with e.g. 3
+b.wipe() //fills with zeros
+b.secureWipe() //fills with random data
 ```
 
 ### Parser and Encoder for Binary-Text-Encodings
@@ -472,7 +497,7 @@ assertTrue(Bytes.allocate(16).validate(
 The internal byte array can be converted or exported into many different formats.
 There are 2 different kinds of converters:
 
-* Ones that create a new type which **reuses the same shared memory**
+* Ones that create a new type which **reuses the same shared memory** (not for immutable type)
 * Ones that create a **copy** of the internal array, which start with `to*`
 
 #### Shared Memory Conversion
@@ -538,16 +563,44 @@ Bytes.wrap(array).toUUID(); // convert 16 byte to UUID
 Bytes.wrap(array).toCharArray(StandardCharsets.UTF-8); // converts to encoded char array
 ```
 
-### Mutable and Read-Only
+### Immutable and Read-Only
 
-Per default the instance is immutable, i.e. every transformation will create a
-a new internal byte array (very similar to the API of `BigInteger`). While
-this is usually the default way to design such a construct because it shows
-[various advantages](https://softwareengineering.stackexchange.com/questions/151733/if-immutable-objects-are-good-why-do-people-keep-creating-mutable-objects)
-this can introduce a major performance issue when handling big arrays
-or many transformations.
+Per default the instance is mutable, i.e. every transformation will be alter the internal reference.
 
-#### Mutable Bytes
+ While this design displays various advantages to reduce memory and time complexity
+  sometimes immutable access might be preferred because it shows other [various advantages](https://softwareengineering.stackexchange.com/questions/151733/if-immutable-objects-are-good-why-do-people-keep-creating-mutable-objects).
+
+#### Immutable Bytes
+
+In immutable design, given reference will not change. So for instance if you create an array and 
+
+```java
+byte[] arr1 = new byte[] {1, 2, 3};
+byte[] arr2 = new byte[] {4, 5};
+Bytes b = Bytes.of(arr1);
+b.append(arr2);
+b.encodeHex(); // returns "0102030405"
+```` 
+
+As you can see the reference `b` is directly modified. The same example with immutable type looks like this:
+
+```java
+Bytes b = Bytes.ofImmutable(arr1);
+Bytes b2 = b.append(arr2);
+b.encodeHex(); // returns "010203"
+b2.encodeHex(); // returns "0102030405"
+```` 
+
+Therefore some methods do not make a lot of sense in an immutable context like:
+
+```java
+Bytes b = Bytes.ofImmutable(arr1);
+b = b.overwrite(arr3); // same as creating a new instance with Bytes.ofImmutable(arr3)
+```` 
+
+
+#########
+
 
 All transformers (if possible) reuse or overwrite the same internal memory
 to avoid unneeded array creation to minimize time and space complexity.

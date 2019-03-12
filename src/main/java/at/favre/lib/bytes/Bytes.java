@@ -112,7 +112,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return new instance
      */
     public static Bytes wrap(Bytes bytes) {
-        return wrap(bytes.internalArray(), bytes.byteOrder);
+        return wrap(bytes.internalArray(), bytes.byteHolder.getByteOrder());
     }
 
     /**
@@ -712,10 +712,10 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
 
     /* OBJECT ****************************************************************************************************/
 
-    private final byte[] byteArray;
-    private final ByteOrder byteOrder;
     private final BytesFactory factory;
     private transient int hashCodeCache;
+
+    private BytesHolder byteHolder;
 
     Bytes(byte[] byteArray, ByteOrder byteOrder) {
         this(byteArray, byteOrder, new Factory());
@@ -728,9 +728,8 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @param byteOrder the internal byte order - this is used to interpret given array, not to change it
      */
     Bytes(byte[] byteArray, ByteOrder byteOrder, BytesFactory factory) {
-        this.byteArray = byteArray;
-        this.byteOrder = byteOrder;
         this.factory = factory;
+        this.byteHolder = new BytesHolder.MutableBytesHolder(byteArray, byteOrder);
     }
 
     /* TRANSFORMER **********************************************************************************************/
@@ -1003,7 +1002,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return copied instance
      */
     public Bytes copy(int offset, int length) {
-        return factory.wrap(Util.Byte.copy(internalArray(), length, offset), byteOrder);
+        return factory.wrap(Util.Byte.copy(internalArray(), length, offset), byteHolder.getByteOrder());
     }
 
     /**
@@ -1183,7 +1182,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @see <a href="https://en.wikipedia.org/wiki/Endianness">Endianness</a>
      */
     public ByteOrder byteOrder() {
-        return byteOrder;
+        return byteHolder.getByteOrder();
     }
 
     /**
@@ -1454,7 +1453,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return new instance backed by the same data
      */
     public Bytes duplicate() {
-        return factory.wrap(array(), byteOrder);
+        return factory.wrap(array(), byteHolder.getByteOrder());
     }
 
     /**
@@ -1467,7 +1466,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @see <a href="https://en.wikipedia.org/wiki/Endianness">Endianness</a>
      */
     public Bytes byteOrder(ByteOrder byteOrder) {
-        if (byteOrder != this.byteOrder) {
+        if (byteOrder != this.byteHolder.getByteOrder()) {
             return wrap(internalArray(), byteOrder);
         }
         return this;
@@ -1483,7 +1482,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
         if (isReadOnly()) {
             return (ReadOnlyBytes) this;
         } else {
-            return new ReadOnlyBytes(internalArray(), byteOrder);
+            return new ReadOnlyBytes(internalArray(), byteHolder.getByteOrder());
         }
     }
 
@@ -1497,11 +1496,11 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @throws ReadOnlyBufferException if this is a read-only instance
      */
     public ByteBuffer buffer() {
-        return ByteBuffer.wrap(array()).order(byteOrder);
+        return ByteBuffer.wrap(array()).order(byteHolder.getByteOrder());
     }
 
     private ByteBuffer internalBuffer() {
-        return ByteBuffer.wrap(internalArray()).order(byteOrder);
+        return ByteBuffer.wrap(internalArray()).order(byteHolder.getByteOrder());
     }
 
     /**
@@ -1527,7 +1526,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
     }
 
     byte[] internalArray() {
-        return byteArray;
+        return byteHolder.get();
     }
 
     /* IN-PLACE-TRANSFORMER ******************************************************************************/
@@ -1848,7 +1847,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return byte-to-text representation
      */
     public String encode(BinaryToTextEncoding.Encoder encoder) {
-        return encoder.encode(internalArray(), byteOrder);
+        return encoder.encode(internalArray(), byteHolder.getByteOrder());
     }
 
     /* CONVERTERS WITHOUT REUSING THE INTERNAL ARRAY ****************************************************************/
@@ -1894,7 +1893,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return big integer
      */
     public BigInteger toBigInteger() {
-        if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+        if (byteHolder.getByteOrder() == ByteOrder.LITTLE_ENDIAN) {
             return new BigInteger(new BytesTransformer.ReverseTransformer().transform(internalArray(), false));
         } else {
             return new BigInteger(internalArray());
@@ -2007,7 +2006,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      */
     public int[] toIntArray() {
         Util.Validation.checkModLength(length(), 4, "creating an int array");
-        return Util.Converter.toIntArray(internalArray(), byteOrder);
+        return Util.Converter.toIntArray(internalArray(), byteHolder.getByteOrder());
     }
 
     /**
@@ -2041,7 +2040,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      */
     public long[] toLongArray() {
         Util.Validation.checkModLength(length(), 8, "creating an long array");
-        return Util.Converter.toLongArray(internalArray(), byteOrder);
+        return Util.Converter.toLongArray(internalArray(), byteHolder.getByteOrder());
     }
 
     /**
@@ -2088,7 +2087,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return char array
      */
     public char[] toCharArray(Charset charset) {
-        return Util.Converter.byteToCharArray(internalArray(), charset, byteOrder);
+        return Util.Converter.byteToCharArray(internalArray(), charset, byteHolder.getByteOrder());
     }
 
     /**
@@ -2123,8 +2122,8 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
 
         Bytes bytes = (Bytes) o;
 
-        if (!Arrays.equals(byteArray, bytes.byteArray)) return false;
-        return Objects.equals(byteOrder, bytes.byteOrder);
+        if (!Arrays.equals(byteHolder.get(), byteHolder.get())) return false;
+        return Objects.equals(byteHolder.getByteOrder(), bytes.byteHolder.getByteOrder());
     }
 
     /**
@@ -2170,7 +2169,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      * @return true if both array have same length and every byte element is the same
      */
     public boolean equals(ByteBuffer buffer) {
-        return buffer != null && byteOrder == buffer.order() && internalBuffer().equals(buffer);
+        return buffer != null && byteHolder.getByteOrder() == buffer.order() && internalBuffer().equals(buffer);
     }
 
     /**
