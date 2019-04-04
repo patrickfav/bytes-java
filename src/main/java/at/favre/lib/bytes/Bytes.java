@@ -663,6 +663,35 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * A new instance with pseudo random bytes using an unsecure random number generator.
+     * This may be used in e.g. tests. In production code use {@link #random(int)} per default.
+     * <p>
+     * <strong>ONLY USE IN NON-SECURITY RELEVANT CONTEXT!</strong>
+     *
+     * @param length desired array length
+     * @return random instance
+     */
+    public static Bytes unsecureRandom(int length) {
+        return random(length, new Random());
+    }
+
+    /**
+     * A new instance with pseudo random bytes using an unsecure random number generator.
+     * This may be used in e.g. tests to create predictable numbers.
+     * <p>
+     * In production code use {@link #random(int)} per default.
+     * <p>
+     * <strong>ONLY USE IN NON-SECURITY RELEVANT CONTEXT!</strong>
+     *
+     * @param length desired array length
+     * @param seed   used to seed random number generator - using same seed will generate same numbers
+     * @return random instance
+     */
+    public static Bytes unsecureRandom(int length, long seed) {
+        return random(length, new Random(seed));
+    }
+
+    /**
      * A new instance with random bytes.
      *
      * @param length desired array length
