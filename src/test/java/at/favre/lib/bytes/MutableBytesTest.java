@@ -64,6 +64,30 @@ public class MutableBytesTest extends ABytesTest {
     }
 
     @Test
+    public void overwriteBytes() {
+        MutableBytes a = fromAndTest(example_bytes_seven).mutable();
+        MutableBytes b = Bytes.from((byte)0).mutable();
+        MutableBytes c = a.overwrite(b, 0).mutable();
+        MutableBytes d = Bytes.wrap(a).copy(1, a.array().length-1).mutable();
+
+        assertArrayEquals(c.array(), Bytes.from(b).append(d).array());
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void overwriteTooBigArrayShouldThrowException() {
+        MutableBytes b = fromAndTest(example_bytes_seven).mutable();
+        b.overwrite(new byte[]{(byte) 0xAA, 0x30}, b.length() - 1);
+
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void overwriteNullArrayShouldThrowException() {
+        MutableBytes nonsense = null;
+        MutableBytes b = fromAndTest(example_bytes_seven).mutable();
+        b.overwrite(nonsense.array());
+    }
+
+    @Test
     public void fill() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         assertSame(b, b.fill((byte) 0));

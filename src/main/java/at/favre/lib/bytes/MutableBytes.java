@@ -75,6 +75,10 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
         return overwrite(newArray, 0);
     }
 
+    public MutableBytes overwrite(Bytes newArray) {
+        return overwrite(newArray, 0);
+    }
+
     /**
      * Uses given array to overwrite internal array.
      *
@@ -86,6 +90,12 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
     public MutableBytes overwrite(byte[] newArray, int offsetInternalArray) {
         Objects.requireNonNull(newArray, "must provide non-null array as source");
         System.arraycopy(newArray, 0, internalArray(), offsetInternalArray, newArray.length);
+        return this;
+    }
+
+    public MutableBytes overwrite(Bytes newBytes, int offsetInternalArray) {
+        Objects.requireNonNull(newBytes, "must provide non-null array as source");
+        System.arraycopy(newBytes.array(), 0, internalArray(), offsetInternalArray, newBytes.array().length);
         return this;
     }
 
