@@ -1,13 +1,9 @@
 # Releases
 
-## Unreleased
-
-* adds overwrite method to Bytes
-* adds tests to NullPointerException and IndexOutOfBoundsException
-
 ## v1.1.0
 
 * add `unsecureRandom()` constructor which creates random for e.g. tests or deterministic randoms
+* adds overwrite method to Bytes (thx @JadePaukkunen)
 
 ## v1.0.0
 
