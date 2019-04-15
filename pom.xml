@@ -7,7 +7,7 @@
     <groupId>at.favre.lib</groupId>
     <artifactId>bytes</artifactId>
     <version>1.1.0</version>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
 
     <name>Bytes Utility Library</name>
     <description>Bytes is a utility library that makes it easy to create, parse, transform, validate and convert byte
@@ -37,6 +37,12 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>4.2.0</version>
+                <extensions>true</extensions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>

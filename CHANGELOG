@@ -4,6 +4,7 @@
 
 * add `unsecureRandom()` constructor which creates random for e.g. tests or deterministic randoms
 * adds overwrite method to Bytes (thx @JadePaukkunen)
+* make project OSGi compatible #36
 
 ## v1.0.0
 
