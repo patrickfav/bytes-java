@@ -1,5 +1,10 @@
 # Releases
 
+## Unreleased
+
+* adds overwrite method to Bytes
+* adds tests to NullPointerException and IndexOutOfBoundsException
+
 ## v1.0.0
 
 * add `append()` method supporting multiple byte arrays #26

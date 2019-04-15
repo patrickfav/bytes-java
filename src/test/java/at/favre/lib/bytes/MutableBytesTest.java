@@ -73,19 +73,39 @@ public class MutableBytesTest extends ABytesTest {
         assertArrayEquals(c.array(), Bytes.from(b).append(d).array());
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void overwriteTooBigArrayShouldThrowException() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
-        b.overwrite(new byte[]{(byte) 0xAA, 0x30}, b.length() - 1);
+        try {
+            b.overwrite(new byte[]{(byte) 0xAA, 0x30}, b.length());
+            fail();
+        } catch(IndexOutOfBoundsException ignored) {}
 
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
+    public void overwriteTooBigBytesShouldThrowException() {
+        MutableBytes b = fromAndTest(example_bytes_seven).mutable();
+        System.out.println(b);
+        try {
+            b.overwrite(Bytes.from((byte) 0xAA, 0x30), b.length());
+            fail();
+        } catch(IndexOutOfBoundsException ignored) {}
+
+    }
+
+    @Test
     public void overwriteNullArrayShouldThrowException() {
         MutableBytes nonsense = null;
-        MutableBytes b = fromAndTest(example_bytes_seven).mutable();
-        b.overwrite(nonsense.array());
+        try{
+            MutableBytes b = fromAndTest(example_bytes_seven).mutable();
+            b.overwrite(nonsense);
+            fail();
+        } catch (NullPointerException ignored){}
+
+
     }
+
 
     @Test
     public void fill() {
@@ -208,4 +228,5 @@ public class MutableBytesTest extends ABytesTest {
         assertArrayNotEquals(new byte[16], leak.array());
 
     }
+
 }
