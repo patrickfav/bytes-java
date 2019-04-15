@@ -155,4 +155,42 @@ public class UtilConverterTest extends AUtilTest {
         assertArrayEquals(new long[0], Util.Converter.toLongArray(new byte[0], ByteOrder.LITTLE_ENDIAN));
         assertArrayEquals(new long[0], Util.Converter.toLongArray(new byte[0], ByteOrder.BIG_ENDIAN));
     }
+
+    @Test
+    public void testToFloatArray() {
+        assertArrayEquals(new float[]{1.4E-45f}, Util.Converter.toFloatArray(new byte[]{0, 0, 0, 1}, ByteOrder.BIG_ENDIAN), 0.01f);
+        assertArrayEquals(new float[]{3.6E-43f}, Util.Converter.toFloatArray(new byte[]{0, 0, 1, 1}, ByteOrder.BIG_ENDIAN), 0.01f);
+
+        assertArrayEquals(new float[]{1.4E-45f}, Util.Converter.toFloatArray(new byte[]{1, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN), 0.01f);
+        assertArrayEquals(new float[]{3.6E-43f}, Util.Converter.toFloatArray(new byte[]{1, 1, 0, 0}, ByteOrder.LITTLE_ENDIAN), 0.01f);
+
+        assertArrayEquals(new float[]{2.3694278E-38f}, Util.Converter.toFloatArray(new byte[]{1, 1, 1, 1}, ByteOrder.BIG_ENDIAN), 0.01f);
+        assertArrayEquals(new float[]{1.897368E-18f}, Util.Converter.toFloatArray(new byte[]{34, 12, 0, 69}, ByteOrder.BIG_ENDIAN), 0.01f);
+        assertArrayEquals(new float[]{1.22888184E8f}, Util.Converter.toFloatArray(new byte[]{76, (byte) 234, 99, (byte) 255}, ByteOrder.BIG_ENDIAN), 0.01f);
+        assertArrayEquals(new float[]{3.6E-43f, 9.2196E-41f, 1.4E-45f}, Util.Converter.toFloatArray(new byte[]{0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1}, ByteOrder.BIG_ENDIAN), 0.01f);
+
+        assertArrayEquals(new float[]{1.22888184E8f}, Util.Converter.toFloatArray(new byte[]{(byte) 255, 99, (byte) 234, 76}, ByteOrder.LITTLE_ENDIAN), 0.01f);
+        assertArrayEquals(new float[]{3.6E-43f, 9.2196E-41f, 1.4E-45f}, Util.Converter.toFloatArray(new byte[]{1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN), 0.01f);
+
+        assertArrayEquals(new float[0], Util.Converter.toFloatArray(new byte[0], ByteOrder.LITTLE_ENDIAN), 0.01f);
+        assertArrayEquals(new float[0], Util.Converter.toFloatArray(new byte[0], ByteOrder.BIG_ENDIAN), 0.01f);
+    }
+
+    @Test
+    public void testToDoubleArray() {
+        assertArrayEquals(new double[]{1.4E-45}, Util.Converter.toDoubleArray(new byte[]{0, 0, 0, 0, 0, 0, 0, 1}, ByteOrder.BIG_ENDIAN), 0.01);
+        assertArrayEquals(new double[]{3.6E-43}, Util.Converter.toDoubleArray(new byte[]{0, 0, 0, 0, 0, 0, 1, 1}, ByteOrder.BIG_ENDIAN), 0.01);
+
+        assertArrayEquals(new double[]{1.4E-45}, Util.Converter.toDoubleArray(new byte[]{1, 0, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN), 0.01);
+        assertArrayEquals(new double[]{3.6E-43}, Util.Converter.toDoubleArray(new byte[]{1, 1, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN), 0.01);
+
+        assertArrayEquals(new double[]{-2.385279556059394E-168}, Util.Converter.toDoubleArray(new byte[]{(byte) 157, 34, 1, 0, 76, (byte) 234, 99, (byte) 255}, ByteOrder.BIG_ENDIAN), 0.01);
+        assertArrayEquals(new double[]{-2.385279556059394E-168}, Util.Converter.toDoubleArray(new byte[]{(byte) 255, 99, (byte) 234, 76, 0, 1, 34, (byte) 157}, ByteOrder.LITTLE_ENDIAN), 0.01);
+
+        assertArrayEquals(new double[]{1.27E-321, 4.9E-324}, Util.Converter.toDoubleArray(new byte[]{0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1}, ByteOrder.BIG_ENDIAN), 0.01);
+        assertArrayEquals(new double[]{1.27E-321, 4.9E-324}, Util.Converter.toDoubleArray(new byte[]{1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN), 0.01);
+
+        assertArrayEquals(new double[0], Util.Converter.toDoubleArray(new byte[0], ByteOrder.LITTLE_ENDIAN), 0.01);
+        assertArrayEquals(new double[0], Util.Converter.toDoubleArray(new byte[0], ByteOrder.BIG_ENDIAN), 0.01);
+    }
 }

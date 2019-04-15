@@ -720,6 +720,60 @@ final class Util {
         }
 
         /**
+         * Converts the byte array to an float array. This will spread 4 bytes into a single float:
+         *
+         * <pre>
+         *     [b1, b2, b3, b4] = [float1]
+         * </pre>
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
+         * @param bytes     to convert to float array, must be % 4 == 0 to work correctly
+         * @param byteOrder of the byte array
+         * @return float array
+         */
+        static float[] toFloatArray(byte[] bytes, ByteOrder byteOrder) {
+            FloatBuffer buffer = ByteBuffer.wrap(bytes).order(byteOrder).asFloatBuffer();
+            float[] array = new float[buffer.remaining()];
+            buffer.get(array);
+            return array;
+        }
+
+        /**
+         * Converts the byte array to an double array. This will spread 8 bytes into a single double:
+         *
+         * <pre>
+         *     [b1, b2, b3, b4, b5, b6, b7, b8] = [double1]
+         * </pre>
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
+         * @param bytes     to convert to double array, must be % 8 == 0 to work correctly
+         * @param byteOrder of the byte array
+         * @return double array
+         */
+        static double[] toDoubleArray(byte[] bytes, ByteOrder byteOrder) {
+            DoubleBuffer buffer = ByteBuffer.wrap(bytes).order(byteOrder).asDoubleBuffer();
+            double[] array = new double[buffer.remaining()];
+            buffer.get(array);
+            return array;
+        }
+
+        /**
          * Convert UUID to a newly generated 16 byte long array representation. Puts the 8 byte most significant bits and
          * 8 byte least significant bits into an byte array.
          *

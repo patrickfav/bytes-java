@@ -5,6 +5,8 @@
 * add `unsecureRandom()` constructor which creates random for e.g. tests or deterministic randoms
 * adds overwrite method to Bytes (thx @JadePaukkunen)
 * make project OSGi compatible #36
+* add `toFloatArray()` converter #30
+* add `toDoubleArray()` converter #30
 
 ## v1.0.0
 
