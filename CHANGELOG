@@ -1,5 +1,7 @@
 # Releases
 
+## v1.2.0
+
 ## v1.1.0
 
 * add `unsecureRandom()` constructor which creates random for e.g. tests or deterministic randoms
