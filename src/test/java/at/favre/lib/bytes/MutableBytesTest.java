@@ -86,7 +86,6 @@ public class MutableBytesTest extends ABytesTest {
     @Test
     public void overwriteTooBigBytesShouldThrowException() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
-        System.out.println(b);
         try {
             b.overwrite(Bytes.from((byte) 0xAA, 0x30), b.length());
             fail();
@@ -97,8 +96,9 @@ public class MutableBytesTest extends ABytesTest {
     @Test
     public void overwriteNullArrayShouldThrowException() {
         MutableBytes nonsense = null;
+        MutableBytes b = fromAndTest(example_bytes_seven).mutable();
+
         try{
-            MutableBytes b = fromAndTest(example_bytes_seven).mutable();
             b.overwrite(nonsense);
             fail();
         } catch (NullPointerException ignored){}

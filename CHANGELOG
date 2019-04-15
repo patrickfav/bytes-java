@@ -5,6 +5,10 @@
 * adds overwrite method to Bytes
 * adds tests to NullPointerException and IndexOutOfBoundsException
 
+## v1.1.0
+
+* add `unsecureRandom()` constructor which creates random for e.g. tests or deterministic randoms
+
 ## v1.0.0
 
 * add `append()` method supporting multiple byte arrays #26

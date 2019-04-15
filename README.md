@@ -145,10 +145,16 @@ Bytes.allocate(4, (byte) 1); //fill with 0x01
 Bytes.empty(); //creates zero length byte array
 ```
 
-Creating **random** byte arrays for e.g. testing:
+Creating cryptographically secure **random** byte arrays:
 
 ```java
 Bytes.random(12);
+```
+
+Creating cryptographically unsecure **random** byte arrays for e.g. testing:
+
+```java
+Bytes.unsecureRandom(12, 12345L); // using seed makes it deterministic
 ```
 
 Reading byte content of encoded `String`s:
