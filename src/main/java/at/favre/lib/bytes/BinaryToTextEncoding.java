@@ -104,27 +104,39 @@ public interface BinaryToTextEncoding {
 
         @Override
         public byte[] decode(CharSequence hexString) {
-            if (Objects.requireNonNull(hexString, "hex input must not be null").length() % 2 != 0)
-                throw new IllegalArgumentException("invalid hex string, must be mod 2 == 0");
 
             int start;
-            if (hexString.length() > 2 &&
+            if (Objects.requireNonNull(hexString).length() > 2 &&
                     hexString.charAt(0) == '0' && hexString.charAt(1) == 'x') {
                 start = 2;
             } else {
                 start = 0;
             }
 
+
             int len = hexString.length();
+            boolean isOddLength = len % 2 != 0;
+            if (isOddLength) {
+                start--;
+            }
+
             byte[] data = new byte[(len - start) / 2];
             int first4Bits;
             int second4Bits;
             for (int i = start; i < len; i += 2) {
-                first4Bits = Character.digit(hexString.charAt(i), 16);
+                if (i == start && isOddLength) {
+                    first4Bits = 0;
+                } else {
+                    first4Bits = Character.digit(hexString.charAt(i), 16);
+                }
                 second4Bits = Character.digit(hexString.charAt(i + 1), 16);
 
                 if (first4Bits == -1 || second4Bits == -1) {
-                    throw new IllegalArgumentException("'" + hexString.charAt(i) + hexString.charAt(i + 1) + "' at index " + i + " is not hex formatted");
+                    if (i == start && isOddLength) {
+                        throw new IllegalArgumentException("'" + hexString.charAt(i + 1) + "' at index " + (i + 1) + " is not hex formatted");
+                    } else {
+                        throw new IllegalArgumentException("'" + hexString.charAt(i) + hexString.charAt(i + 1) + "' at index " + i + " is not hex formatted");
+                    }
                 }
 
                 data[(i - start) / 2] = (byte) ((first4Bits << 4) + second4Bits);

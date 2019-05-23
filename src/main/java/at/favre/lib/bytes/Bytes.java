@@ -593,11 +593,17 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Parsing of base16/HEX encoded byte arrays. Will accept upper- and lowercase variant and ignores
-     * possible "0x" prefix.
+     * Parsing of base16/HEX encoded byte arrays. This is by design a very flexible decoder accepting the following cases:
+     *
+     * <ul>
+     *     <li>Upper- and lowercase <code>a-f</code> (also mixed case)</li>
+     *     <li>Prefix with <code>0x</code> which will be ignored</li>
+     *     <li>Even and odd number of string length with auto zero padding (ie. 'E3F' is same as '0E3F')</li>
+     * </ul>
      *
      * @param hexString the encoded string
      * @return decoded instance
+     * @throws IllegalArgumentException if string contains something else than [0-9a-fA-F]
      */
     public static Bytes parseHex(CharSequence hexString) {
         return parse(hexString, new BinaryToTextEncoding.Hex());
