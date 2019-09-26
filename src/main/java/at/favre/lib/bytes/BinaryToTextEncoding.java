@@ -72,6 +72,8 @@ public interface BinaryToTextEncoding {
      * Hex or Base16
      */
     class Hex implements EncoderDecoder {
+        private static final char[] LOOKUP_TABLE_LOWER = new char[]{0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66};
+        private static final char[] LOOKUP_TABLE_UPPER = new char[]{0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46};
         private final boolean upperCase;
 
         public Hex() {
@@ -84,22 +86,18 @@ public interface BinaryToTextEncoding {
 
         @Override
         public String encode(byte[] byteArray, ByteOrder byteOrder) {
-            StringBuilder sb = new StringBuilder(byteArray.length * 2);
+
+            final char[] buffer = new char[byteArray.length * 2];
+            final char[] lookup = upperCase ? LOOKUP_TABLE_UPPER : LOOKUP_TABLE_LOWER;
 
             int index;
-            char first4Bit;
-            char last4Bit;
             for (int i = 0; i < byteArray.length; i++) {
                 index = (byteOrder == ByteOrder.BIG_ENDIAN) ? i : byteArray.length - i - 1;
-                first4Bit = Character.forDigit((byteArray[index] >> 4) & 0xF, 16);
-                last4Bit = Character.forDigit((byteArray[index] & 0xF), 16);
-                if (upperCase) {
-                    first4Bit = Character.toUpperCase(first4Bit);
-                    last4Bit = Character.toUpperCase(last4Bit);
-                }
-                sb.append(first4Bit).append(last4Bit);
+
+                buffer[i << 1] = lookup[(byteArray[index] >> 4) & 0xF];
+                buffer[(i << 1) + 1] = lookup[(byteArray[index] & 0xF)];
             }
-            return sb.toString();
+            return new String(buffer);
         }
 
         @Override
