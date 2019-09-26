@@ -1,9 +1,11 @@
 # Releases
 
+## v1.3.0
+* improve hex encoder performance by factor 5
+
 ## v1.2.0
 
 * let hex decoder accept odd length string #37
-* improve hex encoder performance by factor 5
 
 ## v1.1.0
 
