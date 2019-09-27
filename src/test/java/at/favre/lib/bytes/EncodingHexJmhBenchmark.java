@@ -53,10 +53,44 @@ import java.util.concurrent.TimeUnit;
  * EncodingHexJmhBenchmark.encodeStackOverflowCode           512  thrpt    4    917914,259 ±  122729,496  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode       1000000  thrpt    4       471,778 ±     126,385  ops/s
  */
+
+/**
+ * Benchmark                                         (byteLength)   Mode  Cnt         Score   Error  Units
+ * EncodingHexJmhBenchmark.encodeBigInteger                     4  thrpt    2   9571230,509          ops/s
+ * EncodingHexJmhBenchmark.encodeBigInteger                     8  thrpt    2   3724335,328          ops/s
+ * EncodingHexJmhBenchmark.encodeBigInteger                    16  thrpt    2   1454898,799          ops/s
+ * EncodingHexJmhBenchmark.encodeBigInteger                   128  thrpt    2    135397,758          ops/s
+ * EncodingHexJmhBenchmark.encodeBigInteger                   512  thrpt    2     26011,356          ops/s
+ * EncodingHexJmhBenchmark.encodeBigInteger               1000000  thrpt    2         4,163          ops/s
+ * EncodingHexJmhBenchmark.encodeBytesLib                       4  thrpt    2  24530310,446          ops/s
+ * EncodingHexJmhBenchmark.encodeBytesLib                       8  thrpt    2  23430124,448          ops/s
+ * EncodingHexJmhBenchmark.encodeBytesLib                      16  thrpt    2  20531301,587          ops/s
+ * EncodingHexJmhBenchmark.encodeBytesLib                     128  thrpt    2   6733027,370          ops/s
+ * EncodingHexJmhBenchmark.encodeBytesLib                     512  thrpt    2   1606857,133          ops/s
+ * EncodingHexJmhBenchmark.encodeBytesLib                 1000000  thrpt    2       772,010          ops/s
+ * EncodingHexJmhBenchmark.encodeOldBytesLib                    4  thrpt    2  18639952,166          ops/s
+ * EncodingHexJmhBenchmark.encodeOldBytesLib                    8  thrpt    2  15485869,934          ops/s
+ * EncodingHexJmhBenchmark.encodeOldBytesLib                   16  thrpt    2  11458232,999          ops/s
+ * EncodingHexJmhBenchmark.encodeOldBytesLib                  128  thrpt    2   2042399,306          ops/s
+ * EncodingHexJmhBenchmark.encodeOldBytesLib                  512  thrpt    2    280376,308          ops/s
+ * EncodingHexJmhBenchmark.encodeOldBytesLib              1000000  thrpt    2       122,003          ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode1             4  thrpt    2  24755066,357          ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode1             8  thrpt    2  23455073,140          ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode1            16  thrpt    2  20548280,011          ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode1           128  thrpt    2   6675118,357          ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode1           512  thrpt    2   1618356,891          ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode1       1000000  thrpt    2       829,757          ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode2             4  thrpt    2  25323515,857          ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode2             8  thrpt    2  24027424,805          ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode2            16  thrpt    2  21262668,356          ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode2           128  thrpt    2   7492036,913          ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode2           512  thrpt    2   1789353,825          ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode2       1000000  thrpt    2       935,383          ops/s
+ */
 @State(Scope.Thread)
 @Fork(1)
-@Warmup(iterations = 2, time = 2)
-@Measurement(iterations = 4, time = 5)
+@Warmup(iterations = 1, time = 2)
+@Measurement(iterations = 2, time = 5)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 public class EncodingHexJmhBenchmark {
@@ -69,6 +103,7 @@ public class EncodingHexJmhBenchmark {
     private BinaryToTextEncoding.EncoderDecoder option2;
     private BinaryToTextEncoding.EncoderDecoder option3;
     private BinaryToTextEncoding.EncoderDecoder option4;
+    private BinaryToTextEncoding.EncoderDecoder option5;
     private Random random;
 
     @Setup(Level.Trial)
@@ -79,6 +114,7 @@ public class EncodingHexJmhBenchmark {
         option2 = new BinaryToTextEncoding.Hex(true);
         option3 = new BigIntegerHexEncoder();
         option4 = new OldBytesImplementation();
+        option5 = new StackOverflowAnswer2Encoder();
 
         rndMap = new HashMap<>();
         int[] lengths = new int[]{4, 8, 16, 128, 512, 1000000};
@@ -91,26 +127,30 @@ public class EncodingHexJmhBenchmark {
         }
     }
 
-    @Benchmark
-    public String encodeStackOverflowCode() {
+    //    @Benchmark
+    public String encodeStackOverflowCode1() {
         return encodeDecode(option1);
     }
 
-    @Benchmark
+    //    @Benchmark
     public String encodeBytesLib() {
         return encodeDecode(option2);
     }
 
-    @Benchmark
+    //    @Benchmark
     public String encodeBigInteger() {
         return encodeDecode(option3);
     }
 
-    @Benchmark
+    //    @Benchmark
     public String encodeOldBytesLib() {
         return encodeDecode(option4);
     }
 
+    @Benchmark
+    public String encodeStackOverflowCode2() {
+        return encodeDecode(option5);
+    }
 
     private String encodeDecode(BinaryToTextEncoding.EncoderDecoder encoder) {
         Bytes[] bytes = rndMap.get(byteLength);
@@ -133,6 +173,51 @@ public class EncodingHexJmhBenchmark {
                 hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
             }
             return new String(hexChars);
+        }
+
+        @Override
+        public byte[] decode(CharSequence encoded) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    /**
+     * With full lookup table of all 256 values
+     * See: https://stackoverflow.com/a/21429909/774398
+     */
+    static final class StackOverflowAnswer2Encoder implements BinaryToTextEncoding.EncoderDecoder {
+
+        private static final char[] BYTE2HEX = (
+                "000102030405060708090A0B0C0D0E0F" +
+                        "101112131415161718191A1B1C1D1E1F" +
+                        "202122232425262728292A2B2C2D2E2F" +
+                        "303132333435363738393A3B3C3D3E3F" +
+                        "404142434445464748494A4B4C4D4E4F" +
+                        "505152535455565758595A5B5C5D5E5F" +
+                        "606162636465666768696A6B6C6D6E6F" +
+                        "707172737475767778797A7B7C7D7E7F" +
+                        "808182838485868788898A8B8C8D8E8F" +
+                        "909192939495969798999A9B9C9D9E9F" +
+                        "A0A1A2A3A4A5A6A7A8A9AAABACADAEAF" +
+                        "B0B1B2B3B4B5B6B7B8B9BABBBCBDBEBF" +
+                        "C0C1C2C3C4C5C6C7C8C9CACBCCCDCECF" +
+                        "D0D1D2D3D4D5D6D7D8D9DADBDCDDDEDF" +
+                        "E0E1E2E3E4E5E6E7E8E9EAEBECEDEEEF" +
+                        "F0F1F2F3F4F5F6F7F8F9FAFBFCFDFEFF").toCharArray();
+
+        @Override
+        public String encode(byte[] bytes, ByteOrder byteOrder) {
+            final int len = bytes.length;
+            final char[] chars = new char[len << 1];
+            int hexIndex;
+            int idx = 0;
+            int ofs = 0;
+            while (ofs < len) {
+                hexIndex = (bytes[ofs++] & 0xFF) << 1;
+                chars[idx++] = BYTE2HEX[hexIndex++];
+                chars[idx++] = BYTE2HEX[hexIndex];
+            }
+            return new String(chars);
         }
 
         @Override
