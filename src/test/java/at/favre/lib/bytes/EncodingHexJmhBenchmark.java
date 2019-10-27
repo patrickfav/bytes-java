@@ -45,51 +45,70 @@ import java.util.concurrent.TimeUnit;
  * EncodingHexJmhBenchmark.encodeBigInteger                     4  thrpt    3   9427359,108 ±   194693,624  ops/s
  * EncodingHexJmhBenchmark.encodeBigInteger                     8  thrpt    3   2638943,318 ±    15520,030  ops/s
  * EncodingHexJmhBenchmark.encodeBigInteger                    16  thrpt    3   2088514,337 ±    50090,292  ops/s
+ * EncodingHexJmhBenchmark.encodeBigInteger                    32  thrpt    3   1002560,730 ±    11096,621  ops/s
  * EncodingHexJmhBenchmark.encodeBigInteger                   128  thrpt    3    133665,420 ±     5750,982  ops/s
  * EncodingHexJmhBenchmark.encodeBigInteger                   512  thrpt    3     25807,764 ±      407,273  ops/s
  * EncodingHexJmhBenchmark.encodeBigInteger               1000000  thrpt    3         4,178 ±        0,021  ops/s
  * EncodingHexJmhBenchmark.encodeBouncyCastleHex                4  thrpt    3  14260598,238 ±  4113483,586  ops/s
  * EncodingHexJmhBenchmark.encodeBouncyCastleHex                8  thrpt    3  10910660,517 ±    51077,989  ops/s
  * EncodingHexJmhBenchmark.encodeBouncyCastleHex               16  thrpt    3   7501666,934 ±   938571,073  ops/s
+ * EncodingHexJmhBenchmark.encodeBouncyCastleHex               32  thrpt    3   3657718,637 ±   214574,329  ops/s
  * EncodingHexJmhBenchmark.encodeBouncyCastleHex              128  thrpt    3   1077236,523 ±    78734,473  ops/s
  * EncodingHexJmhBenchmark.encodeBouncyCastleHex              512  thrpt    3    266238,359 ±     2544,657  ops/s
  * EncodingHexJmhBenchmark.encodeBouncyCastleHex          1000000  thrpt    3       152,235 ±        8,156  ops/s
  * EncodingHexJmhBenchmark.encodeBytesLib                       4  thrpt    3  24944896,332 ±  2367456,841  ops/s
  * EncodingHexJmhBenchmark.encodeBytesLib                       8  thrpt    3  23222999,376 ±   396218,748  ops/s
  * EncodingHexJmhBenchmark.encodeBytesLib                      16  thrpt    3  20423170,033 ±   194747,311  ops/s
+ * EncodingHexJmhBenchmark.encodeBytesLib                      32  thrpt    3  15723370,706 ±   148740,280  ops/s
  * EncodingHexJmhBenchmark.encodeBytesLib                     128  thrpt    3   6685522,295 ±   920540,781  ops/s
  * EncodingHexJmhBenchmark.encodeBytesLib                     512  thrpt    3   1612325,148 ±    18002,919  ops/s
  * EncodingHexJmhBenchmark.encodeBytesLib                 1000000  thrpt    3       825,527 ±      124,972  ops/s
  * EncodingHexJmhBenchmark.encodeOldBytesLib                    4  thrpt    3  17973467,504 ±   429817,214  ops/s
  * EncodingHexJmhBenchmark.encodeOldBytesLib                    8  thrpt    3  14836039,023 ± 16437596,584  ops/s
  * EncodingHexJmhBenchmark.encodeOldBytesLib                   16  thrpt    3  11727630,076 ±  1849815,074  ops/s
+ * EncodingHexJmhBenchmark.encodeOldBytesLib                   32  thrpt    3   7440067,345 ± 10968063,752  ops/s
  * EncodingHexJmhBenchmark.encodeOldBytesLib                  128  thrpt    3   2656731,985 ±    53887,109  ops/s
  * EncodingHexJmhBenchmark.encodeOldBytesLib                  512  thrpt    3    288949,898 ±     7650,867  ops/s
  * EncodingHexJmhBenchmark.encodeOldBytesLib              1000000  thrpt    3       127,737 ±        3,982  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode1             4  thrpt    3  24557504,065 ±   797466,455  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode1             8  thrpt    3  23515327,490 ±   979922,009  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode1            16  thrpt    3  20377272,084 ±   480955,369  ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode1            32  thrpt    3  16273674,820 ±   745874,444  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode1           128  thrpt    3   6767893,154 ±   511154,141  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode1           512  thrpt    3   1573543,465 ±  1126382,628  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode1       1000000  thrpt    3       833,885 ±       54,099  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode2             4  thrpt    3  25220997,342 ±   852230,094  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode2             8  thrpt    3  24152600,074 ±   480651,708  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode2            16  thrpt    3  21494551,701 ±  1722250,353  ops/s
+ * EncodingHexJmhBenchmark.encodeStackOverflowCode2            32  thrpt    3  17283936,474 ±   134694,570  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode2           128  thrpt    3   7554272,476 ±  1329386,082  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode2           512  thrpt    3   1781989,859 ±   125696,811  ops/s
  * EncodingHexJmhBenchmark.encodeStackOverflowCode2       1000000  thrpt    3       935,685 ±      103,571  ops/s
  * EncodingHexJmhBenchmark.encodeGuavaBase16                    4  thrpt    3  17606767,347 ± 3615884,433  ops/s
  * EncodingHexJmhBenchmark.encodeGuavaBase16                    8  thrpt    3  14077449,253 ± 3570354,199  ops/s
  * EncodingHexJmhBenchmark.encodeGuavaBase16                   16  thrpt    3  10177925,910 ± 5584265,227  ops/s
+ * EncodingHexJmhBenchmark.encodeGuavaBase16                   32  thrpt    3   6270140,774 ±    96756,395  ops/s
  * EncodingHexJmhBenchmark.encodeGuavaBase16                  128  thrpt    3   2094658,415 ± 2321008,783  ops/s
  * EncodingHexJmhBenchmark.encodeGuavaBase16                  512  thrpt    3    514528,610 ±   20419,732  ops/s
  * EncodingHexJmhBenchmark.encodeGuavaBase16              1000000  thrpt    3       257,440 ±      23,100  ops/s
  * EncodingHexJmhBenchmark.encodeSpringSecurity                 4  thrpt    3  25269684,873 ± 1820484,918  ops/s
  * EncodingHexJmhBenchmark.encodeSpringSecurity                 8  thrpt    3  22631565,512 ±  291386,502  ops/s
  * EncodingHexJmhBenchmark.encodeSpringSecurity                16  thrpt    3  18704986,566 ±  604936,041  ops/s
+ * EncodingHexJmhBenchmark.encodeSpringSecurity                32  thrpt    3  13345680,362 ±    59610,208  ops/s
  * EncodingHexJmhBenchmark.encodeSpringSecurity               128  thrpt    3   4904805,240 ±   18454,315  ops/s
  * EncodingHexJmhBenchmark.encodeSpringSecurity               512  thrpt    3   1165535,921 ±   13487,051  ops/s
  * EncodingHexJmhBenchmark.encodeSpringSecurity           1000000  thrpt    3       601,152 ±     248,099  ops/s
+ * EncodingHexJmhBenchmark.encodeApacheCommons                  4  thrpt    3  24942725,562 ± 4311405,167  ops/s
+ * EncodingHexJmhBenchmark.encodeApacheCommons                  8  thrpt    3  21908225,962 ±  488932,267  ops/s
+ * EncodingHexJmhBenchmark.encodeApacheCommons                 16  thrpt    3  17503857,494 ±   37335,212  ops/s
+ * EncodingHexJmhBenchmark.encodeApacheCommons                 32  thrpt    3  12378489,920 ±   541212,742  ops/s
+ * EncodingHexJmhBenchmark.encodeApacheCommons                128  thrpt    3   4319898,906 ±   15591,318  ops/s
+ * EncodingHexJmhBenchmark.encodeApacheCommons                512  thrpt    3   1034983,537 ±    8517,121  ops/s
+ * EncodingHexJmhBenchmark.encodeApacheCommons            1000000  thrpt    3       529,885 ±     223,283  ops/s
+ * EncodingHexJmhBenchmark.encodeJaxBDataTypeConverter         16  thrpt    3  13497736,529 ± 871841,900  ops/s
+ * EncodingHexJmhBenchmark.encodeJaxBDataTypeConverter         32  thrpt    3   8312834,453 ± 196657,729  ops/s
+ * EncodingHexJmhBenchmark.encodeJaxBDataTypeConverter        128  thrpt    3   2590940,123 ±  50999,492  ops/s
+ * EncodingHexJmhBenchmark.encodeJaxBDataTypeConverter    1000000  thrpt    3       346,074 ±     29,339  ops/s
  */
 
 @State(Scope.Thread)
@@ -100,7 +119,7 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.SECONDS)
 public class EncodingHexJmhBenchmark {
 
-    @Param({"4", "8", "16", "128", "512", "1000000"})
+    @Param({"4", "8", "16", "32", "128", "512", "1000000"})
     private int byteLength;
     private Map<Integer, Bytes[]> rndMap;
 
@@ -112,6 +131,8 @@ public class EncodingHexJmhBenchmark {
     private BinaryToTextEncoding.EncoderDecoder option6;
     private BinaryToTextEncoding.EncoderDecoder option7;
     private BinaryToTextEncoding.EncoderDecoder option8;
+    private BinaryToTextEncoding.EncoderDecoder option9;
+    private BinaryToTextEncoding.EncoderDecoder option10;
     private Random random;
 
     @Setup(Level.Trial)
@@ -126,9 +147,11 @@ public class EncodingHexJmhBenchmark {
 //        option6 = new BCUtilEncoder();
 //        option7 = new GuavaEncoder();
 //        option8 = new SpringSecurityEncoder();
+//        option9 = new ApacheCommonsHex();
+//        option10 = new JaxBDataTypeHex();
 
         rndMap = new HashMap<>();
-        int[] lengths = new int[]{4, 8, 16, 128, 512, 1000000};
+        int[] lengths = new int[]{4, 8, 16, 32, 128, 512, 1000000};
         for (int length : lengths) {
             int count = 10;
             rndMap.put(length, new Bytes[count]);
@@ -138,31 +161,31 @@ public class EncodingHexJmhBenchmark {
         }
     }
 
-    //    @Benchmark
-    public String encodeStackOverflowCode1() {
-        return encodeDecode(option1);
-    }
-
-    @Benchmark
-    public String encodeBytesLib() {
-        return encodeDecode(option2);
-    }
-
-    //    @Benchmark
-    public String encodeBigInteger() {
-        return encodeDecode(option3);
-    }
-
-    //    @Benchmark
-    public String encodeOldBytesLib() {
-        return encodeDecode(option4);
-    }
-
-    //    @Benchmark
-    public String encodeStackOverflowCode2() {
-        return encodeDecode(option5);
-    }
-
+//    @Benchmark
+//    public String encodeStackOverflowCode1() {
+//        return encodeDecode(option1);
+//    }
+//
+//    @Benchmark
+//    public String encodeBytesLib() {
+//        return encodeDecode(option2);
+//    }
+//
+//    @Benchmark
+//    public String encodeBigInteger() {
+//        return encodeDecode(option3);
+//    }
+//
+//    @Benchmark
+//    public String encodeOldBytesLib() {
+//        return encodeDecode(option4);
+//    }
+//
+//    @Benchmark
+//    public String encodeStackOverflowCode2() {
+//        return encodeDecode(option5);
+//    }
+//
 //    @Benchmark
 //    public String encodeBouncyCastleHex() {
 //        return encodeDecode(option6);
@@ -177,6 +200,16 @@ public class EncodingHexJmhBenchmark {
 //    public String encodeSpringSecurity() {
 //        return encodeDecode(option8);
 //    }
+//
+//    @Benchmark
+//    public String encodeApacheCommons() {
+//        return encodeDecode(option9);
+//    }
+
+    @Benchmark
+    public String encodeJaxBDataTypeConverter() {
+        return encodeDecode(option10);
+    }
 
     private String encodeDecode(BinaryToTextEncoding.EncoderDecoder encoder) {
         Bytes[] bytes = rndMap.get(byteLength);
@@ -288,11 +321,14 @@ public class EncodingHexJmhBenchmark {
         }
     }
 
+
+
     /*
      * Requires dependencies:
      *
      *
-     * <dependency>
+     *
+        <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
             <version>1.60</version>
@@ -312,8 +348,34 @@ public class EncodingHexJmhBenchmark {
             <version>5.2.0.RELEASE</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.13</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+        </dependency>
      */
 
+//    static final class ApacheCommonsHex implements BinaryToTextEncoding.EncoderDecoder {
+//        @Override
+//        public String encode(byte[] array, ByteOrder byteOrder) {
+//            return org.apache.commons.codec.binary.Hex.encodeHexString(array);
+//        }
+//
+//        @Override
+//        public byte[] decode(CharSequence encoded) {
+//            try {
+//                return Hex.decodeHex(encoded.toString());
+//            } catch (DecoderException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
+//
 //    static final class BCUtilEncoder implements BinaryToTextEncoding.EncoderDecoder {
 //        @Override
 //        public String encode(byte[] array, ByteOrder byteOrder) {
@@ -347,6 +409,18 @@ public class EncodingHexJmhBenchmark {
 //        @Override
 //        public byte[] decode(CharSequence encoded) {
 //            return org.springframework.security.crypto.codec.Hex.decode(encoded);
+//        }
+//    }
+//
+//    static final class JaxBDataTypeHex implements BinaryToTextEncoding.EncoderDecoder {
+//        @Override
+//        public String encode(byte[] array, ByteOrder byteOrder) {
+//            return javax.xml.bind.DatatypeConverter.printHexBinary(array);
+//        }
+//
+//        @Override
+//        public byte[] decode(CharSequence encoded) {
+//            return javax.xml.bind.DatatypeConverter.parseHexBinary(encoded.toString());
 //        }
 //    }
 }
