@@ -128,11 +128,6 @@ public class EncodingHexJmhBenchmark {
     private BinaryToTextEncoding.EncoderDecoder option3;
     private BinaryToTextEncoding.EncoderDecoder option4;
     private BinaryToTextEncoding.EncoderDecoder option5;
-    private BinaryToTextEncoding.EncoderDecoder option6;
-    private BinaryToTextEncoding.EncoderDecoder option7;
-    private BinaryToTextEncoding.EncoderDecoder option8;
-    private BinaryToTextEncoding.EncoderDecoder option9;
-    private BinaryToTextEncoding.EncoderDecoder option10;
     private Random random;
 
     @Setup(Level.Trial)
@@ -144,11 +139,6 @@ public class EncodingHexJmhBenchmark {
         option3 = new BigIntegerHexEncoder();
         option4 = new OldBytesImplementation();
         option5 = new StackOverflowAnswer2Encoder();
-//        option6 = new BCUtilEncoder();
-//        option7 = new GuavaEncoder();
-//        option8 = new SpringSecurityEncoder();
-//        option9 = new ApacheCommonsHex();
-//        option10 = new JaxBDataTypeHex();
 
         rndMap = new HashMap<>();
         int[] lengths = new int[]{4, 8, 16, 32, 128, 512, 1000000};
@@ -161,54 +151,29 @@ public class EncodingHexJmhBenchmark {
         }
     }
 
-//    @Benchmark
-//    public String encodeStackOverflowCode1() {
-//        return encodeDecode(option1);
-//    }
-//
-//    @Benchmark
-//    public String encodeBytesLib() {
-//        return encodeDecode(option2);
-//    }
-//
-//    @Benchmark
-//    public String encodeBigInteger() {
-//        return encodeDecode(option3);
-//    }
-//
-//    @Benchmark
-//    public String encodeOldBytesLib() {
-//        return encodeDecode(option4);
-//    }
-//
-//    @Benchmark
-//    public String encodeStackOverflowCode2() {
-//        return encodeDecode(option5);
-//    }
-//
-//    @Benchmark
-//    public String encodeBouncyCastleHex() {
-//        return encodeDecode(option6);
-//    }
-//
-//    @Benchmark
-//    public String encodeGuavaBase16() {
-//        return encodeDecode(option7);
-//    }
-//
-//    @Benchmark
-//    public String encodeSpringSecurity() {
-//        return encodeDecode(option8);
-//    }
-//
-//    @Benchmark
-//    public String encodeApacheCommons() {
-//        return encodeDecode(option9);
-//    }
+    @Benchmark
+    public String encodeStackOverflowCode1() {
+        return encodeDecode(option1);
+    }
 
     @Benchmark
-    public String encodeJaxBDataTypeConverter() {
-        return encodeDecode(option10);
+    public String encodeBytesLib() {
+        return encodeDecode(option2);
+    }
+
+    @Benchmark
+    public String encodeBigInteger() {
+        return encodeDecode(option3);
+    }
+
+    @Benchmark
+    public String encodeOldBytesLib() {
+        return encodeDecode(option4);
+    }
+
+    @Benchmark
+    public String encodeStackOverflowCode2() {
+        return encodeDecode(option5);
     }
 
     private String encodeDecode(BinaryToTextEncoding.EncoderDecoder encoder) {
@@ -320,107 +285,4 @@ public class EncodingHexJmhBenchmark {
             throw new UnsupportedOperationException();
         }
     }
-
-
-
-    /*
-     * Requires dependencies:
-     *
-     *
-     *
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.60</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>28.1-jre</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>5.2.0.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.13</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
-        </dependency>
-     */
-
-//    static final class ApacheCommonsHex implements BinaryToTextEncoding.EncoderDecoder {
-//        @Override
-//        public String encode(byte[] array, ByteOrder byteOrder) {
-//            return org.apache.commons.codec.binary.Hex.encodeHexString(array);
-//        }
-//
-//        @Override
-//        public byte[] decode(CharSequence encoded) {
-//            try {
-//                return Hex.decodeHex(encoded.toString());
-//            } catch (DecoderException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
-//
-//    static final class BCUtilEncoder implements BinaryToTextEncoding.EncoderDecoder {
-//        @Override
-//        public String encode(byte[] array, ByteOrder byteOrder) {
-//            return org.bouncycastle.util.encoders.Hex.toHexString(array);
-//        }
-//
-//        @Override
-//        public byte[] decode(CharSequence encoded) {
-//            return org.bouncycastle.util.encoders.Hex.decode(encoded.toString());
-//        }
-//    }
-//
-//    static final class GuavaEncoder implements BinaryToTextEncoding.EncoderDecoder {
-//        @Override
-//        public String encode(byte[] array, ByteOrder byteOrder) {
-//            return com.google.common.io.BaseEncoding.base16().lowerCase().encode(array);
-//        }
-//
-//        @Override
-//        public byte[] decode(CharSequence encoded) {
-//            return com.google.common.io.BaseEncoding.base16().lowerCase().decode(encoded);
-//        }
-//    }
-//
-//    static final class SpringSecurityEncoder implements BinaryToTextEncoding.EncoderDecoder {
-//        @Override
-//        public String encode(byte[] array, ByteOrder byteOrder) {
-//            return new String(org.springframework.security.crypto.codec.Hex.encode(array));
-//        }
-//
-//        @Override
-//        public byte[] decode(CharSequence encoded) {
-//            return org.springframework.security.crypto.codec.Hex.decode(encoded);
-//        }
-//    }
-//
-//    static final class JaxBDataTypeHex implements BinaryToTextEncoding.EncoderDecoder {
-//        @Override
-//        public String encode(byte[] array, ByteOrder byteOrder) {
-//            return javax.xml.bind.DatatypeConverter.printHexBinary(array);
-//        }
-//
-//        @Override
-//        public byte[] decode(CharSequence encoded) {
-//            return javax.xml.bind.DatatypeConverter.parseHexBinary(encoded.toString());
-//        }
-//    }
 }

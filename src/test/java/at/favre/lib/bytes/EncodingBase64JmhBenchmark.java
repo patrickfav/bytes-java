@@ -59,23 +59,19 @@ EncodingJmhBenchmark.encodeBase64Okio         1000000  thrpt    4       103,728 
 @Measurement(iterations = 4, time = 5)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
-public class EncodingJmhBenchmark {
+public class EncodingBase64JmhBenchmark {
 
     @Param({"1", "16", "128", "512", "1000000"})
     private int byteLength;
     private Map<Integer, Bytes[]> rndMap;
 
     private BinaryToTextEncoding.EncoderDecoder base64Okio;
-    private BinaryToTextEncoding.EncoderDecoder base64Guava;
-    private BinaryToTextEncoding.EncoderDecoder base64Apache;
     private Random random;
 
     @Setup(Level.Trial)
     public void setup() {
         random = new Random();
         base64Okio = new BinaryToTextEncoding.Base64Encoding();
-//        base64Apache = new ApacheCommonCodecBase64();
-//        base64Guava = new GuavaBase64();
 
         rndMap = new HashMap<>();
         int[] lengths = new int[]{1, 16, 128, 512, 1000000};
@@ -93,16 +89,6 @@ public class EncodingJmhBenchmark {
         return encodeDecode(base64Okio);
     }
 
-//    @Benchmark
-//    public byte[] encodeBase64Apache() {
-//        return encodeDecode(base64Apache);
-//    }
-//
-//    @Benchmark
-//    public byte[] encodeBase64Guava() {
-//        return encodeDecode(base64Guava);
-//    }
-
     private byte[] encodeDecode(BinaryToTextEncoding.EncoderDecoder encoder) {
         Bytes[] bytes = rndMap.get(byteLength);
         int rndNum = random.nextInt(bytes.length);
@@ -110,41 +96,4 @@ public class EncodingJmhBenchmark {
         String encoded = encoder.encode(bytes[rndNum].array(), ByteOrder.BIG_ENDIAN);
         return encoder.decode(encoded);
     }
-
-//        <dependency>
-//            <groupId>commons-codec</groupId>
-//            <artifactId>commons-codec</artifactId>
-//            <version>1.11</version>
-//            <scope>test</scope>
-//        </dependency>
-//        <dependency>
-//            <groupId>com.google.guava</groupId>
-//            <artifactId>guava</artifactId>
-//            <version>26.0-jre</version>
-//            <scope>test</scope>
-//        </dependency>
-//
-//    static final class ApacheCommonCodecBase64 implements BinaryToTextEncoding.EncoderDecoder {
-//        @Override
-//        public String encode(byte[] array, ByteOrder byteOrder) {
-//            return Base64.encodeBase64String(array);
-//        }
-//
-//        @Override
-//        public byte[] decode(String encoded) {
-//            return Base64.decodeBase64(encoded);
-//        }
-//    }
-//
-//    static final class GuavaBase64 implements BinaryToTextEncoding.EncoderDecoder {
-//        @Override
-//        public String encode(byte[] array, ByteOrder byteOrder) {
-//            return com.google.common.io.BaseEncoding.base64().encode(array);
-//        }
-//
-//        @Override
-//        public byte[] decode(String encoded) {
-//            return com.google.common.io.BaseEncoding.base64().decode(encoded);
-//        }
-//    }
 }
