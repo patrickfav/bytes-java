@@ -42,7 +42,8 @@ final class BaseEncoding implements BinaryToTextEncoding.EncoderDecoder {
     private final Alphabet alphabet;
     private final Character paddingChar;
 
-    BaseEncoding(Alphabet alphabet, Character paddingChar) {
+    @SuppressWarnings("WeakerAccess")
+    public BaseEncoding(Alphabet alphabet, Character paddingChar) {
         this.alphabet = Objects.requireNonNull(alphabet);
         this.paddingChar = paddingChar;
     }

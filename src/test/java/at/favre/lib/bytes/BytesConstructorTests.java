@@ -34,6 +34,7 @@ import java.nio.CharBuffer;
 import java.nio.IntBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -546,5 +547,26 @@ public class BytesConstructorTests extends ABytesTest {
     @Test(expected = NullPointerException.class)
     public void fromUUIDNullArgument() {
         Bytes.of((UUID) null);
+    }
+
+    @Test
+    public void createSecureRandom() {
+        assertNotEquals(Bytes.random(16), Bytes.random(16));
+    }
+
+    @Test
+    public void createSecureRandomWithExplicitSecureRandom() {
+        assertNotEquals(Bytes.random(16, new SecureRandom()), Bytes.random(16, new SecureRandom()));
+    }
+
+    @Test
+    public void createUnsecureRandom() {
+        assertNotEquals(Bytes.unsecureRandom(128), Bytes.unsecureRandom(128));
+    }
+
+    @Test
+    public void createUnsecureRandomWithSeed() {
+        assertEquals(Bytes.unsecureRandom(128, 4L), Bytes.unsecureRandom(128, 4L));
+        assertNotEquals(Bytes.unsecureRandom(4, 3L), Bytes.unsecureRandom(4, 4L));
     }
 }

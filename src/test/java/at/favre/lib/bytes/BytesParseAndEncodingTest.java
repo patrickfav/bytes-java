@@ -42,11 +42,37 @@ public class BytesParseAndEncodingTest extends ABytesTest {
         assertArrayEquals(defaultArray, Bytes.parseHex("A0E1").array());
         assertArrayEquals(defaultArray, Bytes.parseHex("a0e1").array());
         assertArrayEquals(defaultArray, Bytes.parseHex(Bytes.parseHex("A0E1").encodeHex()).array());
+        assertArrayEquals(defaultArray, Bytes.parseHex(Bytes.parseHex("a0E1").encodeHex()).array());
+    }
+
+    @Test
+    public void parseHexOddNumberStrings() {
+        assertArrayEquals(new byte[]{(byte) 0x00}, Bytes.parseHex("0").array());
+        assertArrayEquals(new byte[]{(byte) 0x0E}, Bytes.parseHex("E").array());
+        assertArrayEquals(new byte[]{(byte) 0x0A, (byte) 0x0E}, Bytes.parseHex("A0E").array());
+        assertArrayEquals(new byte[]{(byte) 0x03, (byte) 0xEA, (byte) 0x0E}, Bytes.parseHex("3EA0E").array());
+        assertArrayEquals(new byte[]{(byte) 0x00, (byte) 0xF3, (byte) 0xEA, (byte) 0x0E}, Bytes.parseHex("0F3EA0E").array());
+        assertArrayEquals(new byte[]{(byte) 0x0A, (byte) 0xD0, (byte) 0xF3, (byte) 0xEA, (byte) 0x0E}, Bytes.parseHex("AD0F3EA0E").array());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void parseHexInvalid() {
-        Bytes.parseHex("A0E");
+    public void parseHexIllegalChars() {
+        Bytes.parseHex("AX");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void parseHexIllegalChars2() {
+        Bytes.parseHex("XX");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void parseHexIllegalChars3() {
+        Bytes.parseHex("Y");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void parseHexIllegalChars4() {
+        Bytes.parseHex("F3El0E");
     }
 
     @Test

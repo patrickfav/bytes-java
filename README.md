@@ -157,10 +157,16 @@ Creating an **immutable** instance where every transformation will create a copy
 Bytes.ofImmutable(array1);
 ```
 
-Creating **random** byte arrays for e.g. testing:
+Creating cryptographically secure **random** byte arrays:
 
 ```java
 Bytes.random(12);
+```
+
+Creating cryptographically unsecure **random** byte arrays for e.g. testing:
+
+```java
+Bytes.unsecureRandom(12, 12345L); // using seed makes it deterministic
 ```
 
 Reading byte content of encoded `String`s:
@@ -662,6 +668,35 @@ readOnlyBytes.array();
 readOnlyBytes.byteBuffer();
 readOnlyBytes.inputStream();
 ```
+
+## Download
+
+The artifacts are deployed to [jcenter](https://bintray.com/bintray/jcenter) and [Maven Central](https://search.maven.org/).
+
+### Maven
+
+Add the dependency of the [latest version](https://github.com/patrickfav/bytes/releases) to your `pom.xml`:
+
+    <dependency>
+        <groupId>at.favre.lib</groupId>
+        <artifactId>bytes</artifactId>
+        <version>{latest-version}</version>
+    </dependency>
+
+### Gradle
+
+Add to your `build.gradle` module dependencies:
+
+    implementation group: 'at.favre.lib', name: 'bytes', version: '{latest-version}'
+
+### Local Jar Library
+
+[Grab jar from latest release.](https://github.com/patrickfav/bytes/releases/latest)
+
+### OSGi
+
+The library should be prepared to be used with the OSGi framework with the help of the [bundle plugin](http://felix.apache.org/documentation/subprojects/apache-felix-maven-bundle-plugin-bnd.html).
+
 
 ## Digital Signatures
 

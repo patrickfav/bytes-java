@@ -628,11 +628,17 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
     }
 
     /**
-     * Parsing of base16/HEX encoded byte arrays. Will accept upper- and lowercase variant and ignores
-     * possible "0x" prefix.
+     * Parsing of base16/HEX encoded byte arrays. This is by design a very flexible decoder accepting the following cases:
+     *
+     * <ul>
+     *     <li>Upper- and lowercase <code>a-f</code> (also mixed case)</li>
+     *     <li>Prefix with <code>0x</code> which will be ignored</li>
+     *     <li>Even and odd number of string length with auto zero padding (ie. 'E3F' is same as '0E3F')</li>
+     * </ul>
      *
      * @param hexString the encoded string
      * @return decoded instance
+     * @throws IllegalArgumentException if string contains something else than [0-9a-fA-F]
      */
     public static Bytes parseHex(CharSequence hexString) {
         return parse(hexString, new BinaryToTextEncoding.Hex());
@@ -695,6 +701,35 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
      */
     public static Bytes random(int length) {
         return random(length, new SecureRandom());
+    }
+
+    /**
+     * A new instance with pseudo random bytes using an unsecure random number generator.
+     * This may be used in e.g. tests. In production code use {@link #random(int)} per default.
+     * <p>
+     * <strong>ONLY USE IN NON-SECURITY RELEVANT CONTEXT!</strong>
+     *
+     * @param length desired array length
+     * @return random instance
+     */
+    public static Bytes unsecureRandom(int length) {
+        return random(length, new Random());
+    }
+
+    /**
+     * A new instance with pseudo random bytes using an unsecure random number generator.
+     * This may be used in e.g. tests to create predictable numbers.
+     * <p>
+     * In production code use {@link #random(int)} per default.
+     * <p>
+     * <strong>ONLY USE IN NON-SECURITY RELEVANT CONTEXT!</strong>
+     *
+     * @param length desired array length
+     * @param seed   used to seed random number generator - using same seed will generate same numbers
+     * @return random instance
+     */
+    public static Bytes unsecureRandom(int length, long seed) {
+        return random(length, new Random(seed));
     }
 
     /**
@@ -2057,6 +2092,25 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
     }
 
     /**
+     * Converts the internal byte array to an float array, that is, every 4 bytes will be packed into a single float.
+     * <p>
+     * E.g. 4 bytes will be packed to a length 1 float array:
+     * <pre>
+     *  [b1, b2, b3, b4] = [float1]
+     * </pre>
+     * <p>
+     * This conversion respects the internal byte order. Will only work if all bytes can be directly mapped to float,
+     * which means the byte array length must be dividable by 4 without rest.
+     *
+     * @return new float[] instance representing this byte array
+     * @throws IllegalArgumentException if internal byte length mod 4 != 0
+     */
+    public float[] toFloatArray() {
+        Util.Validation.checkModLength(length(), 4, "creating an float array");
+        return Util.Converter.toFloatArray(internalArray(), byteOrder);
+    }
+
+    /**
      * If the underlying byte array is exactly 8 byte / 64 bit long, return the
      * representation for a Java double value. The output is dependent on the set {@link #byteOrder()}.
      *
@@ -2067,6 +2121,25 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte>, A
     public double toDouble() {
         Util.Validation.checkExactLength(length(), 8, "double");
         return internalBuffer().getDouble();
+    }
+
+    /**
+     * Converts the internal byte array to an double array, that is, every 8 bytes will be packed into a single double.
+     * <p>
+     * E.g. 8 bytes will be packed to a length 1 double array:
+     * <pre>
+     *  [b1, b2, b3, b4, b5, b6, b7, b8] = [double1]
+     * </pre>
+     * <p>
+     * This conversion respects the internal byte order. Will only work if all bytes can be directly mapped to double,
+     * which means the byte array length must be dividable by 8 without rest.
+     *
+     * @return new double[] instance representing this byte array
+     * @throws IllegalArgumentException if internal byte length mod 8 != 0
+     */
+    public double[] toDoubleArray() {
+        Util.Validation.checkModLength(length(), 8, "creating an double array");
+        return Util.Converter.toDoubleArray(internalArray(), byteOrder);
     }
 
     /**

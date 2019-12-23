@@ -72,6 +72,8 @@ public interface BinaryToTextEncoding {
      * Hex or Base16
      */
     class Hex implements EncoderDecoder {
+        private static final char[] LOOKUP_TABLE_LOWER = new char[]{0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66};
+        private static final char[] LOOKUP_TABLE_UPPER = new char[]{0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46};
         private final boolean upperCase;
 
         public Hex() {
@@ -84,47 +86,55 @@ public interface BinaryToTextEncoding {
 
         @Override
         public String encode(byte[] byteArray, ByteOrder byteOrder) {
-            StringBuilder sb = new StringBuilder(byteArray.length * 2);
+
+            final char[] buffer = new char[byteArray.length * 2];
+            final char[] lookup = upperCase ? LOOKUP_TABLE_UPPER : LOOKUP_TABLE_LOWER;
 
             int index;
-            char first4Bit;
-            char last4Bit;
             for (int i = 0; i < byteArray.length; i++) {
                 index = (byteOrder == ByteOrder.BIG_ENDIAN) ? i : byteArray.length - i - 1;
-                first4Bit = Character.forDigit((byteArray[index] >> 4) & 0xF, 16);
-                last4Bit = Character.forDigit((byteArray[index] & 0xF), 16);
-                if (upperCase) {
-                    first4Bit = Character.toUpperCase(first4Bit);
-                    last4Bit = Character.toUpperCase(last4Bit);
-                }
-                sb.append(first4Bit).append(last4Bit);
+
+                buffer[i << 1] = lookup[(byteArray[index] >> 4) & 0xF];
+                buffer[(i << 1) + 1] = lookup[(byteArray[index] & 0xF)];
             }
-            return sb.toString();
+            return new String(buffer);
         }
 
         @Override
         public byte[] decode(CharSequence hexString) {
-            if (Objects.requireNonNull(hexString, "hex input must not be null").length() % 2 != 0)
-                throw new IllegalArgumentException("invalid hex string, must be mod 2 == 0");
 
             int start;
-            if (hexString.length() > 2 &&
+            if (Objects.requireNonNull(hexString).length() > 2 &&
                     hexString.charAt(0) == '0' && hexString.charAt(1) == 'x') {
                 start = 2;
             } else {
                 start = 0;
             }
 
+
             int len = hexString.length();
+            boolean isOddLength = len % 2 != 0;
+            if (isOddLength) {
+                start--;
+            }
+
             byte[] data = new byte[(len - start) / 2];
             int first4Bits;
             int second4Bits;
             for (int i = start; i < len; i += 2) {
-                first4Bits = Character.digit(hexString.charAt(i), 16);
+                if (i == start && isOddLength) {
+                    first4Bits = 0;
+                } else {
+                    first4Bits = Character.digit(hexString.charAt(i), 16);
+                }
                 second4Bits = Character.digit(hexString.charAt(i + 1), 16);
 
                 if (first4Bits == -1 || second4Bits == -1) {
-                    throw new IllegalArgumentException("'" + hexString.charAt(i) + hexString.charAt(i + 1) + "' at index " + i + " is not hex formatted");
+                    if (i == start && isOddLength) {
+                        throw new IllegalArgumentException("'" + hexString.charAt(i + 1) + "' at index " + (i + 1) + " is not hex formatted");
+                    } else {
+                        throw new IllegalArgumentException("'" + hexString.charAt(i) + hexString.charAt(i + 1) + "' at index " + i + " is not hex formatted");
+                    }
                 }
 
                 data[(i - start) / 2] = (byte) ((first4Bits << 4) + second4Bits);

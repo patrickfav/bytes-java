@@ -307,7 +307,6 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         assertArrayEquals(new long[0], Bytes.empty().toLongArray());
     }
 
-
     @Test
     public void testToLongArrayLittleEndian() {
         assertArrayEquals(new long[]{1}, Bytes.wrap(new byte[]{1, 0, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toLongArray());
@@ -321,5 +320,90 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
                 1, 1, 0, 0, 0, 1, 0, 0,
                 1, 1, 1, 0, 0, 0, 1, 0,
                 1, 0, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toLongArray());
+    }
+
+    @Test
+    public void testToFloatArray() {
+        assertArrayEquals(new float[]{1.4E-45f}, Bytes.wrap(new byte[]{0, 0, 0, 1}).toFloatArray(), 0.01f);
+        assertArrayEquals(new float[]{3.6E-43f}, Bytes.wrap(new byte[]{0, 0, 1, 1}).toFloatArray(), 0.01f);
+        assertArrayEquals(new float[]{9.2196E-41f}, Bytes.wrap(new byte[]{0, 1, 1, 1}).toFloatArray(), 0.01f);
+        assertArrayEquals(new float[]{2.3694278E-38f}, Bytes.wrap(new byte[]{1, 1, 1, 1}).toFloatArray(), 0.01f);
+        assertArrayEquals(new float[]{1.897368E-18f}, Bytes.wrap(new byte[]{34, 12, 0, 69}).toFloatArray(), 0.01f);
+        assertArrayEquals(new float[]{1.22888184E8f}, Bytes.wrap(new byte[]{76, (byte) 234, 99, (byte) 255}).toFloatArray(), 0.01f);
+
+        assertArrayEquals(new float[]{1.4E-45f, 1.4E-45f}, Bytes.wrap(new byte[]{0, 0, 0, 1, 0, 0, 0, 1}).toFloatArray(), 0.01f);
+        assertArrayEquals(new float[]{3.6E-43f, 1.4E-45f}, Bytes.wrap(new byte[]{0, 0, 1, 1, 0, 0, 0, 1}).toFloatArray(), 0.01f);
+        assertArrayEquals(new float[]{3.6E-43f, 9.2196E-41f, 1.4E-45f}, Bytes.wrap(new byte[]{0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1}).toFloatArray(), 0.01f);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testToFloatArrayNotMod4Was5Byte() {
+        Bytes.wrap(new byte[]{1, 0, 0, 0, 1}).toFloatArray();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testToFloatArrayNotMod4Only3Byte() {
+        Bytes.wrap(new byte[]{0, 0, 1}).toFloatArray();
+    }
+
+    @Test
+    public void testToFloatEmptyArray() {
+        assertArrayEquals(new float[0], Bytes.empty().toFloatArray(), 0.01f);
+    }
+
+    @Test
+    public void testToFloatArrayLittleEndian() {
+        assertArrayEquals(new float[]{1.4E-45f}, Bytes.wrap(new byte[]{1, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toFloatArray(), 0.01f);
+        assertArrayEquals(new float[]{3.6E-43f}, Bytes.wrap(new byte[]{1, 1, 0, 0}, ByteOrder.LITTLE_ENDIAN).toFloatArray(), 0.01f);
+        assertArrayEquals(new float[]{1.22888184E8f}, Bytes.wrap(new byte[]{(byte) 255, 99, (byte) 234, 76}, ByteOrder.LITTLE_ENDIAN).toFloatArray(), 0.01f);
+
+        assertArrayEquals(new float[]{1.4E-45f, 1.4E-45f}, Bytes.wrap(new byte[]{1, 0, 0, 0, 1, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toFloatArray(), 0.01f);
+        assertArrayEquals(new float[]{3.6E-43f, 1.4E-45f}, Bytes.wrap(new byte[]{1, 1, 0, 0, 1, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toFloatArray(), 0.01f);
+        assertArrayEquals(new float[]{3.6E-43f, 9.2196E-41f, 1.4E-45f}, Bytes.wrap(new byte[]{1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toFloatArray(), 0.01f);
+    }
+
+    @Test
+    public void testToDoubleArray() {
+        assertArrayEquals(new double[]{1.4E-45}, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0, 1}).toDoubleArray(), 0.01);
+        assertArrayEquals(new double[]{3.6E-43}, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 1, 1}).toDoubleArray(), 0.01);
+        assertArrayEquals(new double[]{4.228405109821336E-86}, Bytes.wrap(new byte[]{46, 53, 7, 98, 34, 12, 0, 69}).toDoubleArray(), 0.01);
+        assertArrayEquals(new double[]{-2.385279556059394E-168}, Bytes.wrap(new byte[]{(byte) 157, 34, 1, 0, 76, (byte) 234, 99, (byte) 255}).toDoubleArray(), 0.01);
+
+        assertArrayEquals(new double[]{1.4E-45, 1.4E-45}, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1}).toDoubleArray(), 0.01);
+        assertArrayEquals(new double[]{3.6E-43, 1.4E-45}, Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1}).toDoubleArray(), 0.01);
+        assertArrayEquals(new double[]{5.43230922614E-312, 1.39067116189206E-309, 1.4E-45}, Bytes.wrap(new byte[]{
+                0, 0, 1, 0, 0, 0, 1, 1,
+                0, 1, 0, 0, 0, 1, 1, 1,
+                0, 0, 0, 0, 0, 0, 0, 1}).toDoubleArray(), 0.01);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testToDoubleArrayNotMod4Was9Byte() {
+        Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 1}).toDoubleArray();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testToDoubleArrayNotMod4Only7Byte() {
+        Bytes.wrap(new byte[]{0, 0, 0, 0, 0, 0, 1}).toDoubleArray();
+    }
+
+    @Test
+    public void testToDoubleEmptyArray() {
+        assertArrayEquals(new double[0], Bytes.empty().toDoubleArray(), 0.01);
+    }
+
+    @Test
+    public void testToDoubleArrayLittleEndian() {
+        assertArrayEquals(new double[]{1.4E-45}, Bytes.wrap(new byte[]{1, 0, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toDoubleArray(), 0.01);
+        assertArrayEquals(new double[]{3.6E-43}, Bytes.wrap(new byte[]{1, 1, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toDoubleArray(), 0.01);
+        assertArrayEquals(new double[]{4.228405109821336E-86}, Bytes.wrap(new byte[]{69, 0, 12, 34, 98, 7, 53, 46}, ByteOrder.LITTLE_ENDIAN).toDoubleArray(), 0.01);
+        assertArrayEquals(new double[]{-2.385279556059394E-168}, Bytes.wrap(new byte[]{(byte) 255, 99, (byte) 234, 76, 0, 1, 34, (byte) 157}, ByteOrder.LITTLE_ENDIAN).toDoubleArray(), 0.01);
+
+        assertArrayEquals(new double[]{1.4E-45, 1.4E-45}, Bytes.wrap(new byte[]{1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toDoubleArray(), 0.01);
+        assertArrayEquals(new double[]{3.6E-43f, 1.4E-45}, Bytes.wrap(new byte[]{1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toDoubleArray(), 0.01);
+        assertArrayEquals(new double[]{5.43230922614E-312, 1.39067116189206E-309, 1.4E-45}, Bytes.wrap(new byte[]{
+                1, 1, 0, 0, 0, 1, 0, 0,
+                1, 1, 1, 0, 0, 0, 1, 0,
+                1, 0, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toDoubleArray(), 0.01);
     }
 }
