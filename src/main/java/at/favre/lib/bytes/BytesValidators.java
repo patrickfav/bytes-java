@@ -113,7 +113,6 @@ public final class BytesValidators {
         return new BytesValidator.IdenticalContent(refByte, BytesValidator.IdenticalContent.Mode.NONE_OF);
     }
 
-
     /**
      * This will execute all passed validators and returns true if at least one returns true (i.e. OR concatenation)
      *

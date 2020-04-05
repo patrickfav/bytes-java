@@ -72,7 +72,6 @@ final class Util {
             return result;
         }
 
-
         /**
          * Combines a single argument with a vararg to a single array
          *
