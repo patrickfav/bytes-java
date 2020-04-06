@@ -24,7 +24,7 @@ after_success:
 deploy:
   - provider: script
     script: ./mvnw -s ci-settings.xml deploy -X
-    cleanup: false
+    skip_cleanup: true
     on:
       branch: master
       tags: true
@@ -36,7 +36,7 @@ deploy:
       - "target/*.jar"
       - "target/*.sha256"
       - "target/checksum-sha256.txt"
-    cleanup: false
+    skip_cleanup: true
     on:
       branch: master
       tags: true
