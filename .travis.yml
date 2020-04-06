@@ -24,12 +24,12 @@ after_success:
 deploy:
   - provider: script
     script: ./mvnw -s ci-settings.xml deploy -X
-    skip_cleanup: true
+    cleanup: true
     on:
       branch: master
       tags: true
   - provider: releases
-    token:
+    api_key:
       secure: "ozRga/xe4pNZNH59tmPK1lLpCFa4WFW674JMTBWLbf+7zjPiN8K5dtAYUkhDqngw0ifasukVCRey4F9fu479KlFciGrLBd4r/hq/rh7inVHqd1qcn4AwyDX3EkbloD5qwfas7yn5zJ7cWm7KyEkfpr+fgReaQzSRvJUpjpDBrS2xNIYOhL1tInu84/RtyB6QuJjQOkH9rulP9M8gjcEH9Iu0k40jAVYLJDL9opOWrc9qpAzL0wN4xXGbnI30WrA8nmLcrHRxODOxbYEQ5EndLFJyS3nYxL9D3QJeEYkXf9uqz46V4dgfrEirWrtin3PlSUKTD9/0Mqz4uxqrGky0vrpha7m231+ilTUJzvE0a29LdS3R4A6ssDb0oFtj4pP3O6uNDqZN20r83ughGi0GrlKL/CGpQ4fS5nOpqppx0Xg+SR78/uOqQDIOn570FILBTKiaTsCn6xKqYC4QFSlsZiXojgU4FDZpKygH932qUDE0BnzsZEtzCube2oXMktZs6keSmELMyRYVs/K9yC7+8R1Pez1Xz72zxNG1ke6588sO3wxN+Q+0ZhqmQC8Y2OY8i72b06M5SyGz5TV38SrntLU88HOMWVJtfRDcMcPnJdFgaujZCoOw5SfokzXncipldfJGpKGIb3fHBMJw0MzspT7Kp6XRzSbtJI5+NVestR4="
     file_glob: true
     file:
