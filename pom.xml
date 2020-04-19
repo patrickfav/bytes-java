@@ -22,6 +22,10 @@
     <url>https://github.com/patrickfav/bytes-java</url>
     <inceptionYear>2017</inceptionYear>
 
+    <properties>
+        <commonConfig.jarSign.skip>false</commonConfig.jarSign.skip>
+    </properties>
+
     <repositories>
         <repository>
             <id>jcenter</id>
@@ -79,36 +83,6 @@
             <plugin>
                 <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
-                <version>2.0.14</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>proguard</goal>
-                        </goals>
-                        <configuration>
-                            <includeDependency>false</includeDependency>
-                            <attachArtifactClassifier>optimized</attachArtifactClassifier>
-                            <attach>true</attach>
-                            <proguardVersion>6.0.3</proguardVersion>
-                            <obfuscate>false</obfuscate>
-                            <options>
-                                <option>-include ${project.basedir}/proguard-rules.pro</option>
-                            </options>
-                            <libs>
-                                <lib>${java.home}/lib/rt.jar</lib>
-                            </libs>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sf.proguard</groupId>
-                        <artifactId>proguard-base</artifactId>
-                        <version>6.0.3</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
