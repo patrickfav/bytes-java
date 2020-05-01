@@ -51,11 +51,13 @@ It is lightweight as it does not require any additional dependencies.
 
 Add dependency to your `pom.xml` ([check latest release](https://github.com/patrickfav/bytes-java/releases)):
 
-    <dependency>
-        <groupId>at.favre.lib</groupId>
-        <artifactId>bytes</artifactId>
-        <version>{latest-version}</version>
-    </dependency>
+```xml
+<dependency>
+    <groupId>at.favre.lib</groupId>
+    <artifactId>bytes</artifactId>
+    <version>{latest-version}</version>
+</dependency>
+```
 
 _Note:_ There is a byte-code optimized version (powered by [ProGuard](https://www.guardsquare.com/en/products/proguard)) which can be used with [classifier](https://maven.apache.org/pom.html#Maven_Coordinates) 'optimized'. This may have issues so use at your own risk.
 
@@ -624,11 +626,13 @@ The artifacts are deployed to [jcenter](https://bintray.com/bintray/jcenter) and
 
 Add the dependency of the [latest version](https://github.com/patrickfav/bytes/releases) to your `pom.xml`:
 
-    <dependency>
-        <groupId>at.favre.lib</groupId>
-        <artifactId>bytes</artifactId>
-        <version>{latest-version}</version>
-    </dependency>
+```xml
+<dependency>
+    <groupId>at.favre.lib</groupId>
+    <artifactId>bytes</artifactId>
+    <version>{latest-version}</version>
+</dependency>
+```
 
 ### Gradle
 
