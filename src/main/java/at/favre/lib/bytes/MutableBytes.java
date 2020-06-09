@@ -71,7 +71,6 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
      * @return this instance
      * @throws IndexOutOfBoundsException if newArray.length &gt; internal length
      */
-
     public MutableBytes overwrite(byte[] newArray) {
         return overwrite(newArray, 0);
     }
@@ -83,7 +82,6 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
      * @return this instance
      * @throws IndexOutOfBoundsException if newArray.length &gt; internal length
      */
-
     public MutableBytes overwrite(Bytes newBytes) {
         return overwrite(newBytes, 0);
     }
@@ -96,7 +94,6 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
      * @return this instance
      * @throws IndexOutOfBoundsException if newArray.length + offsetInternalArray &gt; internal length
      */
-
     public MutableBytes overwrite(byte[] newArray, int offsetInternalArray) {
         Objects.requireNonNull(newArray, "must provide non-null array as source");
         System.arraycopy(newArray, 0, internalArray(), offsetInternalArray, newArray.length);
@@ -111,7 +108,6 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
      * @return this instance
      * @throws IndexOutOfBoundsException if newBytes.length + offsetInternalArray &gt; internal length
      */
-
     public MutableBytes overwrite(Bytes newBytes, int offsetInternalArray) {
         return overwrite(Objects.requireNonNull(newBytes, "must provide non-null array as source").array(), offsetInternalArray);
     }
