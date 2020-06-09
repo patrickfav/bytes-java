@@ -52,14 +52,23 @@ public class BytesMiscTest extends ABytesTest {
 
     @Test
     public void testHashcode() {
-        Bytes instance = Bytes.wrap(example_bytes_seven);
+        Bytes instance = Bytes.from(example_bytes_seven);
         assertEquals(instance.hashCode(), instance.hashCode());
         assertNotEquals(0, instance.hashCode());
-        assertEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.from(example_bytes_seven).hashCode());
-        assertEquals(Bytes.wrap(example2_bytes_seven).hashCode(), Bytes.from(example2_bytes_seven).hashCode());
-        assertNotEquals(Bytes.wrap(example_bytes_seven).hashCode(), Bytes.wrap(example2_bytes_seven).hashCode());
-        assertNotEquals(Bytes.wrap(example_bytes_eight).hashCode(), Bytes.wrap(example2_bytes_seven).hashCode());
-        assertNotEquals(0, Bytes.wrap(example2_bytes_seven).hashCode());
+        assertEquals(Bytes.from(example_bytes_seven).hashCode(), Bytes.from(example_bytes_seven).hashCode());
+        assertEquals(Bytes.from(example2_bytes_seven).hashCode(), Bytes.from(example2_bytes_seven).hashCode());
+        assertNotEquals(Bytes.from(example_bytes_seven).hashCode(), Bytes.from(example2_bytes_seven).hashCode());
+        assertNotEquals(Bytes.from(example_bytes_eight).hashCode(), Bytes.from(example2_bytes_seven).hashCode());
+        assertNotEquals(0, Bytes.from(example2_bytes_seven).hashCode());
+    }
+
+    @Test
+    public void testHashcode_changing() {
+        MutableBytes instance = Bytes.from(example_bytes_seven).mutable();
+        assertEquals(instance.hashCode(), Bytes.from(example_bytes_seven).hashCode());
+
+        instance.setByteAt(0, (byte) 0x4B);
+        assertNotEquals(instance.hashCode(), Bytes.from(example_bytes_seven).hashCode());
     }
 
     @SuppressWarnings("SimplifiableJUnitAssertion")
