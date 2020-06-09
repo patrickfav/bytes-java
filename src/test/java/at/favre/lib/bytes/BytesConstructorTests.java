@@ -68,13 +68,18 @@ public class BytesConstructorTests extends ABytesTest {
     }
 
     @Test(expected = NullPointerException.class)
+    public void wrapByteNull_shouldThrow() {
+        Bytes.wrap((Bytes) null);
+    }
+
+    @Test(expected = NullPointerException.class)
     public void wrapTestNullExpected() {
         Bytes.wrap((byte[]) null);
     }
 
     @Test
     public void wrapTestNullSafe() {
-        Bytes.wrapNullSafe(null);
+        assertSame(Bytes.empty(), Bytes.wrapNullSafe(null));
     }
 
     @Test
@@ -183,6 +188,11 @@ public class BytesConstructorTests extends ABytesTest {
         assertEquals(test, Bytes.from(test).toInt());
     }
 
+    @Test(expected = NullPointerException.class)
+    public void fromIntArray_empty_shouldThrow() {
+        Bytes.from((int[]) null);
+    }
+
     @Test
     public void fromIntArray() {
         assertArrayEquals(new byte[]{0, 0, 0, 1, 0, 0, 0, 2}, Bytes.from(1, 2).array());
@@ -207,6 +217,11 @@ public class BytesConstructorTests extends ABytesTest {
         assertEquals(test, Bytes.from(test).toLong());
     }
 
+    @Test(expected = NullPointerException.class)
+    public void fromLongArray_empty_shouldThrow() {
+        Bytes.from((long[]) null);
+    }
+
     @Test
     public void fromLongArray() {
         assertArrayEquals(new byte[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2}, Bytes.from(new long[]{1, 2}).array());
@@ -224,6 +239,22 @@ public class BytesConstructorTests extends ABytesTest {
         assertEquals(test, Bytes.from(test).toFloat(), 0.01);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void fromFloatArray_empty_shouldThrow() {
+        Bytes.from((float[]) null);
+    }
+
+    @Test
+    public void fromFloatArray() {
+        assertArrayEquals(new byte[]{0, 0, 0, 0, 0, 0, 0, 0}, Bytes.from(0f, 0f).array());
+        assertArrayEquals(new byte[]{0, 0, 0, 0, 63, -128, 0, 0}, Bytes.from(0f, 1f).array());
+        assertArrayEquals(new byte[]{0, 0, 0, 0, -65, -128, 0, 0}, Bytes.from(0f, -1f).array());
+        assertArrayEquals(new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, Bytes.from(0f, 0f, 0f).array());
+        assertArrayEquals(new byte[]{66, -105, 0, 0, 71, 119, 46, 31}, Bytes.from(75.5f, 63278.123f).array());
+        assertArrayEquals(Bytes.from(Bytes.from(78239.934978f), Bytes.from(-82736.65178f), Bytes.from(0.12879316287461f)).array(),
+                Bytes.from(78239.934978f, -82736.65178f, 0.12879316287461f).array());
+    }
+
     @Test
     public void fromDouble() {
         double test = 3423423.8923423974123;
@@ -231,6 +262,21 @@ public class BytesConstructorTests extends ABytesTest {
         assertArrayEquals(primitiveArray, Bytes.from(test).array());
         assertArrayEquals(new byte[8], Bytes.from(0.0).array());
         assertEquals(test, Bytes.from(test).toDouble(), 0.01);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void fromDoubleArray_empty_shouldThrow() {
+        Bytes.from((double[]) null);
+    }
+
+    @Test
+    public void fromDoubleArray() {
+        assertArrayEquals(new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, Bytes.from(0.0, 0.0).array());
+        assertArrayEquals(new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 63, -16, 0, 0, 0, 0, 0, 0}, Bytes.from(0.0, 1.0).array());
+        assertArrayEquals(new byte[]{0, 0, 0, 0, 0, 0, 0, 0, -65, -16, 0, 0, 0, 0, 0, 0}, Bytes.from(0.0, -1.0).array());
+        assertArrayEquals(new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, Bytes.from(0, 0, 0).array());
+        assertArrayEquals(Bytes.from(Bytes.from(78239.934978), Bytes.from(-82736.65178), Bytes.from(0.12879316287461)).array(),
+                Bytes.from(78239.934978, -82736.65178, 0.12879316287461).array());
     }
 
     @Test
@@ -323,6 +369,11 @@ public class BytesConstructorTests extends ABytesTest {
     @Test(expected = NullPointerException.class)
     public void toCharArrayShouldThroughNullPointer() {
         Bytes.allocate(4).toCharArray(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void fromMultipleBytes_empty_shouldThrow() {
+        Bytes.from((Bytes[]) null);
     }
 
     @Test
@@ -444,6 +495,21 @@ public class BytesConstructorTests extends ABytesTest {
         assertArrayEquals(new byte[0], Bytes.fromNullSafe(null).array());
         assertArrayEquals(example_bytes_two, Bytes.fromNullSafe(example_bytes_two).array());
         assertArrayEquals(example_bytes_sixteen, Bytes.fromNullSafe(example_bytes_sixteen).array());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void fromArray_empty_shouldThrow() {
+        Bytes.from((byte[]) null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void wrapArrayByteOrder_empty_shouldThrow() {
+        Bytes.wrap(null, ByteOrder.BIG_ENDIAN);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void fromPartByte_empty_shouldThrow() {
+        Bytes.from((byte[]) null, 0, 1);
     }
 
     @Test

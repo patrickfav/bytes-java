@@ -137,6 +137,8 @@ Creating byte arrays from **primitive integer** types and arrays:
 Bytes.from(8);  //00000000 00000000 00000000 00001000
 Bytes.from(1897621543227L);
 Bytes.from(1634, 88903, 77263);
+Bytes.from(0.7336f, -87263.0f);
+Bytes.from(0.8160183296, 3984639846.0);
 ```
 
 Initializing **empty arrays** of arbitrary length:

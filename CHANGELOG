@@ -1,5 +1,10 @@
 # Releases
 
+## v1.4.0
+
+* add `from()` constructor from `float[]`
+* add `from()` constructor from `double[]`
+
 ## v1.3.0
 * improve hex encoder performance by factor 5
 

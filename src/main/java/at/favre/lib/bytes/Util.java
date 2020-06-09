@@ -561,6 +561,33 @@ final class Util {
         }
 
         /**
+         * Creates a byte array from given float array.
+         * The resulting byte array will have length floatArray * 4.
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
+         * @param floatArray to convert
+         * @return resulting byte array
+         */
+        static byte[] toByteArray(float[] floatArray) {
+            byte[] primitivesArray = new byte[floatArray.length * 4];
+            ByteBuffer buffer = ByteBuffer.allocate(4);
+            for (int i = 0; i < floatArray.length; i++) {
+                buffer.clear();
+                byte[] floatBytes = buffer.putFloat(floatArray[i]).array();
+                System.arraycopy(floatBytes, 0, primitivesArray, (i * 4), floatBytes.length);
+            }
+            return primitivesArray;
+        }
+
+        /**
          * Creates a byte array from given long array.
          * The resulting byte array will have length longArray * 8
          *
@@ -583,6 +610,33 @@ final class Util {
                 buffer.clear();
                 byte[] longBytes = buffer.putLong(longArray[i]).array();
                 System.arraycopy(longBytes, 0, primitivesArray, (i * 8), longBytes.length);
+            }
+            return primitivesArray;
+        }
+
+        /**
+         * Creates a byte array from given double array.
+         * The resulting byte array will have length doubleArray * 8.
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
+         * @param doubleArray to convert
+         * @return resulting byte array
+         */
+        static byte[] toByteArray(double[] doubleArray) {
+            byte[] primitivesArray = new byte[doubleArray.length * 8];
+            ByteBuffer buffer = ByteBuffer.allocate(8);
+            for (int i = 0; i < doubleArray.length; i++) {
+                buffer.clear();
+                byte[] doubleBytes = buffer.putDouble(doubleArray[i]).array();
+                System.arraycopy(doubleBytes, 0, primitivesArray, (i * 8), doubleBytes.length);
             }
             return primitivesArray;
         }

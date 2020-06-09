@@ -108,7 +108,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @return new instance
      */
     public static Bytes wrap(Bytes bytes) {
-        return wrap(bytes.internalArray(), bytes.byteOrder);
+        return wrap(Objects.requireNonNull(bytes, "passed Byte instance must not be null").internalArray(), bytes.byteOrder);
     }
 
     /**
@@ -347,6 +347,16 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Creates a new instance from given float array.
+     *
+     * @param floatArray to create from
+     * @return new instance
+     */
+    public static Bytes from(float... floatArray) {
+        return wrap(Util.Converter.toByteArray(Objects.requireNonNull(floatArray, "must provide at least a single float")));
+    }
+
+    /**
      * Creates a new instance from given 8 byte floating point number (double).
      *
      * @param double8Byte to create from
@@ -354,6 +364,16 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public static Bytes from(double double8Byte) {
         return wrap(ByteBuffer.allocate(8).putDouble(double8Byte).array());
+    }
+
+    /**
+     * Creates a new instance from given double array.
+     *
+     * @param doubleArray to create from
+     * @return new instance
+     */
+    public static Bytes from(double... doubleArray) {
+        return wrap(Util.Converter.toByteArray(Objects.requireNonNull(doubleArray, "must provide at least a single double")));
     }
 
     /**
@@ -2043,7 +2063,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * Pairs of {@code byte} elements are compared as if by invoking
      * {@link Byte#compare(byte, byte)}.
      * <p>
-     * Uses {@link ByteBuffer#compareTo(Object)} internally.
+     * Uses {@link ByteBuffer#compareTo(ByteBuffer)} internally.
      *
      * @return A negative integer, zero, or a positive integer as this buffer
      * is less than, equal to, or greater than the given buffer
