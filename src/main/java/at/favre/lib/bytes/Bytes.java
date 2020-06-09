@@ -1832,11 +1832,10 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * to a {@link UUID} constructor.
      *
      * @return newly created UUID
+     * @throws IllegalArgumentException if byte array has length not equal to 16
      */
     public UUID toUUID() {
-        if (length() != 16) {
-            throw new IllegalStateException("creating UUID requires internal array to be exactly 16 bytes, was " + length());
-        }
+        Util.Validation.checkExactLength(length(), 16, "UUID");
         ByteBuffer byteBuffer = buffer();
         return new UUID(byteBuffer.getLong(), byteBuffer.getLong());
     }
@@ -1848,7 +1847,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * If you just want to get the first element as {@code byte}, see {@link #byteAt(int)}, using index zero.
      *
      * @return the byte representation
-     * @throws IllegalStateException if byte array has length not equal to 1
+     * @throws IllegalArgumentException if byte array has length not equal to 1
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public byte toByte() {
@@ -1863,7 +1862,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * If you just want to get the first element as {@code byte}, see {@link #byteAt(int)}, using index zero.
      *
      * @return the unsigned byte representation wrapped in an int
-     * @throws IllegalStateException if byte array has length not equal to 1
+     * @throws IllegalArgumentException if byte array has length not equal to 1
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public int toUnsignedByte() {
@@ -1878,7 +1877,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * If you just want to get the first 2 bytes as {@code char}, see {@link #charAt(int)} using index zero.
      *
      * @return the int representation
-     * @throws IllegalStateException if byte array has length not equal to 2
+     * @throws IllegalArgumentException if byte array has length not equal to 2
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public char toChar() {
@@ -1893,7 +1892,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * If you just want to get the first 2 bytes as {@code short}, see {@link #shortAt(int)} using index zero.
      *
      * @return the int representation
-     * @throws IllegalStateException if byte array has length not equal to 2
+     * @throws IllegalArgumentException if byte array has length not equal to 2
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public short toShort() {
@@ -1908,7 +1907,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * If you just want to get the first 4 bytes as {@code int}, see {@link #intAt(int)} using index zero.
      *
      * @return the int representation
-     * @throws IllegalStateException if byte array has length not equal to 4
+     * @throws IllegalArgumentException if byte array has length not equal to 4
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public int toInt() {
@@ -1942,7 +1941,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * If you just want to get the first 4 bytes as {@code long}, see {@link #longAt(int)} using index zero.
      *
      * @return the long representation
-     * @throws IllegalStateException if byte array has length not equal to 8
+     * @throws IllegalArgumentException if byte array has length not equal to 8
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public long toLong() {
@@ -1974,7 +1973,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * representation for a Java float value. The output is dependent on the set {@link #byteOrder()}.
      *
      * @return the float representation
-     * @throws IllegalStateException if byte array has length not equal to 4
+     * @throws IllegalArgumentException if byte array has length not equal to 4
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public float toFloat() {
@@ -2006,7 +2005,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * representation for a Java double value. The output is dependent on the set {@link #byteOrder()}.
      *
      * @return the double representation
-     * @throws IllegalStateException if byte array has length not equal to 8
+     * @throws IllegalArgumentException if byte array has length not equal to 8
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Types</a>
      */
     public double toDouble() {

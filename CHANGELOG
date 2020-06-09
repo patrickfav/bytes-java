@@ -4,6 +4,7 @@
 
 * add `from()` constructor from `float[]`
 * add `from()` constructor from `double[]`
+* fix throwing `IllegalArgumentException` instead of `IllegalStateException` in `.toUUID()`
 
 ## v1.3.0
 * improve hex encoder performance by factor 5

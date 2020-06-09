@@ -222,17 +222,17 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
         }
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testToUUIDToLong() {
         Bytes.random(17).toUUID();
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testToUUIDToShort() {
         Bytes.random(15).toUUID();
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testToUUIDEmpty() {
         Bytes.allocate(0).toUUID();
     }
