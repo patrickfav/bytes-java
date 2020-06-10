@@ -303,65 +303,32 @@ public final class BytesTransformers {
         }
 
         private byte[] decompress(byte[] compressedContent) {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            GZIPInputStream gzipInputStream = null;
-            byte[] returnBuffer;
-            try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream(Math.max(32, compressedContent.length / 2));
+
+            try (GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedContent))) {
                 int len;
                 byte[] buffer = new byte[4 * 1024];
-                gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedContent));
 
                 while ((len = gzipInputStream.read(buffer)) > 0) {
                     bos.write(buffer, 0, len);
                 }
 
-                gzipInputStream.close();
-                returnBuffer = bos.toByteArray();
-                bos.close();
-                return returnBuffer;
+                return bos.toByteArray();
             } catch (Exception e) {
                 throw new IllegalStateException("could not decompress gzip", e);
-            } finally {
-                try {
-                    bos.close();
-                } catch (IOException ignore) {
-                }
-
-                if (gzipInputStream != null) {
-                    try {
-                        gzipInputStream.close();
-                    } catch (IOException ignore) {
-                    }
-                }
             }
         }
 
         private byte[] compress(byte[] content) {
             ByteArrayOutputStream bos = new ByteArrayOutputStream(content.length);
-            GZIPOutputStream gzipOutputStream = null;
-            byte[] returnBuffer;
-            try {
-                gzipOutputStream = new GZIPOutputStream(bos);
+
+            try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(bos)) {
                 gzipOutputStream.write(content);
-                gzipOutputStream.close();
-                returnBuffer = bos.toByteArray();
-                bos.close();
-                return returnBuffer;
             } catch (Exception e) {
                 throw new IllegalStateException("could not compress gzip", e);
-            } finally {
-                try {
-                    bos.close();
-                } catch (IOException ignore) {
-                }
-
-                if (gzipOutputStream != null) {
-                    try {
-                        gzipOutputStream.close();
-                    } catch (IOException ignore) {
-                    }
-                }
             }
+
+            return bos.toByteArray();
         }
 
         @Override
