@@ -32,6 +32,20 @@ import static org.junit.Assert.*;
 
 public class MutableBytesTest extends ABytesTest {
     @Test
+    public void allocate() {
+        MutableBytes b = MutableBytes.allocate(8);
+        assertEquals(8, b.length());
+        assertFalse(b.validateNotOnlyZeros());
+    }
+
+    @Test
+    public void allocateFill() {
+        MutableBytes b = MutableBytes.allocate(1, (byte) 0xFF);
+        assertEquals(1, b.length());
+        assertEquals((byte) 0xFF, b.byteAt(0));
+    }
+
+    @Test
     public void overwriteWithEmptyArray() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         assertSame(b, b.overwrite(new byte[example_bytes_seven.length]));
@@ -42,6 +56,13 @@ public class MutableBytesTest extends ABytesTest {
     public void overwriteOtherArray() {
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
         assertSame(b, b.overwrite(Arrays.copyOf(example2_bytes_seven, example2_bytes_seven.length)));
+        assertArrayEquals(example2_bytes_seven, b.array());
+    }
+
+    @Test
+    public void overwriteOtherBytesInstance() {
+        MutableBytes b = fromAndTest(example_bytes_seven).mutable();
+        assertSame(b, b.overwrite(Bytes.from(example2_bytes_seven)));
         assertArrayEquals(example2_bytes_seven, b.array());
     }
 
@@ -66,9 +87,9 @@ public class MutableBytesTest extends ABytesTest {
     @Test
     public void overwriteBytes() {
         MutableBytes a = fromAndTest(example_bytes_seven).mutable();
-        MutableBytes b = Bytes.from((byte)0).mutable();
+        MutableBytes b = Bytes.from((byte) 0).mutable();
         MutableBytes c = a.overwrite(b, 0).mutable();
-        MutableBytes d = Bytes.wrap(a).copy(1, a.array().length-1).mutable();
+        MutableBytes d = Bytes.wrap(a).copy(1, a.array().length - 1).mutable();
 
         assertArrayEquals(c.array(), Bytes.from(b).append(d).array());
     }
@@ -79,7 +100,8 @@ public class MutableBytesTest extends ABytesTest {
         try {
             b.overwrite(new byte[]{(byte) 0xAA, 0x30}, b.length());
             fail();
-        } catch(IndexOutOfBoundsException ignored) {}
+        } catch (IndexOutOfBoundsException ignored) {
+        }
 
     }
 
@@ -89,7 +111,8 @@ public class MutableBytesTest extends ABytesTest {
         try {
             b.overwrite(Bytes.from((byte) 0xAA, 0x30), b.length());
             fail();
-        } catch(IndexOutOfBoundsException ignored) {}
+        } catch (IndexOutOfBoundsException ignored) {
+        }
 
     }
 
@@ -98,10 +121,11 @@ public class MutableBytesTest extends ABytesTest {
         MutableBytes nonsense = null;
         MutableBytes b = fromAndTest(example_bytes_seven).mutable();
 
-        try{
+        try {
             b.overwrite(nonsense);
             fail();
-        } catch (NullPointerException ignored){}
+        } catch (NullPointerException ignored) {
+        }
 
 
     }
