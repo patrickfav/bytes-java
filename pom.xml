@@ -138,6 +138,6 @@
 
     <ciManagement>
         <system>Travis</system>
-        <url>https://travis-ci.org/patrickfav/bytes-java</url>
+        <url>https://travis-ci.com/patrickfav/bytes-java</url>
     </ciManagement>
 </project>
