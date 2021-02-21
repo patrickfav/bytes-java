@@ -272,6 +272,12 @@ public class BytesMiscTest extends ABytesTest {
             fail();
         } catch (IndexOutOfBoundsException ignored) {
         }
+
+        Bytes bytes = Bytes.wrap(new byte[]{1, 0, 2, 0}).byteOrder(ByteOrder.LITTLE_ENDIAN);
+        assertTrue(bytes.bitAt(0));
+        assertTrue(bytes.bitAt(17));
+        assertFalse(bytes.bitAt(8));
+        assertFalse(bytes.bitAt(31));
     }
 
     @Test

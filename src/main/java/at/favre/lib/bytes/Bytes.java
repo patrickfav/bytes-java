@@ -1338,7 +1338,11 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public boolean bitAt(int bitIndex) {
         Util.Validation.checkIndexBounds(lengthBit(), bitIndex, 1, "bit");
-        return ((byteAt(length() - 1 - (bitIndex / 8)) >>> bitIndex % 8) & 1) != 0;
+        if (byteOrder == ByteOrder.BIG_ENDIAN) {
+            return ((byteAt(length() - 1 - (bitIndex / 8)) >>> bitIndex % 8) & 1) != 0;
+        } else {
+            return ((byteAt(bitIndex / 8) >>> bitIndex % 8) & 1) != 0;
+        }
     }
 
     /**
