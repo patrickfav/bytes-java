@@ -25,6 +25,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigInteger;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -162,21 +163,34 @@ public class UtilByteTest extends AUtilTest {
     @Test
     public void testLeftShift() {
         byte[] test = new byte[]{0, 0, 1, 0};
-        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.Byte.shiftLeft(new byte[]{0, 0, -128, 0}, 1));
-        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.Byte.shiftLeft(new byte[]{0, 0, 64, 0}, 2));
-        assertArrayEquals(new byte[]{1, 1, 1, 0}, Util.Byte.shiftLeft(new byte[]{-128, -128, -128, -128}, 1));
-        assertArrayEquals(new byte[]{0, 0, 2, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 1));
-        assertArrayEquals(new byte[]{0, 0, 4, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 2));
-        assertArrayEquals(new byte[]{0, 0, 8, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 3));
-        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 8));
-        assertArrayEquals(new byte[]{0, 2, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 9));
-        assertArrayEquals(new byte[]{1, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 16));
-        assertArrayEquals(new byte[]{2, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 17));
-        assertArrayEquals(new byte[]{-128, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 23));
-        assertArrayEquals(new byte[]{0, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 24));
-        assertArrayEquals(new byte[]{0, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 24));
+        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.Byte.shiftLeft(new byte[]{0, 0, -128, 0}, 1, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.Byte.shiftLeft(new byte[]{0, 0, 64, 0}, 2, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{1, 1, 1, 0}, Util.Byte.shiftLeft(new byte[]{-128, -128, -128, -128}, 1, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 2, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 1, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 4, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 2, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 8, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 3, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 1, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 8, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 2, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 9, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{1, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 16, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{2, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 17, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{-128, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 23, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 24, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 0, 0}, Util.Byte.shiftLeft(Bytes.from(test).array(), 24, ByteOrder.BIG_ENDIAN));
 
-        assertSame(test, Util.Byte.shiftLeft(test, 1));
+        assertSame(test, Util.Byte.shiftLeft(test, 1, ByteOrder.BIG_ENDIAN));
+
+        assertArrayEquals(new byte[]{0, 0, 1, 0}, Util.Byte.shiftLeft(new byte[]{0, 1, 0, 0}, 8, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{(byte) 0, 0, 1, 0}, Util.Byte.shiftLeft(new byte[]{(byte) 0, 1, 0, 1}, 8, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{(byte) 0x54, 0x1}, Util.Byte.shiftLeft(new byte[]{(byte) 0xAA, 0}, 1, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{(byte) 0xA8, 0x2}, Util.Byte.shiftLeft(new byte[]{(byte) 0xAA, 0}, 2, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{(byte) 0x50, 0x5}, Util.Byte.shiftLeft(new byte[]{(byte) 0xAA, 0}, 3, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{(byte) 0xA0, 0xA}, Util.Byte.shiftLeft(new byte[]{(byte) 0xAA, 0}, 4, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{(byte) 0x40, 0x15}, Util.Byte.shiftLeft(new byte[]{(byte) 0xAA, 0}, 5, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{(byte) 0x80, 0x2A}, Util.Byte.shiftLeft(new byte[]{(byte) 0xAA, 0}, 6, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{(byte) 0x00, 0x55}, Util.Byte.shiftLeft(new byte[]{(byte) 0xAA, 0}, 7, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{(byte) 0, (byte) 0xAA}, Util.Byte.shiftLeft(new byte[]{(byte) 0xAA, 0}, 8, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 0, 0x40}, Util.Byte.shiftLeft(new byte[]{1, 0, 0, 0}, 30, ByteOrder.LITTLE_ENDIAN));
+
     }
 
     @Test
@@ -187,7 +201,7 @@ public class UtilByteTest extends AUtilTest {
             Bytes rnd = Bytes.random(4 + new Random().nextInt(14));
 
             byte[] expected = Bytes.from(new BigInteger(rnd.array()).shiftLeft(shift).toByteArray()).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
-            byte[] actual = Bytes.from(Util.Byte.shiftLeft(rnd.copy().array(), shift)).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
+            byte[] actual = Bytes.from(Util.Byte.shiftLeft(rnd.copy().array(), shift, ByteOrder.BIG_ENDIAN)).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
 
             System.out.println("Original  \t" + rnd.encodeBinary() + " << " + shift);
             System.out.println("Expected \t" + Bytes.wrap(expected).encodeBinary());
@@ -202,18 +216,23 @@ public class UtilByteTest extends AUtilTest {
     public void testRightShift() {
         byte[] test = new byte[]{0, 0, 16, 0};
         assertEquals(0b01111110, 0b11111101 >>> 1);
-        assertArrayEquals(new byte[]{0b00101101, (byte) 0b01111110}, Util.Byte.shiftRight(new byte[]{0b01011010, (byte) 0b11111101}, 1));
-        assertArrayEquals(new byte[]{0, -128, -128, -128}, Util.Byte.shiftRight(new byte[]{1, 1, 1, 1}, 1));
-        assertArrayEquals(new byte[]{0, -128, 66, 0}, Util.Byte.shiftRight(new byte[]{2, 1, 8, 2}, 2));
+        assertArrayEquals(new byte[]{0b00101101, (byte) 0b01111110}, Util.Byte.shiftRight(new byte[]{0b01011010, (byte) 0b11111101}, 1, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, -128, -128, -128}, Util.Byte.shiftRight(new byte[]{1, 1, 1, 1}, 1, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, -128, 66, 0}, Util.Byte.shiftRight(new byte[]{2, 1, 8, 2}, 2, ByteOrder.BIG_ENDIAN));
         assertArrayEquals(new byte[]{0, -128, 66, 0}, new BigInteger(new byte[]{2, 1, 8, 2}).shiftRight(2).toByteArray());
-        assertArrayEquals(new byte[]{0, 0, 0, -128}, Util.Byte.shiftRight(Bytes.from(test).array(), 5));
-        assertArrayEquals(new byte[]{0, 0, 0, -128}, Util.Byte.shiftRight(new byte[]{0, 0, 1, 0}, 1));
-        assertArrayEquals(new byte[]{0, 0, 8, 0}, Util.Byte.shiftRight(Bytes.from(test).array(), 1));
-        assertArrayEquals(new byte[]{0, 0, 4, 0}, Util.Byte.shiftRight(Bytes.from(test).array(), 2));
-        assertArrayEquals(new byte[]{0, 0, 2, 0}, Util.Byte.shiftRight(Bytes.from(test).array(), 3));
-        assertArrayEquals(new byte[]{0, 0, 1, 0}, Util.Byte.shiftRight(Bytes.from(test).array(), 4));
+        assertArrayEquals(new byte[]{0, 0, 0, -128}, Util.Byte.shiftRight(Bytes.from(test).array(), 5, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 0, -128}, Util.Byte.shiftRight(new byte[]{0, 0, 1, 0}, 1, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 8, 0}, Util.Byte.shiftRight(Bytes.from(test).array(), 1, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 4, 0}, Util.Byte.shiftRight(Bytes.from(test).array(), 2, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 2, 0}, Util.Byte.shiftRight(Bytes.from(test).array(), 3, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 1, 0}, Util.Byte.shiftRight(Bytes.from(test).array(), 4, ByteOrder.BIG_ENDIAN));
 
-        assertSame(test, Util.Byte.shiftRight(test, 1));
+        assertSame(test, Util.Byte.shiftRight(test, 1, ByteOrder.BIG_ENDIAN));
+
+        assertArrayEquals(new byte[]{0, 0}, Util.Byte.shiftRight(new byte[]{1, 0}, 1, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{(byte) 0x80, 0}, Util.Byte.shiftRight(new byte[]{0, 0x02}, 2, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{(byte) 0x80, 0, 0, 0}, Util.Byte.shiftRight(new byte[]{0, 0, 0, 1}, 17, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new byte[]{(byte) 1, 0, 0, 0}, Util.Byte.shiftRight(new byte[]{0, 0, 0, (byte) 0x80}, 31, ByteOrder.LITTLE_ENDIAN));
     }
 
     @Test
@@ -223,7 +242,7 @@ public class UtilByteTest extends AUtilTest {
             Bytes rnd = Bytes.random(4 + new Random().nextInt(12));
             if (!rnd.bitAt(rnd.lengthBit() - 1)) { //only unsigned
                 byte[] expected = Bytes.from(new BigInteger(rnd.array()).shiftRight(shift).toByteArray()).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
-                byte[] actual = Bytes.from(Util.Byte.shiftRight(rnd.copy().array(), shift)).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
+                byte[] actual = Bytes.from(Util.Byte.shiftRight(rnd.copy().array(), shift, ByteOrder.BIG_ENDIAN)).resize(rnd.length(), BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_MAX_LENGTH).array();
 
 //                System.out.println("Original  \t" + rnd.encodeBinary() + " >> " + shift);
 //                System.out.println("Expected \t" + Bytes.wrap(expected).encodeBinary());
