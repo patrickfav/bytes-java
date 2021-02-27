@@ -1,5 +1,10 @@
 # Releases
 
+## v1.5.0
+
+* fix `leftShift()` and `rightShift()` to respect byte order (thx @gfpeltier)
+* fix `bitAt()` to respect byte order (thx @gfpeltier)
+
 ## v1.4.0
 
 * add `from()` constructor from `float[]`
