@@ -967,7 +967,11 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#Bit_shifts">Bit shifts</a>
      */
     public Bytes leftShift(int shiftCount) {
-        return transform(new BytesTransformer.ShiftTransformer(shiftCount, BytesTransformer.ShiftTransformer.Type.LEFT_SHIFT));
+        return transform(new BytesTransformer.ShiftTransformer(
+            shiftCount,
+            BytesTransformer.ShiftTransformer.Type.LEFT_SHIFT,
+            byteOrder
+        ));
     }
 
     /**
@@ -982,7 +986,11 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * @see <a href="https://en.wikipedia.org/wiki/Bitwise_operation#Bit_shifts">Bit shifts</a>
      */
     public Bytes rightShift(int shiftCount) {
-        return transform(new BytesTransformer.ShiftTransformer(shiftCount, BytesTransformer.ShiftTransformer.Type.RIGHT_SHIFT));
+        return transform(new BytesTransformer.ShiftTransformer(
+            shiftCount,
+            BytesTransformer.ShiftTransformer.Type.RIGHT_SHIFT,
+            byteOrder
+        ));
     }
 
     /**

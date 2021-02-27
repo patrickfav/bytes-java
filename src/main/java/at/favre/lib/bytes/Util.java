@@ -291,25 +291,42 @@ final class Util {
          *
          * @param byteArray     to shift
          * @param shiftBitCount how many bits to shift
+         * @param byteOrder     endianness of given byte array
          * @return shifted byte array
          */
-        static byte[] shiftLeft(byte[] byteArray, int shiftBitCount) {
+        static byte[] shiftLeft(byte[] byteArray, int shiftBitCount, ByteOrder byteOrder) {
             final int shiftMod = shiftBitCount % 8;
             final byte carryMask = (byte) ((1 << shiftMod) - 1);
             final int offsetBytes = (shiftBitCount / 8);
 
             int sourceIndex;
-            for (int i = 0; i < byteArray.length; i++) {
-                sourceIndex = i + offsetBytes;
-                if (sourceIndex >= byteArray.length) {
-                    byteArray[i] = 0;
-                } else {
-                    byte src = byteArray[sourceIndex];
-                    byte dst = (byte) (src << shiftMod);
-                    if (sourceIndex + 1 < byteArray.length) {
-                        dst |= byteArray[sourceIndex + 1] >>> (8 - shiftMod) & carryMask;
+            if (byteOrder == ByteOrder.BIG_ENDIAN) {
+                for (int i = 0; i < byteArray.length; i++) {
+                    sourceIndex = i + offsetBytes;
+                    if (sourceIndex >= byteArray.length) {
+                        byteArray[i] = 0;
+                    } else {
+                        byte src = byteArray[sourceIndex];
+                        byte dst = (byte) (src << shiftMod);
+                        if (sourceIndex + 1 < byteArray.length) {
+                            dst |= byteArray[sourceIndex + 1] >>> (8 - shiftMod) & carryMask;
+                        }
+                        byteArray[i] = dst;
                     }
-                    byteArray[i] = dst;
+                }
+            } else {
+                for (int i = byteArray.length - 1; i >= 0; i--) {
+                    sourceIndex = i - offsetBytes;
+                    if (sourceIndex < 0) {
+                        byteArray[i] = 0;
+                    } else {
+                        byte src = byteArray[sourceIndex];
+                        byte dst = (byte) (src << shiftMod);
+                        if (sourceIndex - 1 >= 0) {
+                            dst |= byteArray[sourceIndex - 1] >>> (8 - shiftMod) & carryMask;
+                        }
+                        byteArray[i] = dst;
+                    }
                 }
             }
             return byteArray;
@@ -330,25 +347,42 @@ final class Util {
          *
          * @param byteArray     to shift
          * @param shiftBitCount how many bits to shift
+         * @param byteOrder     endianness of given byte array
          * @return shifted byte array
          */
-        static byte[] shiftRight(byte[] byteArray, int shiftBitCount) {
+        static byte[] shiftRight(byte[] byteArray, int shiftBitCount, ByteOrder byteOrder) {
             final int shiftMod = shiftBitCount % 8;
             final byte carryMask = (byte) (0xFF << (8 - shiftMod));
             final int offsetBytes = (shiftBitCount / 8);
 
             int sourceIndex;
-            for (int i = byteArray.length - 1; i >= 0; i--) {
-                sourceIndex = i - offsetBytes;
-                if (sourceIndex < 0) {
-                    byteArray[i] = 0;
-                } else {
-                    byte src = byteArray[sourceIndex];
-                    byte dst = (byte) ((0xff & src) >>> shiftMod);
-                    if (sourceIndex - 1 >= 0) {
-                        dst |= byteArray[sourceIndex - 1] << (8 - shiftMod) & carryMask;
+            if (byteOrder == ByteOrder.BIG_ENDIAN) {
+                for (int i = byteArray.length - 1; i >= 0; i--) {
+                    sourceIndex = i - offsetBytes;
+                    if (sourceIndex < 0) {
+                        byteArray[i] = 0;
+                    } else {
+                        byte src = byteArray[sourceIndex];
+                        byte dst = (byte) ((0xff & src) >>> shiftMod);
+                        if (sourceIndex - 1 >= 0) {
+                            dst |= byteArray[sourceIndex - 1] << (8 - shiftMod) & carryMask;
+                        }
+                        byteArray[i] = dst;
                     }
-                    byteArray[i] = dst;
+                }
+            } else {
+                for (int i = 0; i < byteArray.length; i++) {
+                    sourceIndex = i + offsetBytes;
+                    if (sourceIndex >= byteArray.length) {
+                        byteArray[i] = 0;
+                    } else {
+                        byte src = byteArray[sourceIndex];
+                        byte dst = (byte) ((0xff & src) >>> shiftMod);
+                        if (sourceIndex + 1 < byteArray.length) {
+                            dst |= byteArray[sourceIndex + 1] << (8 - shiftMod) & carryMask;
+                        }
+                        byteArray[i] = dst;
+                    }
                 }
             }
             return byteArray;

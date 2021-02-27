@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Comparator;
@@ -446,7 +447,7 @@ public class BytesTransformTest extends ABytesTest {
         assertTrue(new BytesTransformer.BitSwitchTransformer(0, true).supportInPlaceTransformation());
         assertTrue(new BytesTransformer.BitWiseOperatorTransformer(new byte[]{}, BytesTransformer.BitWiseOperatorTransformer.Mode.XOR).supportInPlaceTransformation());
         assertTrue(new BytesTransformer.NegateTransformer().supportInPlaceTransformation());
-        assertTrue(new BytesTransformer.ShiftTransformer(0, BytesTransformer.ShiftTransformer.Type.LEFT_SHIFT).supportInPlaceTransformation());
+        assertTrue(new BytesTransformer.ShiftTransformer(0, BytesTransformer.ShiftTransformer.Type.LEFT_SHIFT, ByteOrder.BIG_ENDIAN).supportInPlaceTransformation());
         assertTrue(new BytesTransformer.ReverseTransformer().supportInPlaceTransformation());
 
         assertFalse(new BytesTransformer.MessageDigestTransformer("SHA1").supportInPlaceTransformation());

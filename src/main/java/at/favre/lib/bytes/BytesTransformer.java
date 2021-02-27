@@ -21,6 +21,7 @@
 
 package at.favre.lib.bytes;
 
+import java.nio.ByteOrder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
@@ -131,10 +132,12 @@ public interface BytesTransformer {
 
         private final int shiftCount;
         private final Type type;
+        private final ByteOrder byteOrder;
 
-        ShiftTransformer(int shiftCount, Type type) {
+        ShiftTransformer(int shiftCount, Type type, ByteOrder byteOrder) {
             this.shiftCount = shiftCount;
             this.type = Objects.requireNonNull(type, "passed shift type must not be null");
+            this.byteOrder = Objects.requireNonNull(byteOrder, "passed byteOrder type must not be null");
         }
 
         @Override
@@ -143,10 +146,10 @@ public interface BytesTransformer {
 
             switch (type) {
                 case RIGHT_SHIFT:
-                    return Util.Byte.shiftRight(out, shiftCount);
+                    return Util.Byte.shiftRight(out, shiftCount, byteOrder);
                 default:
                 case LEFT_SHIFT:
-                    return Util.Byte.shiftLeft(out, shiftCount);
+                    return Util.Byte.shiftLeft(out, shiftCount, byteOrder);
             }
         }
 
