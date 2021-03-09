@@ -498,7 +498,7 @@ Conversion to [`InputStream`](https://docs.oracle.com/javase/7/docs/api/java/io/
 
 ```java
 Bytes.wrap(array).inputStream();
-Bytes.wrap(array).byteBuffer();
+Bytes.wrap(array).buffer();
 ```
 
 If you just want a duplicated instance, sharing the same array:
