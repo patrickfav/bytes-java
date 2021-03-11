@@ -860,6 +860,34 @@ final class Util {
             return array;
         }
 
+
+        /**
+         * Converts the byte array to a short array. This will spread 2 bytes into a single short:
+         *
+         * <pre>
+         *     [b1, b2] = [short1]
+         * </pre>
+         *
+         * <p>
+         * <strong>Analysis</strong>
+         * <ul>
+         * <li>Time Complexity: <code>O(n)</code></li>
+         * <li>Space Complexity: <code>O(n)</code></li>
+         * <li>Alters Parameters: <code>false</code></li>
+         * </ul>
+         * </p>
+         *
+         * @param bytes     to convert to short array, must be % 2 == 0 to work correctly
+         * @param byteOrder of the byte array
+         * @return short array
+         */
+        static short[] toShortArray(byte[] bytes, ByteOrder byteOrder) {
+            ShortBuffer buffer = ByteBuffer.wrap(bytes).order(byteOrder).asShortBuffer();
+            short[] array = new short[buffer.remaining()];
+            buffer.get(array);
+            return array;
+        }
+
         /**
          * Convert UUID to a newly generated 16 byte long array representation. Puts the 8 byte most significant bits and
          * 8 byte least significant bits into an byte array.

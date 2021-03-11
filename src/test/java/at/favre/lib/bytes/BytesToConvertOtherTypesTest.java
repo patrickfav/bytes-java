@@ -406,4 +406,38 @@ public class BytesToConvertOtherTypesTest extends ABytesTest {
                 1, 1, 1, 0, 0, 0, 1, 0,
                 1, 0, 0, 0, 0, 0, 0, 0}, ByteOrder.LITTLE_ENDIAN).toDoubleArray(), 0.01);
     }
+
+    @Test
+    public void testToShortArrayEmpty() {
+        assertArrayEquals(new short[0], Bytes.empty().toShortArray());
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testToShortArrayNotMod2Was5Byte() {
+        Bytes.wrap(new byte[]{0, 0, 0, 0, 1}).toShortArray();
+    }
+
+    @Test
+    public void testToShortArray() {
+        assertArrayEquals(new short[]{1}, Bytes.wrap(new byte[]{0, 1}).toShortArray());
+        assertArrayEquals(new short[]{257}, Bytes.wrap(new byte[]{1, 1}).toShortArray());
+        assertArrayEquals(new short[]{32_767}, Bytes.wrap(new byte[]{127, -1}).toShortArray());
+
+        assertArrayEquals(new short[]{1, 1}, Bytes.wrap(new byte[]{0, 1, 0, 1}).toShortArray());
+        assertArrayEquals(new short[]{257, 1}, Bytes.wrap(new byte[]{1, 1, 0, 1}).toShortArray());
+        assertArrayEquals(new short[]{257, 32_767, 1}, Bytes.wrap(new byte[]{1, 1, 127, -1, 0, 1}).toShortArray());
+    }
+
+    @Test
+    public void testToShortArrayLittleEndian() {
+        assertArrayEquals(new short[]{1}, Bytes.wrap(new byte[]{1, 0}, ByteOrder.LITTLE_ENDIAN).toShortArray());
+        assertArrayEquals(new short[]{257}, Bytes.wrap(new byte[]{1, 1}, ByteOrder.LITTLE_ENDIAN).toShortArray());
+        assertArrayEquals(new short[]{32_767}, Bytes.wrap(new byte[]{-1, 127}, ByteOrder.LITTLE_ENDIAN).toShortArray());
+
+        assertArrayEquals(new short[]{1, 1}, Bytes.wrap(new byte[]{1, 0, 1, 0}, ByteOrder.LITTLE_ENDIAN).toShortArray());
+        assertArrayEquals(new short[]{257, 1}, Bytes.wrap(new byte[]{1, 1, 1, 0}, ByteOrder.LITTLE_ENDIAN).toShortArray());
+        assertArrayEquals(new short[]{257, 32_767, 1}, Bytes.wrap(new byte[]{1, 1, -1, 127, 1, 0}, ByteOrder.LITTLE_ENDIAN).toShortArray());
+    }
+
 }
