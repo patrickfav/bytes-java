@@ -193,4 +193,20 @@ public class UtilConverterTest extends AUtilTest {
         assertArrayEquals(new double[0], Util.Converter.toDoubleArray(new byte[0], ByteOrder.LITTLE_ENDIAN), 0.01);
         assertArrayEquals(new double[0], Util.Converter.toDoubleArray(new byte[0], ByteOrder.BIG_ENDIAN), 0.01);
     }
+
+    @Test
+    public void testToShortArray() {
+        assertArrayEquals(new short[]{1}, Util.Converter.toShortArray(new byte[]{0, 1}, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new short[]{257}, Util.Converter.toShortArray(new byte[]{1, 1}, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new short[]{32_767}, Util.Converter.toShortArray(new byte[]{127, -1}, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new short[]{257, 32_767, 1}, Util.Converter.toShortArray(new byte[]{1, 1, 127, -1, 0, 1}, ByteOrder.BIG_ENDIAN));
+
+        assertArrayEquals(new short[]{1}, Util.Converter.toShortArray(new byte[]{1, 0}, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new short[]{257}, Util.Converter.toShortArray(new byte[]{1, 1}, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new short[]{32_767}, Util.Converter.toShortArray(new byte[]{-1, 127}, ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new short[]{257, 32_767, 1}, Util.Converter.toShortArray(new byte[]{1, 1, -1, 127, 1, 0}, ByteOrder.LITTLE_ENDIAN));
+
+        assertArrayEquals(new short[0], Util.Converter.toShortArray(new byte[0], ByteOrder.LITTLE_ENDIAN));
+        assertArrayEquals(new short[0], Util.Converter.toShortArray(new byte[0], ByteOrder.BIG_ENDIAN));
+    }
 }

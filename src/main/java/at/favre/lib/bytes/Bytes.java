@@ -2045,6 +2045,25 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Converts the internal byte array to a short array, that is, every 2 bytes will be packed into a single short.
+     * <p>
+     * E.g. 2 bytes will be packed to a length 1 short array:
+     * <pre>
+     *  [b1, b2] = [short1]
+     * </pre>
+     * <p>
+     * This conversion respects the internal byte order. Will only work if all bytes can be directly mapped to short,
+     * which means the byte array length must be dividable by 2 without rest.
+     *
+     * @return new short[] instance representing this byte array
+     * @throws IllegalArgumentException if internal byte length mod 2 != 0
+     */
+    public short[] toShortArray() {
+        Util.Validation.checkModLength(length(), 2, "creating a short array");
+        return Util.Converter.toShortArray(internalArray(), byteOrder);
+    }
+
+    /**
      * Decodes the internal byte array to UTF-8 char array.
      * This implementation will not internally create a {@link String}.
      *
