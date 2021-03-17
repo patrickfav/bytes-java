@@ -297,6 +297,16 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Creates a new instance from given 2 byte short array.
+     *
+     * @param shortArray to create from
+     * @return new instance
+     */
+    public static Bytes from(short... shortArray) {
+        return wrap(Util.Converter.toByteArray(Objects.requireNonNull(shortArray, "must provide at least a single short")));
+    }
+
+    /**
      * Creates a new instance from given 4 byte integer.
      *
      * @param integer4byte to create from
@@ -1492,7 +1502,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     /**
      * Set the byte order or endianness of this instance. Default in Java is {@link ByteOrder#BIG_ENDIAN}.
      * <p>
-     * This option is important for all encoding and conversation methods.
+     * This option is important for all encoding and conversion methods.
      *
      * @param byteOrder new byteOrder
      * @return a new instance with the same underlying array and new order, or "this" if order is the same
