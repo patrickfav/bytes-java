@@ -179,6 +179,19 @@ public class BytesConstructorTests extends ABytesTest {
         assertEquals(test, Bytes.from(test).toShort());
     }
 
+    @Test(expected = NullPointerException.class)
+    public void fromShortArray_empty_shouldThrow() {
+        Bytes.from((short[]) null);
+    }
+
+    @Test
+    public void fromShortArray() {
+        assertArrayEquals(new byte[]{0, 1, 0, 2}, Bytes.from((short) 1, (short) 2).array());
+        assertArrayEquals(Bytes.from(Bytes.from((short) 32767), Bytes.from((short) 6761), Bytes.from((short) -8517)).array(), Bytes.from((short) 32767, (short) 6761, (short) -8517).array());
+        assertArrayEquals(Bytes.from(Bytes.from((short) 1678), Bytes.from((short) -223), Bytes.from((short) 11114)).array(), Bytes.from((short) 1678, (short) -223, (short) 11114).array());
+        assertArrayEquals(new byte[]{114, -123, 35, 53, 0, 0, 56, -70}, Bytes.from((short) 29317, (short) 9013, (short) 0, (short) 14522).array());
+    }
+
     @Test
     public void fromInt() {
         int test = 722837193;
