@@ -1278,6 +1278,20 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
+     * Returns the index of the first appearance of the value {@code target} in
+     * {@code array} from given start index 'fromIndex' to given end index 'toIndex'.
+     *
+     * @param target    a primitive {@code byte} value
+     * @param fromIndex search from this index
+     * @param toIndex   search to this index
+     * @return the least index {@code i} for which {@code array[i] == target}, or
+     * {@code -1} if no such index exists or fromIndex is gt target length.
+     */
+    public int indexOf(byte target, int fromIndex, int toIndex) {
+        return indexOf(new byte[]{target}, fromIndex, toIndex);
+    }
+
+    /**
      * Returns the start position of the first occurrence of the specified {@code
      * target} within {@code array}, or {@code -1} if there is no such occurrence.
      * <p>
@@ -1309,6 +1323,25 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public int indexOf(byte[] subArray, int fromIndex) {
         return Util.Byte.indexOf(internalArray(), subArray, fromIndex, length());
+    }
+
+    /**
+     * Returns the start position of the first occurrence of the specified {@code
+     * target} within {@code array} from given start index 'fromIndex' to given end
+     * index 'toIndex', or {@code -1} if there is no such occurrence.
+     * <p>
+     * More formally, returns the lowest index {@code i} such that {@code
+     * java.util.Arrays.copyOfRange(array, i, i + target.length)} contains exactly
+     * the same elements as {@code target}.
+     *
+     * @param subArray  the array to search for as a sub-sequence of {@code array}
+     * @param fromIndex search from this index
+     * @param toIndex search to this index
+     * @return the least index {@code i} for which {@code array[i] == target}, or
+     * {@code -1} if no such index exists.
+     */
+    public int indexOf(byte[] subArray, int fromIndex, int toIndex) {
+        return Util.Byte.indexOf(internalArray(), subArray, fromIndex, toIndex);
     }
 
     /**

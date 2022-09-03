@@ -189,6 +189,15 @@ public class BytesMiscTest extends ABytesTest {
     }
 
     @Test
+    public void indexOfByteFromIndexToIndex() {
+        assertEquals(4, Bytes.from(example_bytes_seven).indexOf((byte) 0x1E, 0, 7));
+        assertEquals(4, Bytes.from(example_bytes_seven).indexOf((byte) 0x1E, 3, 5));
+        assertEquals(-1, Bytes.from(example_bytes_seven).indexOf((byte) 0x1E, 0, 3));
+        assertEquals(-1, Bytes.from(example_bytes_seven).indexOf((byte) 0x1E, 6, 7));
+        assertEquals(-1, Bytes.from(example_bytes_seven).indexOf((byte) 0xCA, 0, 7));
+    }
+
+    @Test
     public void indexOfArray() {
         assertEquals(-1, Bytes.allocate(0).indexOf(new byte[]{(byte) 0xFD}));
         assertEquals(-1, Bytes.allocate(1).indexOf(new byte[0]));
@@ -202,6 +211,16 @@ public class BytesMiscTest extends ABytesTest {
         assertEquals(-1, Bytes.allocate(1).indexOf(new byte[0], 0));
         assertEquals(-1, Bytes.from(example_bytes_seven).indexOf(new byte[]{(byte) 0xFD, (byte) 0xFF}, 8));
         assertEquals(2, Bytes.from(new byte[]{(byte) 0x8E, (byte) 0xD1, (byte) 0x8E, (byte) 0xD1, 0x12, (byte) 0xAF, (byte) 0x78, 0x09, 0x1E, (byte) 0xD1, (byte) 0xFD, (byte) 0xAA, 0x12}).indexOf(new byte[]{(byte) 0x8E, (byte) 0xD1}, 1));
+    }
+
+    @Test
+    public void indexOfArrayFromIndexToIndex() {
+        assertEquals(4, Bytes.from(example_bytes_seven).indexOf(new byte[] { (byte) 0x1E, (byte) 0xAF }, 0, 7));
+        assertEquals(4, Bytes.from(example_bytes_seven).indexOf(new byte[] { (byte) 0x1E, (byte) 0xAF }, 3, 5));
+        assertEquals(4, Bytes.from(example_bytes_seven).indexOf(new byte[] { (byte) 0x1E, (byte) 0xAF, (byte) 0xED }, 4, 5));
+        assertEquals(-1, Bytes.from(example_bytes_seven).indexOf(new byte[] { (byte) 0x1E, (byte) 0xAF }, 0, 3));
+        assertEquals(-1, Bytes.from(example_bytes_seven).indexOf(new byte[] { (byte) 0x1E, (byte) 0xAF }, 6, 7));
+        assertEquals(-1, Bytes.from(example_bytes_seven).indexOf(new byte[] { (byte) 0xCA, (byte) 0xFE }, 0, 7));
     }
 
     @Test
