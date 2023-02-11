@@ -1,5 +1,14 @@
 # Releases
 
+## v1.6.0
+
+* migrate to github actions, codecov and maven central #49
+* add `indexOf` (thx @hlyakhovich) #48
+* add `toShortArray` (thx @hlyakhovich) #44
+* add `from()` constructor from `short` vararg or array (thx @hlyakhovich) #45
+* add an automatic module name to support the JPMS (thx @airsquared) #47
+* fix warning of junit 4.13 CVE-2020-15250
+
 ## v1.5.0
 
 * fix `leftShift()` and `rightShift()` to respect byte order (thx @gfpeltier)
