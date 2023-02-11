@@ -28,7 +28,7 @@ to blindly paste code snippets from
 [m](https://stackoverflow.com/questions/1519736/random-shuffling-of-an-array)
 
 [![Maven Central](https://img.shields.io/maven-central/v/at.favre.lib/bytes)](https://mvnrepository.com/artifact/at.favre.lib/bytes)
-[![Build Status](https://travis-ci.com/patrickfav/bytes-java.svg?branch=master)](https://travis-ci.com/patrickfav/bytes-java)
+[![Github Actions](https://github.com/patrickfav/bytes-java/actions/workflows/build_deploy.yml/badge.svg)](https://github.com/patrickfav/bytes-java/actions)
 [![Javadocs](https://www.javadoc.io/badge/at.favre.lib/bytes.svg)](https://www.javadoc.io/doc/at.favre.lib/bytes)
 [![codecov](https://codecov.io/gh/patrickfav/bytes-java/branch/master/graph/badge.svg?token=YiSRwBApvz)](https://codecov.io/gh/patrickfav/bytes-java)
 [![Maintainability](https://api.codeclimate.com/v1/badges/43b7770f0ee00b85f92a/maintainability)](https://codeclimate.com/github/patrickfav/bytes-java/maintainability)
