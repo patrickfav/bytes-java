@@ -27,10 +27,10 @@ to blindly paste code snippets from
 [o](https://stackoverflow.com/a/9670279/774398)
 [m](https://stackoverflow.com/questions/1519736/random-shuffling-of-an-array)
 
-[![Download](https://api.bintray.com/packages/patrickfav/maven/bytes-java/images/download.svg)](https://bintray.com/patrickfav/maven/bytes-java/_latestVersion)
+[![Maven Central](https://img.shields.io/maven-central/v/at.favre.lib/bytes)](https://mvnrepository.com/artifact/at.favre.lib/bytes)
 [![Build Status](https://travis-ci.com/patrickfav/bytes-java.svg?branch=master)](https://travis-ci.com/patrickfav/bytes-java)
 [![Javadocs](https://www.javadoc.io/badge/at.favre.lib/bytes.svg)](https://www.javadoc.io/doc/at.favre.lib/bytes)
-[![Coverage Status](https://coveralls.io/repos/github/patrickfav/bytes-java/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/bytes-java?branch=master) 
+[![codecov](https://codecov.io/gh/patrickfav/bytes-java/branch/master/graph/badge.svg?token=YiSRwBApvz)](https://codecov.io/gh/patrickfav/bytes-java)
 [![Maintainability](https://api.codeclimate.com/v1/badges/43b7770f0ee00b85f92a/maintainability)](https://codeclimate.com/github/patrickfav/bytes-java/maintainability)
 
 It's main features include:
