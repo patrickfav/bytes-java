@@ -7,7 +7,7 @@
     <parent>
         <groupId>at.favre.lib</groupId>
         <artifactId>common-parent</artifactId>
-        <version>15</version>
+        <version>18</version>
     </parent>
 
     <artifactId>bytes</artifactId>
@@ -26,27 +26,6 @@
         <commonConfig.jarSign.skip>false</commonConfig.jarSign.skip>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
     <build>
         <plugins>
             <plugin>
@@ -116,7 +95,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -133,18 +111,9 @@
         </dependency>
     </dependencies>
 
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <name>Central Repository OSSRH</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
     <scm>
-        <connection>https://github.com/patrickfav/bytes-java.git</connection>
-        <developerConnection>https://github.com/patrickfav/bytes-java.git</developerConnection>
-        <tag>HEAD</tag>
+        <connection>scm:git:https://github.com/patrickfav/bytes-java.git</connection>
+        <developerConnection>scm:git:https://github.com/patrickfav/bytes-java.git</developerConnection>
         <url>https://github.com/patrickfav/bytes-java</url>
     </scm>
 
@@ -154,7 +123,7 @@
     </issueManagement>
 
     <ciManagement>
-        <system>Travis</system>
-        <url>https://travis-ci.com/patrickfav/bytes-java</url>
+        <system>Github Actions</system>
+        <url>https://github.com/patrickfav/bytes-java/actions</url>
     </ciManagement>
 </project>
