@@ -1,5 +1,12 @@
 # Releases
 
+## v1.6.1
+
+* now build by JDK 11 and removed errorprone compiler #52
+* introduce sonarqube and remove codecov
+* improve javadoc by fixing many typos #53
+* some small bugfixes
+
 ## v1.6.0
 
 * migrate to github actions, codecov and maven central #49
