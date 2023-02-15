@@ -30,10 +30,11 @@ to blindly paste code snippets from
 [![Maven Central](https://img.shields.io/maven-central/v/at.favre.lib/bytes)](https://mvnrepository.com/artifact/at.favre.lib/bytes)
 [![Github Actions](https://github.com/patrickfav/bytes-java/actions/workflows/build_deploy.yml/badge.svg)](https://github.com/patrickfav/bytes-java/actions)
 [![Javadocs](https://www.javadoc.io/badge/at.favre.lib/bytes.svg)](https://www.javadoc.io/doc/at.favre.lib/bytes)
-[![codecov](https://codecov.io/gh/patrickfav/bytes-java/branch/master/graph/badge.svg?token=YiSRwBApvz)](https://codecov.io/gh/patrickfav/bytes-java)
-[![Maintainability](https://api.codeclimate.com/v1/badges/43b7770f0ee00b85f92a/maintainability)](https://codeclimate.com/github/patrickfav/bytes-java/maintainability)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=patrickfav_bytes-java&metric=coverage)](https://sonarcloud.io/summary/new_code?id=patrickfav_bytes-java)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=patrickfav_bytes-java&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=patrickfav_bytes-java)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=patrickfav_bytes-java&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=patrickfav_bytes-java)
 
-It's main features include:
+Its main features include:
 
 * **Creation** from a wide variety of sources: multiple arrays, integers, [streams](https://docs.oracle.com/javase/7/docs/api/java/io/InputStream.html), random, strings, files, uuid, ...
 * **Transformation** with many built-in: append, [xor](https://en.wikipedia.org/wiki/Exclusive_or), [and](https://en.wikipedia.org/wiki/Logical_conjunction), [hash](https://en.wikipedia.org/wiki/Cryptographic_hash_function), [shifts](https://en.wikipedia.org/wiki/Bitwise_operation#Bit_shifts), shuffle, reverse, [checksum](https://en.wikipedia.org/wiki/Checksum), ...
