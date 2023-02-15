@@ -7,7 +7,7 @@
     <parent>
         <groupId>at.favre.lib</groupId>
         <artifactId>common-parent</artifactId>
-        <version>18</version>
+        <version>18.1</version>
     </parent>
 
     <artifactId>bytes</artifactId>
@@ -24,6 +24,12 @@
 
     <properties>
         <commonConfig.jarSign.skip>false</commonConfig.jarSign.skip>
+        <!-- SonarQube Config -->
+        <sonar.organization>patrickfav</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.language>java</sonar.language>
     </properties>
 
     <build>
@@ -35,7 +41,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>4.2.0</version>
+                <version>5.1.8</version>
                 <extensions>true</extensions>
             </plugin>
             <plugin>
@@ -64,10 +70,6 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>com.github.wvengen</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
