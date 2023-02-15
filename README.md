@@ -700,8 +700,8 @@ the plugin versions as well as providing the checkstyle config rules. Specifical
 
 ## Tech Stack
 
-* Java 7 (+ [errorprone](https://github.com/google/error-prone) static analyzer)
-* Maven
+* Java 7 Source, JDK 11 required to build (not yet JDK17 compatible)
+* Maven 3
 
 # Credits
 
