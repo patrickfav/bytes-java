@@ -44,7 +44,7 @@ public final class BytesTransformers {
     }
 
     /**
-     * Create a {@link BytesTransformer} which sorts the internal byte array with it's natural ordering treating
+     * Create a {@link BytesTransformer} which sorts the internal byte array with its natural ordering treating
      * each byte as signed byte (-128...127). Using inplace sorting, this can be reasonable fast.
      *
      * @return transformer
@@ -54,9 +54,9 @@ public final class BytesTransformers {
     }
 
     /**
-     * Create a {@link BytesTransformer} which sorts the internal byte array with it's natural ordering treating
+     * Create a {@link BytesTransformer} which sorts the internal byte array with its natural ordering treating
      * each byte as unsigned byte (0...255). That is, the byte string {@code ff} sorts after {@code 00}.
-     *
+     * <p>
      * <strong>Note:</strong> this requires 2 copies of the internal array and a lot of unboxing due to
      * the fact that no primitives are not allowed as generic type arguments - so only use on small arrays.
      *
@@ -68,7 +68,7 @@ public final class BytesTransformers {
 
     /**
      * Create a {@link BytesTransformer} which sorts the internal byte array according to given comparator.
-     *
+     * <p>
      * <strong>Note:</strong> this requires 2 copies of the internal array and a lot of unboxing due to
      * the fact that no primitives are not allowed as generic type arguments - so only use on small arrays.
      *
@@ -192,7 +192,7 @@ public final class BytesTransformers {
      * Sorts the internal byte array with given {@link java.util.Comparator}
      */
     public static final class SortTransformer implements BytesTransformer {
-        private final Comparator comparator;
+        private final Comparator<Byte> comparator;
 
         SortTransformer() {
             this(null);
