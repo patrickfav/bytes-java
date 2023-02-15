@@ -37,7 +37,7 @@ public final class BytesValidators {
      * Checks the length of a byte array
      *
      * @param byteLength to check against
-     * @return true if longer or equal to given value
+     * @return validator that returns true if longer or equal to given value
      */
     public static BytesValidator atLeast(int byteLength) {
         return new BytesValidator.Length(byteLength, BytesValidator.Length.Mode.GREATER_OR_EQ_THAN);
@@ -47,7 +47,7 @@ public final class BytesValidators {
      * Checks the length of a byte array
      *
      * @param byteLength to check against
-     * @return true if smaller or equal to given value
+     * @return validator that returns true if smaller or equal to given value
      */
     public static BytesValidator atMost(int byteLength) {
         return new BytesValidator.Length(byteLength, BytesValidator.Length.Mode.SMALLER_OR_EQ_THAN);
@@ -57,7 +57,7 @@ public final class BytesValidators {
      * Checks the length of a byte array
      *
      * @param byteLength to check against
-     * @return true if equal to given value
+     * @return validator that returns true if equal to given value
      */
     public static BytesValidator exactLength(int byteLength) {
         return new BytesValidator.Length(byteLength, BytesValidator.Length.Mode.EXACT);
@@ -67,7 +67,7 @@ public final class BytesValidators {
      * Checks individual byte content
      *
      * @param refByte to check against
-     * @return true if array only consists of refByte
+     * @return validator that returns true if array only consists of refByte
      */
     public static BytesValidator onlyOf(byte refByte) {
         return new BytesValidator.IdenticalContent(refByte, BytesValidator.IdenticalContent.Mode.ONLY_OF);
@@ -77,7 +77,7 @@ public final class BytesValidators {
      * Checks individual byte content
      *
      * @param refByte to check against
-     * @return true if array has at least one byte that is not refByte
+     * @return validator that returns true  if array has at least one byte that is not refByte
      */
     public static BytesValidator notOnlyOf(byte refByte) {
         return new BytesValidator.IdenticalContent(refByte, BytesValidator.IdenticalContent.Mode.NOT_ONLY_OF);
@@ -87,7 +87,7 @@ public final class BytesValidators {
      * Checks if the internal byte array starts with given bytes
      *
      * @param startsWithBytes the supposed prefix
-     * @return true all startsWithBytes match the first bytes in the internal array
+     * @return validator that returns true all startsWithBytes match the first bytes in the internal array
      */
     public static BytesValidator startsWith(byte... startsWithBytes) {
         return new BytesValidator.PrePostFix(true, startsWithBytes);
@@ -97,7 +97,7 @@ public final class BytesValidators {
      * Checks if the internal byte array ends with given bytes
      *
      * @param endsWithBytes the supposed postfix
-     * @return true all startsWithBytes match the first bytes in the internal array
+     * @return validator that returns true all startsWithBytes match the first bytes in the internal array
      */
     public static BytesValidator endsWith(byte... endsWithBytes) {
         return new BytesValidator.PrePostFix(false, endsWithBytes);
@@ -107,7 +107,7 @@ public final class BytesValidators {
      * Checks individual byte content
      *
      * @param refByte to check against
-     * @return true if array has no value refByte
+     * @return validator that returns true if array has no value refByte
      */
     public static BytesValidator noneOf(byte refByte) {
         return new BytesValidator.IdenticalContent(refByte, BytesValidator.IdenticalContent.Mode.NONE_OF);
@@ -117,7 +117,7 @@ public final class BytesValidators {
      * This will execute all passed validators and returns true if at least one returns true (i.e. OR concatenation)
      *
      * @param validators at least one validator must be passed
-     * @return true if at least one validator returns true
+     * @return validator that returns true if at least one validator returns true
      */
     public static BytesValidator or(BytesValidator... validators) {
         return new BytesValidator.Logical(Arrays.asList(validators), BytesValidator.Logical.Operator.OR);
@@ -127,7 +127,7 @@ public final class BytesValidators {
      * This will execute all passed validators and returns true if all return true (i.e. AND concatenation)
      *
      * @param validators at least one validator must be passed
-     * @return true if all return true
+     * @return validator that returns true if all return true
      */
     public static BytesValidator and(BytesValidator... validators) {
         return new BytesValidator.Logical(Arrays.asList(validators), BytesValidator.Logical.Operator.AND);

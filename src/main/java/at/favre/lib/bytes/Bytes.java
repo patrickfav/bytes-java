@@ -31,7 +31,7 @@ import java.text.Normalizer;
 import java.util.*;
 
 /**
- * Bytes is wrapper class for an byte-array that allows a lot of convenience operations on it:
+ * "Bytes" is wrapper class for a byte-array that allows a lot of convenience operations on it:
  * <ul>
  * <li>Creation from various source: arrays, primitives, parsed or random</li>
  * <li>Encoding in many formats: hex, base64, etc.</li>
@@ -45,7 +45,7 @@ import java.util.*;
  * It supports byte ordering (little/big endianness).
  * <p>
  * This class is immutable as long as the internal array is not changed from outside (which can't be assured, when
- * using using <code>wrap()</code>). It is possible to create a mutable version (see {@link MutableBytes}).
+ * using <code>wrap()</code>). It is possible to create a mutable version (see {@link MutableBytes}).
  * <p>
  * <strong>Example:</strong>
  * <pre>
@@ -92,7 +92,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Creates an Byte instance with an internal empty byte array. Same as calling {@link #allocate(int)} with 0.
+     * Creates a Byte instance with an internal empty byte array. Same as calling {@link #allocate(int)} with 0.
      *
      * @return the empty instance (always the same reference
      */
@@ -451,7 +451,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     /**
      * Reads given input stream up to maxLength and creates a new instance from read data.
-     * Read maxLength is never longer than stream size (ie. maxLength is only limiting, not assuring maxLength)
+     * Read maxLength is never longer than stream size (i.e. maxLength is only limiting, not assuring maxLength)
      *
      * @param stream    to read from
      * @param maxLength read to this maxLength or end of stream
@@ -568,7 +568,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     /**
      * Convert UUID to a newly generated 16 byte long array representation. Puts the 8 byte most significant bits and
-     * 8 byte least significant bits into an byte array.
+     * 8 byte the least significant bits into a byte array.
      *
      * @param uuid to convert to array
      * @return new instance
@@ -611,7 +611,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * Encodes with given radix string representation (e.g. radix 16 would be hex).
      * See also {@link BigInteger#toString(int)}.
      * <p>
-     * This is usually a number encoding, not a data encoding (ie. leading zeros are not preserved), but this implementation
+     * This is usually a number encoding, not a data encoding (i.e. leading zeros are not preserved), but this implementation
      * tries to preserve the leading zeros, to keep the in/output byte length size the same, but use at your own risk!
      *
      * @param radixNumberString the encoded string
@@ -628,7 +628,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * <ul>
      *     <li>Upper- and lowercase <code>a-f</code> (also mixed case)</li>
      *     <li>Prefix with <code>0x</code> which will be ignored</li>
-     *     <li>Even and odd number of string length with auto zero padding (ie. 'E3F' is same as '0E3F')</li>
+     *     <li>Even and odd number of string length with auto zero padding (i.e. 'E3F' is same as '0E3F')</li>
      * </ul>
      *
      * @param hexString the encoded string
@@ -654,7 +654,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     /**
      * Parsing of base36 encoded byte arrays.
      * <p>
-     * This is usually a number encoding, not a data encoding (ie. leading zeros are not preserved), but this implementation
+     * This is usually a number encoding, not a data encoding (i.e. leading zeros are not preserved), but this implementation
      * tries to preserve the leading zeros, to keep the in/output byte length size the same.
      *
      * @param base36String the encoded string
@@ -766,7 +766,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     /* TRANSFORMER **********************************************************************************************/
 
     /**
-     * Creates a new instance with the current array appended to the provided data (ie. append at the end).
+     * Creates a new instance with the current array appended to the provided data (i.e. append at the end).
      * <p>
      * This will create a new byte array internally, so it is not suitable to use as extensive builder pattern -
      * use {@link ByteBuffer} or {@link java.io.ByteArrayOutputStream} for that.
@@ -779,7 +779,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (i.e. append at the end)
      *
      * @param singleByte to append
      * @return appended instance
@@ -789,7 +789,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (i.e. append at the end)
      *
      * @param char2Bytes to append
      * @return appended instance
@@ -799,7 +799,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (i.e. append at the end)
      *
      * @param short2Bytes to append
      * @return appended instance
@@ -809,7 +809,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (i.e. append at the end)
      *
      * @param integer4Bytes to append
      * @return appended instance
@@ -819,7 +819,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (i.e. append at the end)
      *
      * @param long8Bytes to append
      * @return appended instance
@@ -829,7 +829,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Creates a new instance with the current array appended to the provided data (ie. append at the end).
+     * Creates a new instance with the current array appended to the provided data (i.e. append at the end).
      * You may use this to append multiple byte arrays without the need for chaining the {@link #append(byte[])} call
      * and therefore generating intermediate copies of the byte array, making this approach use less memory.
      *
@@ -841,7 +841,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (i.e. append at the end)
      *
      * @param secondArray to append
      * @return appended instance
@@ -851,7 +851,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Creates a new instance with the current array appended to the provided data (ie. append at the end)
+     * Creates a new instance with the current array appended to the provided data (i.e. append at the end)
      * <p>
      * If given array is null, the nothing will be appended.
      *
@@ -1004,7 +1004,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Returns a Byte whose value is equivalent to this Byte with the designated bit set to newBitValue. Bits start to count from the LSB (ie. Bytes.from(0).switchBit(0,true) == 1)
+     * Returns a Byte whose value is equivalent to this Byte with the designated bit set to newBitValue. Bits start to count from the LSB (i.e. Bytes.from(0).switchBit(0,true) == 1)
      *
      * @param bitPosition not to confuse with byte position
      * @param newBitValue if true set to 1, 0 otherwise
@@ -1063,7 +1063,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * copy but not the original, the copy will contain {@code (byte)0}.
      * <p>
      * Resize from LSB or length, so an array [0,1,2,3] resized to 3 will result in [1,2,3] or resized to 5 [0,0,1,2,3].
-     * So when a 8 byte value resized to 4 byte will result in the same 32 bit integer value
+     * So when an 8 byte value resized to 4 byte will result in the same 32-bit integer value
      *
      * @param newByteLength the length of the copy to be returned
      * @return a copy with the desired size or "this" instance if newByteLength == current length
@@ -1099,7 +1099,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * Calculates md5 on the underlying byte array and returns a byte instance containing the hash.
      * This hash algorithm SHOULD be supported by every JVM implementation (see
      * <a href="https://docs.oracle.com/javase/7/docs/api/java/security/MessageDigest.html">Javadoc for MessageDigest</a>)
-     *
+     * <p>
      * <strong>Do not use this algorithm in security relevant applications.</strong>
      *
      * @return md5 (16 bytes) hash of internal byte array
@@ -1114,7 +1114,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * Calculates sha1 on the underlying byte array and returns a byte instance containing the hash.
      * This hash algorithm SHOULD be supported by every JVM implementation (see
      * <a href="https://docs.oracle.com/javase/7/docs/api/java/security/MessageDigest.html">Javadoc for MessageDigest</a>)
-     *
+     * <p>
      * <strong>Do not use this algorithm in security relevant applications.</strong>
      *
      * @return sha1 (20 bytes) hash of internal byte array
@@ -1151,9 +1151,9 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     /**
      * Generic transformation of this instance.
      * <p>
-     * This transformation might be done in-place (ie. without copying the internal array and overwriting its old state),
+     * This transformation might be done in-place (i.e. without copying the internal array and overwriting its old state),
      * or on a copy of the internal data, depending on the type (e.g. {@link MutableBytes}) and if the operation can be done
-     * in-place. Therefore the caller has to ensure that certain side-effects, which occur due to the changing of the internal
+     * in-place. Therefore, the caller has to ensure that certain side effects, which occur due to the changing of the internal
      * data, do not create bugs in his/her code. Usually immutability is preferred, but when handling many or big byte arrays,
      * mutability enables drastically better performance.
      *
@@ -1199,7 +1199,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     /**
      * The bit length of the underlying byte array.
      *
-     * @return bit length
+     * @return the bit length
      */
     public int lengthBit() {
         return length() * 8;
@@ -1227,7 +1227,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     /**
      * Checks if instance is mutable
      *
-     * @return true if mutable, ie. transformers will change internal array
+     * @return true if mutable, i.e. transformers will change internal array
      */
     public boolean isMutable() {
         return false;
@@ -1384,7 +1384,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * <code>1000 0000</code> has <code>bitAt(0) == false</code> and <code>bitAt(7) == true</code>.
      *
      * @param bitIndex the index of the {@code bit} value.
-     * @return true if bit at given index is set, false otherwise
+     * @return true if the bit at given index is set, false otherwise
      * @throws IndexOutOfBoundsException if the {@code bitIndex} argument is negative or not less than the length of this array in bits.
      */
     public boolean bitAt(int bitIndex) {
@@ -1434,7 +1434,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public char charAt(int index) {
         Util.Validation.checkIndexBounds(length(), index, 2, "char");
-        return ((ByteBuffer) internalBuffer().position(index)).getChar();
+        return internalBuffer().position(index).getChar();
     }
 
     /**
@@ -1447,7 +1447,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public short shortAt(int index) {
         Util.Validation.checkIndexBounds(length(), index, 2, "short");
-        return ((ByteBuffer) internalBuffer().position(index)).getShort();
+        return internalBuffer().position(index).getShort();
     }
 
     /**
@@ -1460,7 +1460,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public int intAt(int index) {
         Util.Validation.checkIndexBounds(length(), index, 4, "int");
-        return ((ByteBuffer) internalBuffer().position(index)).getInt();
+        return internalBuffer().position(index).getInt();
     }
 
     /**
@@ -1473,7 +1473,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      */
     public long longAt(int index) {
         Util.Validation.checkIndexBounds(length(), index, 8, "long");
-        return ((ByteBuffer) internalBuffer().position(index)).getLong();
+        return internalBuffer().position(index).getLong();
     }
 
     /**
@@ -1606,7 +1606,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     /**
      * The reference of te internal byte-array. This call requires no conversation or additional memory allocation.
      * <p>
-     * Modifications to this bytes's content will cause the returned
+     * Modifications to these byte's content will cause the returned
      * array's content to be modified, and vice versa.
      *
      * @return the direct reference of the internal byte array
@@ -1662,12 +1662,12 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     /**
      * Encodes the internal array in given radix representation (e.g. 2 = binary, 10 = decimal, 16 = hex).
      * <p>
-     * This is usually a number encoding, not a data encoding (ie. leading zeros are not preserved), but this implementation
+     * This is usually a number encoding, not a data encoding (i.e. leading zeros are not preserved), but this implementation
      * tries to preserve the leading zeros, to keep the in/output byte length size the same. To preserve the length padding
      * would be required, but is not supported in this implementation.
      * <p>
      * But still full disclaimer:
-     *
+     * <p>
      * <strong>This is NOT recommended for data encoding, only for number encoding</strong>
      * <p>
      * See <a href="https://en.wikipedia.org/wiki/Radix_economy">Radix Economy</a> and {@link BigInteger#toString(int)}.
@@ -1868,7 +1868,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * The internal byte array wrapped in a {@link BigInteger} instance.
      * <p>
      * If the internal byte order is {@link ByteOrder#LITTLE_ENDIAN}, a copy of the internal
-     * array will be reversed and used as backing array with the big integer. Otherwise the internal
+     * array will be reversed and used as backing array with the big integer. Otherwise, the internal
      * array will be used directly.
      *
      * @return big integer
@@ -2005,7 +2005,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Converts the internal byte array to an long array, that is, every 8 bytes will be packed into a single long.
+     * Converts the internal byte array to a long array, that is, every 8 bytes will be packed into a single long.
      * <p>
      * E.g. 8 bytes will be packed to a length 1 long array:
      * <pre>
@@ -2037,7 +2037,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Converts the internal byte array to an float array, that is, every 4 bytes will be packed into a single float.
+     * Converts the internal byte array to a float array, that is, every 4 bytes will be packed into a single float.
      * <p>
      * E.g. 4 bytes will be packed to a length 1 float array:
      * <pre>
@@ -2069,7 +2069,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     }
 
     /**
-     * Converts the internal byte array to an double array, that is, every 8 bytes will be packed into a single double.
+     * Converts the internal byte array to a double array, that is, every 8 bytes will be packed into a single double.
      * <p>
      * E.g. 8 bytes will be packed to a length 1 double array:
      * <pre>
@@ -2178,7 +2178,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
      * will not break on the first mismatch. This method is useful to prevent some side-channel attacks,
      * but is slower on average.
      * <p>
-     * This implementation uses the algorithm suggested in https://codahale.com/a-lesson-in-timing-attacks/
+     * This implementation uses the algorithm suggested in <a href="https://codahale.com/a-lesson-in-timing-attacks/">a-lesson-in-timing-attacks</a>
      *
      * @param anotherArray to compare with
      * @return true if {@link Arrays#equals(byte[], byte[])} returns true on given and internal array

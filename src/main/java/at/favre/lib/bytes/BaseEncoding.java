@@ -28,10 +28,10 @@ import java.util.Objects;
 
 /**
  * Encoder which supports arbitrary alphabet and padding.
- *
+ * <p>
  * Derived from Google Guava's common/io/ BaseEncoding
  * <p>
- * See: https://github.com/google/guava/blob/v26.0/guava/src/com/google/common/io/BaseEncoding.java
+ * See: <a href="https://github.com/google/guava/blob/v26.0/guava/src/com/google/common/io/BaseEncoding.java">BaseEncoding</a>
  */
 final class BaseEncoding implements BinaryToTextEncoding.EncoderDecoder {
     private static final char ASCII_MAX = 127;
@@ -190,7 +190,7 @@ final class BaseEncoding implements BinaryToTextEncoding.EncoderDecoder {
         }
 
         int decode(char ch) {
-            return (int) decodabet[ch];
+            return decodabet[ch];
         }
     }
 

@@ -163,7 +163,7 @@ final class Util {
         }
 
         /**
-         * Counts the occurrence of target in the the in the subject array
+         * Counts the occurrence of target in the subject array
          *
          * <p>
          * <strong>Analysis</strong>
@@ -189,7 +189,7 @@ final class Util {
         }
 
         /**
-         * Counts the times given pattern (ie. an array) can be found in given array
+         * Counts the times given pattern (i.e. an array) can be found in given array
          *
          * <p>
          * <strong>Analysis</strong>
@@ -226,7 +226,7 @@ final class Util {
          * Simple Durstenfeld shuffle.
          * This will shuffle given array and will not make a copy, so beware.
          * <p>
-         * See: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
+         * See: <a href="https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm">Yates_shuffle</a>
          *
          * <p>
          * <strong>Analysis</strong>
@@ -418,7 +418,7 @@ final class Util {
          * Calculates the entropy factor of a byte array.
          * <p>
          * This implementation will not create a copy of the internal array and will only internally initialize
-         * a int array with 256 elements as temporary buffer.
+         * an int array with 256 elements as temporary buffer.
          *
          * <p>
          * <strong>Analysis</strong>
@@ -496,7 +496,7 @@ final class Util {
         }
 
         /**
-         * Converts this primitive array to an boxed object array.
+         * Converts this primitive array to a boxed object array.
          * Will create a new array and not reuse the array reference.
          *
          * <p>
@@ -544,7 +544,7 @@ final class Util {
         }
 
         /**
-         * Converts this object array to an primitives type array.
+         * Converts this object array to a primitives type array.
          * Will create a new array and not reuse the array reference.
          *
          * <p>
@@ -717,7 +717,7 @@ final class Util {
          * @param charArray to get the byte array from
          * @param charset   charset to be used to decode the char array
          * @param offset    to start reading the char array from (must be smaller than length and gt 0)
-         * @param length    from offset (must be between 0 and charArray.length)
+         * @param length    from offset (must be between 0 and charArray.length())
          * @return byte array of encoded chars
          */
         static byte[] charToByteArray(char[] charArray, Charset charset, int offset, int length) {
@@ -807,7 +807,7 @@ final class Util {
         }
 
         /**
-         * Converts the byte array to an long array. This will spread 8 bytes into a single long:
+         * Converts the byte array to a long array. This will spread 8 bytes into a single long:
          *
          * <pre>
          *     [b1, b2, b3, b4, b5, b6, b7, b8] = [long1]
@@ -834,7 +834,7 @@ final class Util {
         }
 
         /**
-         * Converts the byte array to an float array. This will spread 4 bytes into a single float:
+         * Converts the byte array to a float array. This will spread 4 bytes into a single float:
          *
          * <pre>
          *     [b1, b2, b3, b4] = [float1]
@@ -861,7 +861,7 @@ final class Util {
         }
 
         /**
-         * Converts the byte array to an double array. This will spread 8 bytes into a single double:
+         * Converts the byte array to a double array. This will spread 8 bytes into a single double:
          *
          * <pre>
          *     [b1, b2, b3, b4, b5, b6, b7, b8] = [double1]
@@ -916,7 +916,7 @@ final class Util {
 
         /**
          * Convert UUID to a newly generated 16 byte long array representation. Puts the 8 byte most significant bits and
-         * 8 byte least significant bits into an byte array.
+         * 8 byte least-significant bits into a byte array.
          *
          * <p>
          * <strong>Analysis</strong>
@@ -1034,13 +1034,13 @@ final class Util {
         }
 
         /**
-         * Check if a length of an primitive (e.g. int = 4 byte) fits in given length from given start index.
+         * Check if a length of a primitive (e.g. int = 4 byte) fits in given length from given start index.
          * Throws exception with descriptive exception message.
          *
          * @param length          of the whole array
          * @param index           to start from array length
          * @param primitiveLength length of the primitive type to check
-         * @param type            for easier debugging the human readable type of the checked primitive
+         * @param type            for easier debugging the human-readable type of the checked primitive
          *                        to put in exception message
          * @throws IndexOutOfBoundsException if index + primitiveLength > length
          */
@@ -1056,7 +1056,7 @@ final class Util {
          *
          * @param length         of the whole array
          * @param expectedLength how length is expected
-         * @param type           for easier debugging the human readable type of the checked primitive
+         * @param type           for easier debugging the human-readable type of the checked primitive
          *                       to put in exception message
          * @throws IllegalArgumentException if length != expectedLength
          */
@@ -1073,7 +1073,7 @@ final class Util {
          *
          * @param length       of the byte array
          * @param modFactor    to divide the length
-         * @param errorSubject human readable message of the exact error subject
+         * @param errorSubject human-readable message of the exact error subject
          * @throws IllegalArgumentException if length % modFactor != 0
          */
         static void checkModLength(int length, int modFactor, String errorSubject) {
@@ -1086,7 +1086,7 @@ final class Util {
          * Check if the file exists and is a file.
          *
          * @param file to check
-         * @throws IllegalArgumentException if either file is null, does not exists or is not a file
+         * @throws IllegalArgumentException if either file is null, does not exist or is not a file
          */
         private static void checkFileExists(java.io.File file) {
             if (file == null || !file.exists() || !file.isFile()) {
@@ -1181,7 +1181,7 @@ final class Util {
          * @param file   to read bytes from
          * @param offset to read
          * @param length from offset
-         * @return byte array with length length
+         * @return byte array with length
          */
         static byte[] readFromFile(java.io.File file, int offset, int length) {
             Validation.checkFileExists(file);

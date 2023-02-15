@@ -69,7 +69,7 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
      *
      * @param newArray used to overwrite internal
      * @return this instance
-     * @throws IndexOutOfBoundsException if newArray.length &gt; internal length
+     * @throws IndexOutOfBoundsException if newArray.length() &gt; internal length
      */
     public MutableBytes overwrite(byte[] newArray) {
         return overwrite(newArray, 0);
@@ -80,7 +80,7 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
      *
      * @param newBytes used to overwrite internal
      * @return this instance
-     * @throws IndexOutOfBoundsException if newArray.length &gt; internal length
+     * @throws IndexOutOfBoundsException if newArray.length() &gt; internal length
      */
     public MutableBytes overwrite(Bytes newBytes) {
         return overwrite(newBytes, 0);
@@ -92,7 +92,7 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
      * @param newArray            used to overwrite internal
      * @param offsetInternalArray index of the internal array to start overwriting
      * @return this instance
-     * @throws IndexOutOfBoundsException if newArray.length + offsetInternalArray &gt; internal length
+     * @throws IndexOutOfBoundsException if newArray.length() + offsetInternalArray &gt; internal length
      */
     public MutableBytes overwrite(byte[] newArray, int offsetInternalArray) {
         Objects.requireNonNull(newArray, "must provide non-null array as source");
@@ -106,7 +106,7 @@ public final class MutableBytes extends Bytes implements AutoCloseable {
      * @param newBytes            used to overwrite internal
      * @param offsetInternalArray index of the internal array to start overwriting
      * @return this instance
-     * @throws IndexOutOfBoundsException if newBytes.length + offsetInternalArray &gt; internal length
+     * @throws IndexOutOfBoundsException if newBytes.length() + offsetInternalArray &gt; internal length
      */
     public MutableBytes overwrite(Bytes newBytes, int offsetInternalArray) {
         return overwrite(Objects.requireNonNull(newBytes, "must provide non-null array as source").array(), offsetInternalArray);

@@ -231,7 +231,7 @@ public interface BytesTransformer {
      * contain identical values.  For any indices that are valid in the
      * copy but not the original, the copy will contain {@code (byte)0}.
      * <p>
-     * If if the internal array will be grown, zero bytes will be added on the left,
+     * If the internal array will be increased, zero bytes will be added on the left,
      * keeping the value the same.
      */
     final class ResizeTransformer implements BytesTransformer {
@@ -265,10 +265,12 @@ public interface BytesTransformer {
             byte[] resizedArray = new byte[newSize];
 
             if (mode == Mode.RESIZE_KEEP_FROM_MAX_LENGTH) {
+                int max = Math.max(0, Math.abs(newSize - currentArray.length));
+
                 if (newSize > currentArray.length) {
-                    System.arraycopy(currentArray, 0, resizedArray, Math.max(0, Math.abs(newSize - currentArray.length)), Math.min(newSize, currentArray.length));
+                    System.arraycopy(currentArray, 0, resizedArray, max, currentArray.length);
                 } else {
-                    System.arraycopy(currentArray, Math.max(0, Math.abs(newSize - currentArray.length)), resizedArray, Math.min(0, Math.abs(newSize - currentArray.length)), Math.min(newSize, currentArray.length));
+                    System.arraycopy(currentArray, max, resizedArray, 0, newSize);
                 }
             } else {
                 System.arraycopy(currentArray, 0, resizedArray, 0, Math.min(currentArray.length, resizedArray.length));
