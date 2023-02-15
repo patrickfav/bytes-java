@@ -309,7 +309,7 @@ final class Util {
                         byte src = byteArray[sourceIndex];
                         byte dst = (byte) (src << shiftMod);
                         if (sourceIndex + 1 < byteArray.length) {
-                            dst |= byteArray[sourceIndex + 1] >>> (8 - shiftMod) & carryMask;
+                            dst |= byteArray[sourceIndex + 1] >>> (8 - shiftMod) & carryMask & 0xff;
                         }
                         byteArray[i] = dst;
                     }
@@ -323,7 +323,7 @@ final class Util {
                         byte src = byteArray[sourceIndex];
                         byte dst = (byte) (src << shiftMod);
                         if (sourceIndex - 1 >= 0) {
-                            dst |= byteArray[sourceIndex - 1] >>> (8 - shiftMod) & carryMask;
+                            dst |= byteArray[sourceIndex - 1] >>> (8 - shiftMod) & carryMask & 0xff;
                         }
                         byteArray[i] = dst;
                     }
@@ -365,7 +365,7 @@ final class Util {
                         byte src = byteArray[sourceIndex];
                         byte dst = (byte) ((0xff & src) >>> shiftMod);
                         if (sourceIndex - 1 >= 0) {
-                            dst |= byteArray[sourceIndex - 1] << (8 - shiftMod) & carryMask;
+                            dst |= byteArray[sourceIndex - 1] << (8 - shiftMod) & carryMask & 0xff;
                         }
                         byteArray[i] = dst;
                     }
@@ -379,7 +379,7 @@ final class Util {
                         byte src = byteArray[sourceIndex];
                         byte dst = (byte) ((0xff & src) >>> shiftMod);
                         if (sourceIndex + 1 < byteArray.length) {
-                            dst |= byteArray[sourceIndex + 1] << (8 - shiftMod) & carryMask;
+                            dst |= byteArray[sourceIndex + 1] << (8 - shiftMod) & carryMask & 0xff;
                         }
                         byteArray[i] = dst;
                     }
