@@ -39,7 +39,7 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
       - name: Build with Maven
-        run: ./mvnw -B clean verify checkstyle:checkstyle jacoco:report -DcommonConfig.jarSign.skip=true
+        run: ./mvnw -B clean verify -DcommonConfig.jarSign.skip=true
       - name: Analyze with SonaQube
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
@@ -77,7 +77,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
       - name: Publish package
         run: |
-          ./mvnw -B verify nexus-staging:deploy -P deploy && \
+          ./mvnw -B verify nexus-staging:deploy -P deploy -DskipTests && \
           ./mvnw -B nexus-staging:release -P deploy
         env:
           OPENSOURCE_PROJECTS_KS_PW: ${{ secrets.KEYSTORE_PASSWORD }}
