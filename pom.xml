@@ -19,7 +19,7 @@
         arrays in Java. It supports endianness as well as immutability and mutability, so the caller may decide to favor
         performance.
     </description>
-    <url>https://github.com/patrickfav/bytes-java</url>
+    <url>https://favr.dev/opensource/bytes-java</url>
     <inceptionYear>2017</inceptionYear>
 
     <properties>
@@ -82,11 +82,11 @@
             <plugin>
               <artifactId>maven-jar-plugin</artifactId>
               <configuration>
-                <archive>  
-                  <manifestEntries>
-                    <Automatic-Module-Name>at.favre.lib.bytes</Automatic-Module-Name>
-                  </manifestEntries>
-                </archive>
+                  <archive>
+                      <manifestEntries>
+                          <Automatic-Module-Name>at.favre.lib.bytes</Automatic-Module-Name>
+                      </manifestEntries>
+                  </archive>
               </configuration>
             </plugin>
         </plugins>
