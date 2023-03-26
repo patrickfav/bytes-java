@@ -745,7 +745,6 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     private final byte[] byteArray;
     private final ByteOrder byteOrder;
     private final BytesFactory factory;
-    private transient int hashCodeCache;
 
     Bytes(byte[] byteArray, ByteOrder byteOrder) {
         this(byteArray, byteOrder, new Factory());
@@ -2221,10 +2220,7 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     @Override
     public int hashCode() {
-        if (hashCodeCache == 0) {
-            hashCodeCache = Util.Obj.hashCode(internalArray(), byteOrder());
-        }
-        return hashCodeCache;
+        return Util.Obj.hashCode(internalArray(), byteOrder());
     }
 
     /**
