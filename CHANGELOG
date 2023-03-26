@@ -1,5 +1,9 @@
 # Releases
 
+## 1.6.2
+
+* remove hashCode caching since it could introduce very subtle bugs
+
 ## v1.6.1
 
 * now build by JDK 11 and removed errorprone compiler #52
