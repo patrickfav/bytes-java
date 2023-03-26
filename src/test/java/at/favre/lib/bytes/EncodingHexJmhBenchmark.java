@@ -23,10 +23,13 @@ package at.favre.lib.bytes;
 
 import org.openjdk.jmh.annotations.*;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -128,6 +131,7 @@ public class EncodingHexJmhBenchmark {
     private BinaryToTextEncoding.EncoderDecoder option3;
     private BinaryToTextEncoding.EncoderDecoder option4;
     private BinaryToTextEncoding.EncoderDecoder option5;
+    private BinaryToTextEncoding.EncoderDecoder option6;
     private Random random;
 
     @Setup(Level.Trial)
@@ -139,6 +143,7 @@ public class EncodingHexJmhBenchmark {
         option3 = new BigIntegerHexEncoder();
         option4 = new OldBytesImplementation();
         option5 = new StackOverflowAnswer2Encoder();
+        option6 = new Jdk17HexFormat();
 
         rndMap = new HashMap<>();
         int[] lengths = new int[]{4, 8, 16, 32, 128, 512, 1000000};
@@ -174,6 +179,11 @@ public class EncodingHexJmhBenchmark {
     @Benchmark
     public String encodeStackOverflowCode2() {
         return encodeDecode(option5);
+    }
+
+    @Benchmark
+    public String encodeHexFormatJdk17() {
+        return encodeDecode(option6);
     }
 
     private String encodeDecode(BinaryToTextEncoding.EncoderDecoder encoder) {
@@ -278,6 +288,142 @@ public class EncodingHexJmhBenchmark {
                 sb.append(first4Bit).append(last4Bit);
             }
             return sb.toString();
+        }
+
+        @Override
+        public byte[] decode(CharSequence encoded) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    /**
+     * Copy of the JDK 17 implementation of HexFormat, only difference is that we need to create new strings, while
+     * the JDK can create strings without byte copy, I cant here.
+     */
+    static final class Jdk17HexFormat implements BinaryToTextEncoding.EncoderDecoder {
+        private static final byte[] LOWERCASE_DIGITS = {
+                '0', '1', '2', '3', '4', '5', '6', '7',
+                '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+        };
+        private final String delimiter = "";
+        private final String prefix = "";
+        private final String suffix = "";
+        private final byte[] digits = LOWERCASE_DIGITS;
+
+        @Override
+        public String encode(byte[] byteArray, ByteOrder byteOrder) {
+            return formatHex(byteArray, 0, byteArray.length);
+        }
+
+        private String formatHex(byte[] bytes, int fromIndex, int toIndex) {
+            Objects.requireNonNull(bytes, "bytes");
+            //Objects.checkFromToIndex(fromIndex, toIndex, bytes.length);
+            if (toIndex - fromIndex == 0) {
+                return "";
+            }
+            // Format efficiently if possible
+            String s = formatOptDelimiter(bytes, fromIndex, toIndex);
+            if (s == null) {
+                long stride = prefix.length() + 2L + suffix.length() + delimiter.length();
+                int capacity = checkMaxArraySize((toIndex - fromIndex) * stride - delimiter.length());
+                StringBuilder sb = new StringBuilder(capacity);
+                formatHex(sb, bytes, fromIndex, toIndex);
+                s = sb.toString();
+            }
+            return s;
+        }
+
+        private <A extends Appendable> A formatHex(A out, byte[] bytes, int fromIndex, int toIndex) {
+            Objects.requireNonNull(out, "out");
+            Objects.requireNonNull(bytes, "bytes");
+            //Objects.checkFromToIndex(fromIndex, toIndex, bytes.length);
+
+            int length = toIndex - fromIndex;
+            if (length > 0) {
+                try {
+                    String between = suffix + delimiter + prefix;
+                    out.append(prefix);
+                    toHexDigits(out, bytes[fromIndex]);
+                    if (between.isEmpty()) {
+                        for (int i = 1; i < length; i++) {
+                            toHexDigits(out, bytes[fromIndex + i]);
+                        }
+                    } else {
+                        for (int i = 1; i < length; i++) {
+                            out.append(between);
+                            toHexDigits(out, bytes[fromIndex + i]);
+                        }
+                    }
+                    out.append(suffix);
+                } catch (IOException ioe) {
+                    throw new RuntimeException(ioe.getMessage(), ioe);
+                }
+            }
+            return out;
+        }
+
+        private <A extends Appendable> A toHexDigits(A out, byte value) {
+            Objects.requireNonNull(out, "out");
+            try {
+                out.append(toHighHexDigit(value));
+                out.append(toLowHexDigit(value));
+                return out;
+            } catch (IOException ioe) {
+                throw new RuntimeException(ioe.getMessage(), ioe);
+            }
+        }
+
+        private String formatOptDelimiter(byte[] bytes, int fromIndex, int toIndex) {
+            byte[] rep;
+            if (!prefix.isEmpty() || !suffix.isEmpty()) {
+                return null;
+            }
+            int length = toIndex - fromIndex;
+            if (delimiter.isEmpty()) {
+                // Allocate the byte array and fill in the hex pairs for each byte
+                rep = new byte[checkMaxArraySize(length * 2L)];
+                for (int i = 0; i < length; i++) {
+                    rep[i * 2] = (byte) toHighHexDigit(bytes[fromIndex + i]);
+                    rep[i * 2 + 1] = (byte) toLowHexDigit(bytes[fromIndex + i]);
+                }
+            } else if (delimiter.length() == 1 && delimiter.charAt(0) < 256) {
+                // Allocate the byte array and fill in the characters for the first byte
+                // Then insert the delimiter and hexadecimal characters for each of the remaining bytes
+                char sep = delimiter.charAt(0);
+                rep = new byte[checkMaxArraySize(length * 3L - 1L)];
+                rep[0] = (byte) toHighHexDigit(bytes[fromIndex]);
+                rep[1] = (byte) toLowHexDigit(bytes[fromIndex]);
+                for (int i = 1; i < length; i++) {
+                    rep[i * 3 - 1] = (byte) sep;
+                    rep[i * 3] = (byte) toHighHexDigit(bytes[fromIndex + i]);
+                    rep[i * 3 + 1] = (byte) toLowHexDigit(bytes[fromIndex + i]);
+                }
+            } else {
+                // Delimiter formatting not to a single byte
+                return null;
+            }
+            try {
+                // Return a new string using the bytes without making a copy -> we cant use this here as we dont have access to JavaLangAccess
+                //return jla.newStringNoRepl(rep, StandardCharsets.ISO_8859_1);
+                return new String(rep, StandardCharsets.ISO_8859_1);
+            } catch (Exception cce) {
+                throw new AssertionError(cce);
+            }
+        }
+
+        private char toHighHexDigit(int value) {
+            return (char) digits[(value >> 4) & 0xf];
+        }
+
+        private char toLowHexDigit(int value) {
+            return (char) digits[value & 0xf];
+        }
+
+        private static int checkMaxArraySize(long length) {
+            if (length > Integer.MAX_VALUE)
+                throw new OutOfMemoryError("String size " + length +
+                        " exceeds maximum " + Integer.MAX_VALUE);
+            return (int) length;
         }
 
         @Override
