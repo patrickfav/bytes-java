@@ -746,6 +746,10 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
     private final ByteOrder byteOrder;
     private final BytesFactory factory;
     private transient int hashCodeCache;
+    /**
+     * Cache if the hash has been calculated as actually being zero, enabling us to avoid recalculating this.
+     */
+    private transient boolean hashCodeIsZero; // Default to false;
 
     Bytes(byte[] byteArray, ByteOrder byteOrder) {
         this(byteArray, byteOrder, new Factory());
@@ -2221,8 +2225,11 @@ public class Bytes implements Comparable<Bytes>, Serializable, Iterable<Byte> {
 
     @Override
     public int hashCode() {
-        if (hashCodeCache == 0) {
+        if (hashCodeCache == 0 && !hashCodeIsZero) {
             hashCodeCache = Util.Obj.hashCode(internalArray(), byteOrder());
+            if (hashCodeCache == 0) {
+                hashCodeIsZero = true;
+            }
         }
         return hashCodeCache;
     }
