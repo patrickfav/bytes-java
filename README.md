@@ -623,11 +623,11 @@ readOnlyBytes.inputStream();
 
 ## Download
 
-The artifacts are deployed to [jcenter](https://bintray.com/bintray/jcenter) and [Maven Central](https://search.maven.org/).
+The artifacts are deployed to [Maven Central](https://search.maven.org/).
 
 ### Maven
 
-Add the dependency of the [latest version](https://github.com/patrickfav/bytes/releases) to your `pom.xml`:
+Add the dependency of the [latest version](https://github.com/patrickfav/bytes-java/releases) to your `pom.xml`:
 
 ```xml
 <dependency>
@@ -645,7 +645,7 @@ Add to your `build.gradle` module dependencies:
 
 ### Local Jar Library
 
-[Grab jar from latest release.](https://github.com/patrickfav/bytes/releases/latest)
+[Grab jar from latest release.](https://github.com/patrickfav/bytes-java/releases/latest)
 
 ### OSGi
 
