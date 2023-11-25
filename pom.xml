@@ -81,13 +81,31 @@
             </plugin>
             <plugin>
               <artifactId>maven-jar-plugin</artifactId>
-              <configuration>
-                  <archive>
-                      <manifestEntries>
-                          <Automatic-Module-Name>at.favre.lib.bytes</Automatic-Module-Name>
-                      </manifestEntries>
-                  </archive>
-              </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.moditect</groupId>
+                <artifactId>moditect-maven-plugin</artifactId>
+                <version>1.0.0.Final</version>
+                <executions>
+                    <execution>
+                        <id>add-module-infos</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>add-module-info</goal>
+                        </goals>
+                        <configuration>
+                            <jvmVersion>9</jvmVersion>
+                            <module>
+                                <moduleInfo>
+                                    <name>at.favre.lib.bytes</name>
+                                    <exports>
+                                        at.favre.lib.bytes;
+                                    </exports>
+                                </moduleInfo>
+                            </module>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
